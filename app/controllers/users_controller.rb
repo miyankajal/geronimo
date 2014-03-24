@@ -12,7 +12,7 @@ class UsersController < ApplicationController
 
   # GET /users/new
   def new
-    @user = User.new
+	@user = User.new
   end
 
   # GET /users/1/edit
@@ -53,6 +53,6 @@ class UsersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:username, :email, :first_name, :last_name, :password_digest, :remember_token, :type, :enrollment_id, :class_id)
+      params.require(:user).permit(:username, :email, :first_name, :last_name, :password, :password_confirmation, :type, :enrollment_id, :class_id)
     end
 end

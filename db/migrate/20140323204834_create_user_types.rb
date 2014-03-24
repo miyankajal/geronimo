@@ -1,13 +1,9 @@
 class CreateUserTypes < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :user_types do |t|
       t.string :description
 
       t.timestamps
     end
-  end
-  
-  def self.down
-	drop_table :user_types
   end
 end

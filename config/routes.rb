@@ -1,4 +1,8 @@
 GeronimoSms::Application.routes.draw do
+  get "static_pages/home"
+  get "static_pages/help"
+  get "static_pages/about"
+  
   resources :class_sections
 
   resources :alerts
@@ -6,6 +10,10 @@ GeronimoSms::Application.routes.draw do
   resources :points
 
   resources :users
+  
+  resources :user_types
+  
+  resources :teacher_roles
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
