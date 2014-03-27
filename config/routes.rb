@@ -1,8 +1,10 @@
 GeronimoSms::Application.routes.draw do
-  get "static_pages/home"
-  get "static_pages/help"
-  get "static_pages/about"
   
+  root 'static_pages#home'
+  
+  match '/about' => 'static_pages#about', via: [:get]
+  match '/help' => 'static_pages#help', via: [:get]
+
   resources :class_sections
 
   resources :alerts
