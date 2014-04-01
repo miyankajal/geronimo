@@ -1,0 +1,15 @@
+<div class="user_avatars">
+	<%= gravatar_for current_user %>
+	<h3><%= current_user.username %><h3>
+</div>
+
+<p>
+<div class="span6 offset1">
+	<ul>
+		<li><%= link_to "Administrators", users_path %></li>
+		<li><%= link_to "Teachers", users_path %></li>
+		<li><%= link_to "Classes", users_path %></li>
+		<li><%= link_to "Guardians", users_path %></li>
+	<ul>
+</div>
+</p>

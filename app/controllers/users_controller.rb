@@ -1,13 +1,16 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show]
+  before_action :signed_in_user, only: [:index, :show, :edit, :update, :destroy]
+  before_action :admin?, only: [:edit, :update, :destroy]
 
   # GET /users
   def index
-    @users = User.all
+    @users = User.paginate(page: params[:page])
   end
 
   # GET /users/1
   def show
+	@user = User.find(params[:id])
   end
 
   # GET /users/new
@@ -17,6 +20,7 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+	@user = User.find(params[:id])
   end
 
   # POST /users
@@ -32,6 +36,7 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1
   def update
+	@user = User.find(params[:id])
     if @user.update(user_params)
       redirect_to @user, notice: 'User was successfully updated.'
     else
@@ -41,7 +46,7 @@ class UsersController < ApplicationController
 
   # DELETE /users/1
   def destroy
-    @user.destroy
+    User.find(params[:id]).destroy
     redirect_to users_url, notice: 'User was successfully destroyed.'
   end
 
@@ -55,4 +60,19 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:username, :email, :first_name, :last_name, :password, :password_confirmation, :type, :enrollment_id, :class_id)
     end
+	
+	# Only allow signed in user update/edit profiles
+	def signed_in_user
+		unless sign_in?
+			store_location
+			redirect_to root_path, notice: "Please sign in."  
+		end
+	end
+	
+	# Only admins are allowed to change a users profile
+	def admin?
+		unless current_user.type == 1 
+			redirect_to root_path
+		end
+	end 
 end

@@ -1,9 +1,11 @@
 GeronimoSms::Application.routes.draw do
   
-  root 'static_pages#home'
+  root 'sessions#new'
   
   match '/about' => 'static_pages#about', via: [:get]
-  match '/help' => 'static_pages#help', via: [:get]
+  match '/all_users' => 'static_pages#all_users', via: [:get]
+  
+  match '/signout' => 'sessions#destroy', via: [:delete]
 
   resources :class_sections
 
@@ -16,6 +18,8 @@ GeronimoSms::Application.routes.draw do
   resources :user_types
   
   resources :teacher_roles
+  
+  resources :sessions, only: [:new, :create, :destroy]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

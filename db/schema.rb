@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140324015936) do
+ActiveRecord::Schema.define(version: 20140328004255) do
 
   create_table "alert_email_queues", force: true do |t|
     t.integer "alert_id"
@@ -82,5 +82,6 @@ ActiveRecord::Schema.define(version: 20140324015936) do
 
   add_index "users", ["email"], name: "index_users_email", unique: true
   add_index "users", ["first_name", "last_name"], name: "index_users_names"
+  add_index "users", ["remember_token"], name: "index_users_remember_token", unique: true
 
 end
