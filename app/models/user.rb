@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 	
 	has_one :class_section
 	
-	#has_one :user_type
+	has_one :user_type
 
 	#, :through => :class_sections, :conditions => "type = 3"
 	

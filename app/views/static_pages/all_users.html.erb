@@ -6,10 +6,10 @@
 <p>
 <div class="span6 offset1">
 	<ul>
-		<li><%= link_to "Administrators", users_path %></li>
-		<li><%= link_to "Teachers", users_path %></li>
-		<li><%= link_to "Classes", users_path %></li>
-		<li><%= link_to "Guardians", users_path %></li>
+		<li><%= link_to "Administrators", users_path(type: 1, desc: 'Administrators') %></li>
+		<li><%= link_to "Teachers", users_path(type: 2, desc: 'Teachers') %></li>
+		<li><%= link_to "Classes", users_path(type: 3, desc: 'Classes') %></li>
+		<li><%= link_to "Guardians", users_path(type: 4, desc: 'Guardians') %></li>
 	<ul>
 </div>
 </p>

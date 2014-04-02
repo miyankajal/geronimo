@@ -1,11 +1,12 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show]
   before_action :signed_in_user, only: [:index, :show, :edit, :update, :destroy]
-  before_action :admin?, only: [:edit, :update, :destroy]
+  before_action :admin?, only: [:index, :edit, :update, :destroy]
 
-  # GET /users
+  # GET /users?type=[1,2,3,4]
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.where("type = #{params[:type]}")
+    #@users = User.joins(:user_types).where("user_types.description = #{params[:type]}")
   end
 
   # GET /users/1

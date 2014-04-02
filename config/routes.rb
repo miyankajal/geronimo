@@ -15,6 +15,8 @@ GeronimoSms::Application.routes.draw do
 
   resources :users
   
+  match 'user/:type' => 'users#index', via: [:get]
+  
   resources :user_types
   
   resources :teacher_roles
