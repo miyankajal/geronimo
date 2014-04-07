@@ -12,6 +12,7 @@ class UsersController < ApplicationController
   # GET /users/1
   def show
 	@user = User.find(params[:id])
+	@student_points = @user.student_points.paginate(page: params[:page]) 
   end
 
   # GET /users/new

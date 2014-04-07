@@ -6,9 +6,6 @@
       <th>Description</th>
       <th>Value</th>
       <th>Credit</th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
 
@@ -18,7 +15,7 @@
         <td><%= point.description %></td>
         <td><%= point.value %></td>
         <td><%= point.credit %></td>
-        <td><%= link_to 'Show', point %></td>
+
         <td><%= link_to 'Edit', edit_point_path(point) %></td>
         <td><%= link_to 'Destroy', point, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

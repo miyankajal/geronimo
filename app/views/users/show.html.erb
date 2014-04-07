@@ -1,3 +1,8 @@
+<div class="user_avatars">
+	<%= gravatar_for current_user %>
+	<h3><%= current_user.username %><h3>
+</div>
+
 <p id="notice"><%= notice %></p>
 
 <p>
@@ -5,36 +10,7 @@
   <%= @user.username %>
 </p>
 
-<p>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
-
-<p>
-  <strong>First name:</strong>
-  <%= @user.first_name %>
-</p>
-
-<p>
-  <strong>Last name:</strong>
-  <%= @user.last_name %>
-</p>
-
-<p>
-  <strong>Password digest:</strong>
-  <%= @user.password_digest %>
-</p>
-
-<p>
-  <strong>Remember token:</strong>
-  <%= @user.remember_token %>
-</p>
-
-<p>
-  <strong>Type:</strong>
-  <%= @user.type %>
-</p>
-
+<% if @user.type == 3%>
 <p>
   <strong>Enrollment:</strong>
   <%= @user.enrollment_id %>
@@ -45,5 +21,8 @@
   <%= @user.class_id %>
 </p>
 
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+<%end%>
+
+<% if current_user.type == 1 %>
+	<%= link_to 'Edit', edit_user_path(@user) %>
+<% end %>

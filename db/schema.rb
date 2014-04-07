@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140328004255) do
+ActiveRecord::Schema.define(version: 20140404010156) do
 
   create_table "alert_email_queues", force: true do |t|
     t.integer "alert_id"
@@ -48,6 +48,15 @@ ActiveRecord::Schema.define(version: 20140328004255) do
     t.datetime "updated_at"
   end
 
+  create_table "student_points", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "point_id"
+    t.integer  "point"
+    t.boolean  "id_credit"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "teacher_class_relationships", force: true do |t|
     t.integer "teacher_id"
     t.integer "class_id"
@@ -56,6 +65,15 @@ ActiveRecord::Schema.define(version: 20140328004255) do
 
   create_table "teacher_roles", force: true do |t|
     t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_points_relationships", force: true do |t|
+    t.integer  "user_id"
+    t.string   "points_id"
+    t.integer  "point"
+    t.boolean  "is_credit"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

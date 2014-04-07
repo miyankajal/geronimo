@@ -11,8 +11,9 @@ class User < ActiveRecord::Base
 	EMAIL_REGEX = /\A[^@\s]+@([^@.\s]+\.)+[^@.\s]+\z/
 	
 	has_one :class_section
-	
 	has_one :user_type
+	
+	has_many :points, through: :student_points, dependent: :destroy
 
 	#, :through => :class_sections, :conditions => "type = 3"
 	

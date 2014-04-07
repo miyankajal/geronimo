@@ -5,8 +5,18 @@
 			<nav>
 				<ul class="nav pull-right">
 					<% if sign_in? %>
-						<li><%= link_to "Users", all_users_path %></li>
-						<li><%= link_to "Edit", edit_user_path(current_user) %></li>
+						<% if current_user.type == 1 %>
+							<li><%= link_to "Users", all_users_path %></li>
+						<% else %>
+							<li><%= link_to "Users", user_path(current_user) %></li>
+						<% end %>
+						
+						<% if current_user.type == 1 %>
+							<li><%= link_to "Edit", edit_user_path(current_user) %></li>
+							<li><%= link_to "Settings", settings_path %></li>
+						<% elsif current_user.type == 3 %>
+							<li><%= link_to "Points", "#" %></li>
+						<% end %>
 					<% else %>
 						<li><%= link_to "Sign in", root_path %></li>
 					<% end %>
