@@ -2,17 +2,19 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show]
   before_action :signed_in_user, only: [:index, :show, :edit, :update, :destroy]
   before_action :admin?, only: [:index, :edit, :update, :destroy]
+  before_action :classes_all
 
-  # GET /users?type=[1,2,3,4]
+  # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
   def index
-    @users = User.where("type = #{params[:type]}")
+	@users = User.where("type = ? AND (class_id = ? OR class_id IS NULL)", params[:type], params[:class_id])
     #@users = User.joins(:user_types).where("user_types.description = #{params[:type]}")
   end
 
   # GET /users/1
   def show
 	@user = User.find(params[:id])
-	@student_points = @user.student_points.paginate(page: params[:page]) 
+	@grade = ClassSection.where(:id => @user.class_id)
+	@user_grade =  @grade.first.description
   end
 
   # GET /users/new
@@ -51,6 +53,10 @@ class UsersController < ApplicationController
     User.find(params[:id]).destroy
     redirect_to users_url, notice: 'User was successfully destroyed.'
   end
+  
+	def classes_all
+		@class_options = ClassSection.all.map{|class_section| [class_section.description, class_section.id]}
+	end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -77,4 +83,5 @@ class UsersController < ApplicationController
 			redirect_to root_path
 		end
 	end 
+	
 end

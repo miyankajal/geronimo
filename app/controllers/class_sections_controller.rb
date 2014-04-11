@@ -44,7 +44,7 @@ class ClassSectionsController < ApplicationController
     @class_section.destroy
     redirect_to class_sections_url, notice: 'Class section was successfully destroyed.'
   end
-
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_class_section
@@ -55,4 +55,5 @@ class ClassSectionsController < ApplicationController
     def class_section_params
       params.require(:class_section).permit(:description)
     end
+	
 end

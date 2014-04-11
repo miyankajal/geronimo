@@ -46,8 +46,8 @@
     <%= f.number_field :enrollment_id %>
   </div>
   <div class="field">
-    <%= f.label :class_id %><br>
-    <%= f.number_field :class_id %>
+    <%= f.label :class_section %><br>
+    <%= f.select :class_id, @class_options %>
   </div>
   <div class="actions">
     <%= f.submit "Save changes", class: "btn btn-large btn-primary" %>

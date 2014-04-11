@@ -26,6 +26,7 @@ GeronimoSms::Application.routes.draw do
   
   match '/settings' => 'static_pages#settings', via: [:get]
   match '/geronimo_settings' => 'static_pages#geronimo_settings', via: [:get]
+
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

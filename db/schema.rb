@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 20140404010156) do
     t.integer  "user_id"
     t.integer  "point_id"
     t.integer  "point"
-    t.boolean  "id_credit"
+    t.boolean  "is_credit"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -10,10 +10,11 @@ class User < ActiveRecord::Base
 	MAX_FIRST_NAME = MAX_LAST_NAME = 64
 	EMAIL_REGEX = /\A[^@\s]+@([^@.\s]+\.)+[^@.\s]+\z/
 	
-	has_one :class_section
-	has_one :user_type
+	belongs_to :class_section
+	belongs_to :user_type
 	
-	has_many :points, through: :student_points, dependent: :destroy
+	has_many :student_points, dependent: :destroy
+	has_many :points, through: :student_points
 
 	#, :through => :class_sections, :conditions => "type = 3"
 	
