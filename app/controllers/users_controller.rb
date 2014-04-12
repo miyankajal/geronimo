@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
   def index
   	if params[:type] == '3'
-  		@users = User.where("class_id = ?", params[:class_id])
+  		@users = User.where("type = ? AND class_id = ?", params[:type], params[:class_id])
   	else
   		@users = User.where("type = ?", params[:type])
   	end
