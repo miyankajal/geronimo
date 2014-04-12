@@ -1,11 +1,11 @@
-<h1>Listing <%= params[:desc]%></h1>
+<h1>Listing <%= params[:desc]%> </h1>
 
 <ul class="users">
 	<% @users.each do |user| %>
-		<%= render @users, type: params[:type]%>	
+		<%= render user, type: params[:type] %>
 	<% end %>
 </ul>
 
 <br>
 
-<%= link_to 'New User', new_user_path %>
+<%= link_to 'New User', new_user_path(:type => params[:type]) %>

@@ -6,15 +6,22 @@ class UsersController < ApplicationController
 
   # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
   def index
-	@users = User.where("type = ? AND (class_id = ? OR class_id IS NULL)", params[:type], params[:class_id])
+  	if params[:type] == '3'
+  		@users = User.where("class_id = ?", params[:class_id])
+  	else
+  		@users = User.where("type = ?", params[:type])
+  	end
+	#@users = User.where("type = ? AND (class_id = ? OR class_id IS NULL)", params[:type], params[:class_id])
     #@users = User.joins(:user_types).where("user_types.description = #{params[:type]}")
   end
 
   # GET /users/1
   def show
 	@user = User.find(params[:id])
-	@grade = ClassSection.where(:id => @user.class_id)
-	@user_grade =  @grade.first.description
+	if @user.type == 3
+		@grade = ClassSection.where(:id => @user.class_id)
+		@user_grade =  @grade.first.description
+	end
   end
 
   # GET /users/new
