@@ -4,36 +4,38 @@
 </div>
 
 <p id="notice"><%= notice %></p>
-
 <p>
   <strong>Username:</strong>
   <%= @user.username %>
 </p>
 
-<% if @user.type == 3%>
-<p>
-  <strong>Enrollment:</strong>
-  <%= @user.enrollment_id %>
-</p>
+<% if @user.type == 3 %>
+	<p>
+	  <strong>Enrollment:</strong>
+	  <%= @user.enrollment_id %>
+	</p>
 
-<p>
-  <strong>Class:</strong>
-  <%= @user_grade %>
-</p>
+	<p>
+	  <strong>Class:</strong>
+	  <%= @user_grade %>
+	</p>
 
-<div class="span8">
-	<% if @user.student_points.any? %>
-		<h3>Points</h3>
-		<ol class="points">
-			<li>
-				<span class="content"><% point.description %></span>
-				<span class="timestamp">Posted at:<%= time_ago_in_words(point.created_at) %></span>
-			</li>
-		</ol>
-		<%= will_paginate @student_points %>
+	<% if current_user.type != 3%>
+		<div class="span8">
+			<% if @student_points_desc.any? %>	
+				<h3>Points</h3>
+				<ol class="points">
+				<% @student_points_desc.each do |point| %>
+					<%= render point %>
+				<% end %>
+				</ol>
+			<% end %>
+		</div>
 	<% end %>
-</div>
-<%end%>
+	
+	<%= link_to 'Add Points', new_student_point_path(:user_id => @user.id) %>
+	
+<% end %>
 
 <% if current_user.type == 1 %>
 	<%= link_to 'Edit', edit_user_path(@user) %>

@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(version: 20140404010156) do
   create_table "student_points", force: true do |t|
     t.integer  "user_id"
     t.integer  "point_id"
-    t.integer  "point"
+    t.integer  "assigned_points"
     t.boolean  "is_credit"
     t.datetime "created_at"
     t.datetime "updated_at"

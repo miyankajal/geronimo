@@ -14,6 +14,8 @@
 						<% if current_user.type == 1 %>
 							<li><%= link_to "Edit", edit_user_path(current_user) %></li>
 							<li><%= link_to "Settings", settings_path %></li>
+						<% elsif current_user.type == 2 %>
+							<li><%= link_to "Classes", class_sections_path %></li>
 						<% elsif current_user.type == 3 %>
 							<li><%= link_to "Points", "#" %></li>
 						<% end %>

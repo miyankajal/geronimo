@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show]
   before_action :signed_in_user, only: [:index, :show, :edit, :update, :destroy]
-  before_action :admin?, only: [:index, :edit, :update, :destroy]
+  before_action :can_edit_users?, only: [:index, :edit, :update, :destroy]
   before_action :classes_all
 
   # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
@@ -21,6 +21,9 @@ class UsersController < ApplicationController
 	if @user.type == 3
 		@grade = ClassSection.where(:id => @user.class_id)
 		@user_grade =  @grade.first.description
+		#@student_points_desc = StudentPoint.includes(:point).where("user_id = ?", @user.id)
+		
+		@student_points_desc = StudentPoint.select("points.description, student_points.created_at").joins(:point).where("user_id = ?", @user.id)
 	end
   end
 
@@ -61,9 +64,14 @@ class UsersController < ApplicationController
     redirect_to users_url, notice: 'User was successfully destroyed.'
   end
   
-	def classes_all
-		@class_options = ClassSection.all.map{|class_section| [class_section.description, class_section.id]}
-	end
+  def classes_all
+	@class_options = ClassSection.all.map{|class_section| [class_section.description, class_section.id]}
+  end
+  
+  def get_student_points
+	#@student_point_desc = StudentPoint.where("used_id = ?", params[:id])
+	@student_points_desc = StudentPoint.joins(:points).where("user_id = ?", params[:id])
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -85,10 +93,11 @@ class UsersController < ApplicationController
 	end
 	
 	# Only admins are allowed to change a users profile
-	def admin?
-		unless current_user.type == 1 
+	def can_edit_users?
+		unless current_user.type == 1 or current_user.type == 2
 			redirect_to root_path
 		end
 	end 
+
 	
 end
