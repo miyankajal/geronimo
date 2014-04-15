@@ -1,0 +1,10 @@
+<li>
+	<span class="content"><%= point.description %></span>
+	<span class="content">
+		<% if point.credit %>
+			<%= point.value %>
+		<% else %>
+			<%= -point.value %>
+		<% end %>
+	</span>
+</li>

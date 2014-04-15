@@ -20,10 +20,10 @@
 	  <%= @user_grade %>
 	</p>
 
-	<% if current_user.type != 3%>
+	<% if current_user.type != 1 %>
 		<div class="span8">
 			<% if @student_points_desc.any? %>	
-				<h3>Points</h3>
+				<h3>Total Points: <%= @total_points %></h3>
 				<ol class="points">
 				<% @student_points_desc.each do |point| %>
 					<%= render point %>
@@ -33,7 +33,9 @@
 		</div>
 	<% end %>
 	
-	<%= link_to 'Add Points', new_student_point_path(:user_id => @user.id) %>
+	<% if current_user.type == 2 %>
+		<%= link_to 'Add Points', new_student_point_path(:user_id => @user.id) %>
+	<% end %>
 	
 <% end %>
 
