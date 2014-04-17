@@ -15,6 +15,9 @@ class User < ActiveRecord::Base
 	
 	has_many :student_points, dependent: :destroy
 	has_many :points, through: :student_points
+	
+	has_many :teacher_class_relationships, dependent: :destroy
+	has_many :class_sections, through: :teacher_class_relationships
 
 	#, :through => :class_sections, :conditions => "type = 3"
 	

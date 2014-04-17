@@ -16,5 +16,6 @@ UserType.create(:id=>4, :description=>'Guardian')
 
 TeacherRole.delete_all
 
-TeacherRole.create(:id=>1, :description=>'Class Teacher')
-TeacherRole.create(:id=>2, :description=>'Not Class Teacher')
+TeacherRole.create(:id=>1, :description=>'Restricted')
+TeacherRole.create(:id=>2, :description=>'Class Teacher')
+TeacherRole.create(:id=>3, :description=>'Subject Teacher')

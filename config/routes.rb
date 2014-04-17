@@ -1,5 +1,7 @@
 GeronimoSms::Application.routes.draw do
   
+  resources :terms
+
   root 'sessions#new'
   
   match '/about' => 'static_pages#about', via: [:get]
@@ -28,6 +30,8 @@ GeronimoSms::Application.routes.draw do
   match '/geronimo_settings' => 'static_pages#geronimo_settings', via: [:get]
   
   resources :student_points
+  
+  resources :teacher_class_relationships
 
   
   # The priority is based upon order of creation: first created -> highest priority.

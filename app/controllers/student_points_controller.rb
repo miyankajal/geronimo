@@ -1,12 +1,12 @@
 class StudentPointsController < ApplicationController
   before_action :points_all
 	
-  # GET /points/new
+  # GET /student_points/new
   def new
     @student_point = StudentPoint.new
   end
 
-  # POST /points
+  # POST /student_points
   def create
     @student_point = StudentPoint.new(student_point_params)
 

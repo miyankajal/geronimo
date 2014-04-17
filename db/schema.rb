@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140404010156) do
+ActiveRecord::Schema.define(version: 20140415234927) do
 
   create_table "alert_email_queues", force: true do |t|
     t.integer "alert_id"
@@ -58,13 +58,21 @@ ActiveRecord::Schema.define(version: 20140404010156) do
   end
 
   create_table "teacher_class_relationships", force: true do |t|
-    t.integer "teacher_id"
-    t.integer "class_id"
+    t.integer "user_id"
+    t.integer "class_section_id"
     t.integer "teacher_role_id"
   end
 
   create_table "teacher_roles", force: true do |t|
     t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "terms", force: true do |t|
+    t.string   "name"
+    t.datetime "from"
+    t.datetime "to"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

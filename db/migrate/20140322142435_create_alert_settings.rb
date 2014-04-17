@@ -1,5 +1,5 @@
 class CreateAlertSettings < ActiveRecord::Migration
-  def change
+  def self.up
     create_table :alert_settings do |t|
       t.integer :default_points
       t.integer :min_points_required
@@ -9,5 +9,9 @@ class CreateAlertSettings < ActiveRecord::Migration
       t.integer :repetition_of_mistake_before_email
       t.integer :penalty_carried_over
     end
+  end
+  
+  def self.down
+	drop_table alert_settings
   end
 end

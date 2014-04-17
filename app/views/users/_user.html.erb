@@ -1,8 +1,10 @@
 <li>
         <%= link_to user.username, user %>
         <%= user.email %>
-        <%= link_to 'Edit', edit_user_path(user) %>
-        <% unless user.type == 1%>
+        <% if current_user.type == 2 && class_teacher?(current_user.id, user.class_id)%>
+		<%= link_to 'Edit', edit_user_path(user) %>
+        	<% unless user.type == 1%>
 			<%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %>
 		<% end %>
+	<% end %>
 </li>

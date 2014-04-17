@@ -3,7 +3,6 @@ class UsersController < ApplicationController
   before_action :signed_in_user, only: [:index, :show, :edit, :update, :destroy]
   before_action :can_edit_users?, only: [:index, :edit, :update, :destroy]
   before_action :classes_all
-  #before_action :get_create_date
 
   # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
   def index
@@ -19,7 +18,9 @@ class UsersController < ApplicationController
   # GET /users/1
   def show
 	@user = User.find(params[:id])
+	
 	if @user.type == 3
+	
 		@grade = ClassSection.where(:id => @user.class_id)
 		@user_grade =  @grade.first.description
 		@student_points_desc = Point.select("student_points.id, description, value, credit").joins(:student_points).where('student_points.user_id = ?', @user.id).order("student_points.created_at")
@@ -28,6 +29,11 @@ class UsersController < ApplicationController
 		@total_negative_points = Point.joins(:student_points).where('student_points.user_id = ?', @user.id).where(:credit => false).sum('value')
 		
 		@total_points = @total_positive_points - @total_negative_points
+		
+	elsif @user.type == 2
+	
+		@teacher_class = TeacherClassRelationship.select('class_section_id, teacher_role_id, teacher_class_relationships.id, user_id').joins(:class_section).where('user_id = ?', @user.id)
+		
 	end
   end
 
@@ -71,10 +77,7 @@ class UsersController < ApplicationController
   def classes_all
 	@class_options = ClassSection.all.map{|class_section| [class_section.description, class_section.id]}
   end
-    
-  #def get_create_date(point_id)
-  	#@created_at = StudentPoint.select("created_at, id").where("id = ?", point_id)
-  #end
+
   
   def total_points
   	
