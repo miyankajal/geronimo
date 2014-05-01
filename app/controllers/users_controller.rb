@@ -10,10 +10,16 @@ class UsersController < ApplicationController
   		@users = User.where("type = ? AND class_id = ?", params[:type], params[:class_id])
   	else
   		@users = User.where("type = ?", params[:type])
+		
   	end
-	#@users = User.where("type = ? AND (class_id = ? OR class_id IS NULL)", params[:type], params[:class_id])
-    #@users = User.joins(:user_types).where("user_types.description = #{params[:type]}")
+  	
   end
+  
+ # def search
+  #	@search = User.search do
+	#	fulltext params[:query]
+	#end
+  #end
 
   # GET /users/1
   def show
@@ -78,10 +84,6 @@ class UsersController < ApplicationController
 	@class_options = ClassSection.all.map{|class_section| [class_section.description, class_section.id]}
   end
 
-  
-  def total_points
-  	
-  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

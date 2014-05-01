@@ -12,11 +12,22 @@ gem 'faker', '1.0.1'
 gem 'will_paginate', '3.0.3'
 gem 'bootstrap-will_paginate', '0.0.5'
 gem 'gravtastic', '>= 2.1.0'
+#gem "amqp", "~> 1.3.0"
+#gem "eventmachine", "1.0.3"
+gem 'redis'
+
+#Background queue
+gem 'resque', '~> 1.22.0', :require => "resque/server"
+gem "resque-scheduler"
+
+#gem 'sunspot_rails'
+#gem 'sunspot_solr' 
 
 group :development, :test do
   gem 'sqlite3', '1.3.7'
   gem 'rspec-rails', '2.9.0'
   gem 'guard-rspec', '0.5.5'
+  
 end
 
 # Gems used only for assets and not required

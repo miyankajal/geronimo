@@ -1,5 +1,11 @@
 class User < ActiveRecord::Base
 
+	#searchable do
+	#	text :username, :default_boost => 2
+	#	text :email, :first_name, :last_name
+	#	integer :enrollment_id, :class_id
+	#end
+	
 	#attr_accessor :password, :verify_password, :new_password
 	before_save { self.email = email.downcase }
 	before_create :create_remember_token

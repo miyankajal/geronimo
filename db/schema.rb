@@ -71,8 +71,8 @@ ActiveRecord::Schema.define(version: 20140415234927) do
 
   create_table "terms", force: true do |t|
     t.string   "name"
-    t.datetime "from"
-    t.datetime "to"
+    t.datetime "term_from"
+    t.datetime "term_to"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

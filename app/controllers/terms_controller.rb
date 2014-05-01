@@ -1,3 +1,5 @@
+require "studentInitPoints"
+
 class TermsController < ApplicationController
   before_action :set_term, only: [:show, :edit, :update, :destroy]
 
@@ -24,6 +26,9 @@ class TermsController < ApplicationController
     @term = Term.new(term_params)
 
     if @term.save
+	  @prev_term = Term.select('id, term_from, term_to').where('term_from < ?', @term.term_from).order('term_from desc').first
+	  Resque.enqueue_at(@term.term_from, StudentInitPoints, @prev_term)
+	  Resque.remove_delayed(StudentInitPoints, @prev_term)
       redirect_to @term, notice: 'Term was successfully created.'
     else
       render action: 'new'
@@ -44,6 +49,7 @@ class TermsController < ApplicationController
     @term.destroy
     redirect_to terms_url, notice: 'Term was successfully destroyed.'
   end
+  
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -53,6 +59,6 @@ class TermsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def term_params
-      params.require(:term).permit(:name, :from, :to)
+      params.require(:term).permit(:name, :term_from, :term_to)
     end
 end

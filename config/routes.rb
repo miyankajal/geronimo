@@ -1,3 +1,6 @@
+require 'resque/server'
+require 'resque_scheduler'
+ 
 GeronimoSms::Application.routes.draw do
   
   resources :terms
@@ -32,6 +35,13 @@ GeronimoSms::Application.routes.draw do
   resources :student_points
   
   resources :teacher_class_relationships
+  
+  resources :alert_settings
+  
+  
+  mount Resque::Server.new, at: "/resque"
+ 
+  mount Resque::Server, :at => "/resque"
 
   
   # The priority is based upon order of creation: first created -> highest priority.

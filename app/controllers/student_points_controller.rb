@@ -21,6 +21,21 @@ class StudentPointsController < ApplicationController
   	@point_options = Point.all.map{|point| [point.description, point.credit, point.id]}
   end 
   
+  def self.calcInitPoints(prev_term)
+	@setting = AlertSetting.select('penalty_carried_over, default_points').first
+
+	@initialPoints = StudentPoint.select('user_id').group('user_id').where(:is_credit => false).where('created_at >= ?', "2014-04-14 01:51:00").where('created_at <= ?', "2014-04-29 01:51:00").sum('assigned_points')
+	@initialPoints.each do |user_id, points|
+		StudentPoint.create!(:user_id => user_id, :point_id => 100, :is_credit => true, :assigned_points => @setting.default_points)
+	end	
+	
+	@initialPoints = StudentPoint.select('user_id').group('user_id').where(:is_credit => false).where('created_at >= ?', "2014-04-14 01:51:00").where('created_at <= ?', "2014-04-29 01:51:00").sum('assigned_points')
+	
+	@initialPoints.each do |user_id, points|
+		StudentPoint.create!(:user_id => user_id, :point_id => 101, :is_credit => false, :assigned_points => points)
+	end	
+  end
+  
   private
 
     # Only allow a trusted parameter "white list" through.
