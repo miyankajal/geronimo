@@ -19,6 +19,7 @@ gem 'redis'
 #Background queue
 gem 'resque', '~> 1.22.0', :require => "resque/server"
 gem "resque-scheduler"
+gem 'resque_mailer', '~> 2.2.6'
 
 #gem 'sunspot_rails'
 #gem 'sunspot_solr' 

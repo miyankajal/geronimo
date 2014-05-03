@@ -46,7 +46,11 @@ class TermsController < ApplicationController
 
   # DELETE /terms/1
   def destroy
-    @term.destroy
+    
+	# Destroy all the student points related to the term
+	StudentPoint.where("created_at >= ? and created_at < ?", @term.term_from, @term.term_to).delete_all
+	@term.destroy
+	
     redirect_to terms_url, notice: 'Term was successfully destroyed.'
   end
   

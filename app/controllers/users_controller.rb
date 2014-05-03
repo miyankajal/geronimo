@@ -29,10 +29,13 @@ class UsersController < ApplicationController
 	
 		@grade = ClassSection.where(:id => @user.class_id)
 		@user_grade =  @grade.first.description
-		@student_points_desc = Point.select("student_points.id, description, value, credit").joins(:student_points).where('student_points.user_id = ?', @user.id).order("student_points.created_at")
 		
-		@total_positive_points = Point.joins(:student_points).where('student_points.user_id = ?', @user.id).where(:credit => true).sum('value')
-		@total_negative_points = Point.joins(:student_points).where('student_points.user_id = ?', @user.id).where(:credit => false).sum('value')
+		@current_term = Term.select('id, term_from, term_to').where('term_from <= ?', Time.now).order('term_from desc').first
+		
+		@student_points_desc = Point.select("student_points.id, description, value, credit").joins(:student_points).where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @user.id, @current_term.term_from, @current_term.term_to).order("student_points.created_at")
+		
+		@total_positive_points = Point.joins(:student_points).where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @user.id, @current_term.term_from, @current_term.term_to).where(:credit => true).sum('value')
+		@total_negative_points = Point.joins(:student_points).where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @user.id, @current_term.term_from, @current_term.term_to).where(:credit => false).sum('value')
 		
 		@total_points = @total_positive_points - @total_negative_points
 		

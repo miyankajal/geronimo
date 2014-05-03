@@ -9,7 +9,41 @@ class StudentPointsController < ApplicationController
   # POST /student_points
   def create
     @student_point = StudentPoint.new(student_point_params)
+	
+	#gets send_auto_email, min_points_required, min_points_for_penalty, max_warnings_before_email_alert, repetition_of_mistake_before_email
+	@alert_settings = AlertSetting.first
+	
+	if @alert_settings.send_auto_email
+		#calculate total points
+		@current_term = Term.select('id, term_from, term_to').where('term_from <= ?', Time.now).order('term_from desc').first
+		
+		@total_positive_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and is_credit = true', @student_point.user_id, @current_term.term_from, @current_term.term_to).sum('assigned_points')
+		@total_negative_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and is_credit = false', @student_point.user_id, @current_term.term_from, @current_term.term_to).sum('assigned_points')
+		
+		@total_points = @total_positive_points - @total_negative_points
+		
+		# Send Alert for min points required
+		if @total_points <= @alert_settings.min_points_required
+			# Send Alert for min points required
+		end
+			
+		unless @student_point.is_credit?
+			@number_of_repetitions = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and is_credit = false and point_id = ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @student_point.point_id).count
+			if @number_of_repetitions > @alert_settings.repetition_of_mistake_before_email
+				# Send alert for your kids been caught for the same offence again
+			end
+			
+			if @student_point.assigned_points >= @alert_settings.min_points_for_penalty
+				#find the number of serious felanies committed
+				@number_of_serious_offences = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and is_credit = false and assigned_points <= ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @alert_settings.min_points_for_penalty).count
+				if @number_of_serious_offences > @alert_settings.max_warnings_before_email_alert
+					# Send alert your kid has been caught for a big mistake yet again
+				end
+			end
+		end
 
+	end
+	
     if @student_point.save
       redirect_to user_path(:id => @student_point.user_id), notice: 'Point was successfully saved for the student.'
     else
@@ -24,16 +58,12 @@ class StudentPointsController < ApplicationController
   def self.calcInitPoints(prev_term)
 	@setting = AlertSetting.select('penalty_carried_over, default_points').first
 
-	@initialPoints = StudentPoint.select('user_id').group('user_id').where(:is_credit => false).where('created_at >= ?', "2014-04-14 01:51:00").where('created_at <= ?', "2014-04-29 01:51:00").sum('assigned_points')
+	@initialPoints = StudentPoint.select('user_id').group('user_id').where(:is_credit => false).where('created_at >= ?', prev_term['term_from']).where('created_at <= ?', prev_term['term_to']).sum('assigned_points')
 	@initialPoints.each do |user_id, points|
 		StudentPoint.create!(:user_id => user_id, :point_id => 100, :is_credit => true, :assigned_points => @setting.default_points)
-	end	
-	
-	@initialPoints = StudentPoint.select('user_id').group('user_id').where(:is_credit => false).where('created_at >= ?', "2014-04-14 01:51:00").where('created_at <= ?', "2014-04-29 01:51:00").sum('assigned_points')
-	
-	@initialPoints.each do |user_id, points|
-		StudentPoint.create!(:user_id => user_id, :point_id => 101, :is_credit => false, :assigned_points => points)
-	end	
+		StudentPoint.create!(:user_id => user_id, :point_id => 101, :is_credit => false, :assigned_points => ((@setting.penalty_carried_over * points)/100).to_int)
+
+	end		
   end
   
   private
