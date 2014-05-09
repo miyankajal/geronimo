@@ -18,11 +18,12 @@
 
   <div class="field">
  	   <%= f.label :point_id %><br>
- 	   <%= f.select :point_id, @point_options %>
+ 	   <%= f.select :point_id, @point_options, {:include_blank =>'select one'}, :onchange => 'get_point(this.value)', :id => "point"%>
   </div>
+
   <div class="field">
     <%= f.label :assigned_points %><br>
-    <%= f.number_field :assigned_points %>
+    <%= f.number_field(:assigned_points, :id => "assigned_points_value")%>
   </div>
   
   <%= f.hidden_field :user_id, :value => params[:user_id] %> 

@@ -8,6 +8,8 @@ class UsersController < ApplicationController
   def index
   	if params[:type] == '3'
   		@users = User.where("type = ? AND class_id = ?", params[:type], params[:class_id])
+	elsif params[:search]
+        @users = User.where('enrollment_id = ?', params[:search]).order("created_at DESC")
   	else
   		@users = User.where("type = ?", params[:type])
 		
@@ -15,11 +17,12 @@ class UsersController < ApplicationController
   	
   end
   
- # def search
-  #	@search = User.search do
-	#	fulltext params[:query]
-	#end
-  #end
+  def search
+	@search = User.search do
+		fulltext params[:search]
+	end
+	@users_search = @search.results
+  end
 
   # GET /users/1
   def show
@@ -61,6 +64,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+      UserMailer.welcome_email(@user).deliver
       redirect_to @user, notice: 'User was successfully created.'
     else
       render action: 'new'
@@ -86,7 +90,6 @@ class UsersController < ApplicationController
   def classes_all
 	@class_options = ClassSection.all.map{|class_section| [class_section.description, class_section.id]}
   end
-
 
   private
     # Use callbacks to share common setup or constraints between actions.

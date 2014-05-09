@@ -3,7 +3,32 @@ class UserMailer < ActionMailer::Base
  
   def welcome_email(user)
     @user = user
-    @url  = 'http://example.com/login'
-    mail(to: @user.email, subject: 'Welcome to My Awesome Site')
+    @url  = 'http://geronimo.com/login'
+    mail(to: @user.email, subject: 'Welcome to Geronimo!!!')
   end
+  
+  def min_points_email(user)
+    @user = user
+    @url  = 'http://geronimo.com/login'
+    mail(to: @user.email, subject: 'Minimum points')
+  end
+  
+  def repetition_email(user)
+    @user = user
+    @url  = 'http://geronimo.com/login'
+    mail(to: @user.email, subject: 'Repetition')
+  end
+  
+  def session_start_email(user)
+    @user = user
+    @url  = 'http://geronimo.com/login'
+    mail(to: @user.email, subject: 'Session start')
+  end
+  
+  def too_many_email(user)
+    @user = user
+    @url  = 'http://geronimo.com/login'
+    mail(to: @user.email, subject: 'Too many issues')
+  end
+  
 end

@@ -14,30 +14,31 @@ class StudentPointsController < ApplicationController
 	@alert_settings = AlertSetting.first
 	
 	if @alert_settings.send_auto_email
+		@user = User.where('id = ?', @student_point.user_id).first
 		#calculate total points
 		@current_term = Term.select('id, term_from, term_to').where('term_from <= ?', Time.now).order('term_from desc').first
 		
-		@total_positive_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and is_credit = true', @student_point.user_id, @current_term.term_from, @current_term.term_to).sum('assigned_points')
-		@total_negative_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and is_credit = false', @student_point.user_id, @current_term.term_from, @current_term.term_to).sum('assigned_points')
+		@total_positive_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @student_point.user_id, @current_term.term_from, @current_term.term_to).where(:is_credit => true).sum('assigned_points')
+		@total_negative_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @student_point.user_id, @current_term.term_from, @current_term.term_to).where(:is_credit => false).sum('assigned_points')
 		
 		@total_points = @total_positive_points - @total_negative_points
 		
 		# Send Alert for min points required
 		if @total_points <= @alert_settings.min_points_required
-			# Send Alert for min points required
+			UserMailer.min_points_email(@user).deliver
 		end
 			
 		unless @student_point.is_credit?
-			@number_of_repetitions = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and is_credit = false and point_id = ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @student_point.point_id).count
+			@number_of_repetitions = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and point_id = ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @student_point.point_id).where(:is_credit => false).count
 			if @number_of_repetitions > @alert_settings.repetition_of_mistake_before_email
-				# Send alert for your kids been caught for the same offence again
+				UserMailer.repetition_email(@user).deliver
 			end
 			
 			if @student_point.assigned_points >= @alert_settings.min_points_for_penalty
 				#find the number of serious felanies committed
-				@number_of_serious_offences = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and is_credit = false and assigned_points <= ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @alert_settings.min_points_for_penalty).count
+				@number_of_serious_offences = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and assigned_points <= ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @alert_settings.min_points_for_penalty).where(:is_credit => false).count
 				if @number_of_serious_offences > @alert_settings.max_warnings_before_email_alert
-					# Send alert your kid has been caught for a big mistake yet again
+					UserMailer.too_many_email(@user).deliver
 				end
 			end
 		end
@@ -52,7 +53,7 @@ class StudentPointsController < ApplicationController
   end
   
   def points_all
-  	@point_options = Point.all.map{|point| [point.description, point.credit, point.id]}
+  	@point_options = Point.where('id != 100 and id != 101').map{|point| [point.description, point.credit, point.value, point.id]	}
   end 
   
   def self.calcInitPoints(prev_term)
@@ -62,7 +63,8 @@ class StudentPointsController < ApplicationController
 	@initialPoints.each do |user_id, points|
 		StudentPoint.create!(:user_id => user_id, :point_id => 100, :is_credit => true, :assigned_points => @setting.default_points)
 		StudentPoint.create!(:user_id => user_id, :point_id => 101, :is_credit => false, :assigned_points => ((@setting.penalty_carried_over * points)/100).to_int)
-
+		@user = User.where('id = ?', user_id)
+		UserMailer.min_points_email(@user).deliver
 	end		
   end
   

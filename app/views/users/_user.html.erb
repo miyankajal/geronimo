@@ -1,10 +1,19 @@
 <li>
         <%= link_to user.username, user %>
-        <%= user.email %>
+        <%= user.enrollment_id %>
+	<%= user.first_name %>
+	<%= user.last_name %>
+
         <% if (current_user.type == 2 && class_teacher?(current_user.id, user.class_id)) || current_user.type == 1 %>
+		<% unless params[:search].nil? %>
+			<%= link_to 'Add Ward', add_guardian_student_relationship(user.id, guardian_id) %>
+
+		<% else %>
+		
 		<%= link_to 'Edit', edit_user_path(user) %>
         	<% unless user.type == 1%>
 			<%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %>
+		<% end %>
 		<% end %>
 	<% end %>
 </li>

@@ -25,4 +25,11 @@ module UsersHelper
 	TeacherClassRelationship.exists?(:user_id => teacher_id, :class_section_id => class_id)
   end
   
+  def add_guardian_student_relationship(user_id, guardian_id)
+	Guardianship.create!(:user_id => user_id, :guardian_id => guardian_id)
+  end
+  
+  def get_wards(id)
+	@wards = User.joins(:guardianships).where('guardian_id = ?', id)
+  end
 end

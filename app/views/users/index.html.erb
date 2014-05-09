@@ -1,8 +1,8 @@
-<h1>Listing <%= params[:desc]%> </h1>
+<h1>Listing <%= params[:desc] %> </h1>
 
 <ul class="users">
 	<% @users.each do |user| %>
-		<%= render user, type: params[:type] %>
+		<%= render user, type: params[:type], guardian_id: params[:guardian_id], search: params[:search] %>
 	<% end %>
 </ul>
 

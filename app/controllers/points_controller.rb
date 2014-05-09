@@ -8,6 +8,12 @@ class PointsController < ApplicationController
 
   # GET /points/1
   def show
+	@point_val = Point.where('id = ?', params[:id])
+	
+	respond_to do |format|
+      format.html
+      format.json { render json: @point_val }
+    end
   end
 
   # GET /points/new

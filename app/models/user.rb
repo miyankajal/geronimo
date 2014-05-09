@@ -1,10 +1,10 @@
 class User < ActiveRecord::Base
 
-	#searchable do
-	#	text :username, :default_boost => 2
-	#	text :email, :first_name, :last_name
-	#	integer :enrollment_id, :class_id
-	#end
+	searchable do
+		text :username, :default_boost => 2
+		text :email, :first_name, :last_name
+		integer :enrollment_id, :class_id
+	end
 	
 	#attr_accessor :password, :verify_password, :new_password
 	before_save { self.email = email.downcase }
@@ -24,9 +24,13 @@ class User < ActiveRecord::Base
 	
 	has_many :teacher_class_relationships, dependent: :destroy
 	has_many :class_sections, through: :teacher_class_relationships
-
-	#, :through => :class_sections, :conditions => "type = 3"
 	
+	# self referential associations
+	has_many :guardianships
+	has_many :guardians, :through => :guardianships
+	has_many :inverse_guardianships, :class_name => "GuardianShip", :foreign_key => "guardian_id"
+	has_many :inverse_guardians, :through => :inverse_guardianships, :source => :user
+
 	has_secure_password
 	
 	validates_presence_of :username, :email, :password_digest, :first_name, :last_name

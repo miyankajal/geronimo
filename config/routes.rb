@@ -3,6 +3,8 @@ require 'resque_scheduler'
  
 GeronimoSms::Application.routes.draw do
   
+  resources :guardianships
+
   resources :terms
 
   root 'sessions#new'
@@ -32,7 +34,15 @@ GeronimoSms::Application.routes.draw do
   match '/settings' => 'static_pages#settings', via: [:get]
   match '/geronimo_settings' => 'static_pages#geronimo_settings', via: [:get]
   
+ 
+  
   resources :student_points
+  
+  resources :student_points do
+	member do
+		get 'value_of_point', only: [:new]
+	end
+  end
   
   resources :teacher_class_relationships
   

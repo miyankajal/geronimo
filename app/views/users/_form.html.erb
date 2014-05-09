@@ -37,7 +37,12 @@
     <%= f.label :password_confirmation %><br>
     <%= f.password_field :password_confirmation %>
   </div>
- <% if params[:type] == 3 %>
+
+  <% if @user.type.nil? %>
+ 	 <%= f.hidden_field :type, :value => params[:type] %> 
+  <% end %>
+ 
+ <% if params[:type] == "3" %>
 	  <div class="field">
  	   <%= f.label :enrollment_id %><br>
  	   <%= f.number_field :enrollment_id %>
@@ -47,10 +52,7 @@
  	   <%= f.select :class_id, @class_options %>
  	 </div>
   <% end %>
-  
-  <% if @user.type.nil? %>
- 	 <%= f.hidden_field :type, :value => params[:type] %> 
-  <% end %>
+
   
   <div class="actions">
     <%= f.submit "Save changes", class: "btn btn-large btn-primary" %>
