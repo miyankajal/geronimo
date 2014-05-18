@@ -12,7 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require twitter/bootstrap
 //= require bootstrap
 //= require turbolinks
 //= require_tree .
 //= require student_points
+//= require jsapi
+//= require chartkick

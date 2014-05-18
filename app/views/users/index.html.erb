@@ -1,11 +1,24 @@
 <h1>Listing <%= params[:desc] %> </h1>
 
-<ul class="users">
+</br>
+<%= link_to 'New User', new_user_path(:type => params[:type]) %>
+<hr>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <% if params[:type].to_s == "3" %>
+      	<th>Enrollment ID</th>
+      <% end %>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
 	<% @users.each do |user| %>
 		<%= render user, type: params[:type], guardian_id: params[:guardian_id], search: params[:search] %>
 	<% end %>
-</ul>
+  </tbody>
+</table>
 
 <br>
-
-<%= link_to 'New User', new_user_path(:type => params[:type]) %>

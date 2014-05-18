@@ -15,6 +15,11 @@ gem 'gravtastic', '>= 2.1.0'
 #gem "amqp", "~> 1.3.0"
 #gem "eventmachine", "1.0.3"
 gem 'redis'
+gem "chartkick"
+gem "therubyracer"
+gem "less-rails"
+gem "twitter-bootstrap-rails"
+gem 'bootswatch-rails'
 
 #Background queue
 gem 'resque', '~> 1.22.0', :require => "resque/server"

@@ -1,29 +1,48 @@
-<%= form_for(@term) do |f| %>
-  <% if @term.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@term.errors.count, "error") %> prohibited this term from being saved:</h2>
+<div class="row-fuild">
+	<div class="span4 well">
+		<%= form_for @term, :html => {:class => 'form-horizontal'} do |f| %>
+		 <fieldset>
+		  <% if @term.errors.any? %>
+			<div id="error_explanation">
+			  <h2><%= pluralize(@term.errors.count, "error") %> prohibited this term from being saved:</h2>
 
-      <ul>
-      <% @term.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+			  <ul>
+			  <% @term.errors.full_messages.each do |msg| %>
+				<li><%= msg %></li>
+			  <% end %>
+			  </ul>
+			</div>
+		  <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :term_from %><br>
-    <%= f.datetime_select :term_from %>
-  </div>
-  <div class="field">
-    <%= f.label :term_to %><br>
-    <%= f.datetime_select :term_to %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+		 <div class="form-group">
+			<%= f.label :name, :class=>'col-sm-2 control-label' %>
+			<div class="col-xs-4">
+				<%= f.text_field :name, :class=>'form-control' %>
+			</div>
+		  </div>
+		  <div class="form-group">
+			<%= f.label :term_from, :class=>'col-sm-2 control-label' %>
+			<div class="col-xs-4">
+				<%= f.date_select :term_from, :class=>'form-control' %>
+			</div>
+		  </div>
+		  <div class="form-group">
+			<%= f.label :term_to, :class=>'col-sm-2 control-label' %>
+			<div class="col-xs-4">
+				<%= f.date_select :term_to, :class=>'form-control' %>
+			</div>
+		  </div>
+		  
+		  <p>
+			  <div class="form-actions">
+				<div class="col-sm-offset-2 col-sm-10">
+					<%= f.submit "Create Term", class: "btn-small btn-primary" %>
+				</div>
+			  </div>
+			  </p>
+  
+		  </fieldset>
+		<% end %>
+
+	</div>
+</div>

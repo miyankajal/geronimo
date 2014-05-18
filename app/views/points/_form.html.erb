@@ -1,29 +1,49 @@
-<%= form_for(@point) do |f| %>
-  <% if @point.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@point.errors.count, "error") %> prohibited this point from being saved:</h2>
+<div class="row-fuild">
+	<div class="span4 well">
+		<%= form_for @point, :html => {:class => 'form-horizontal'} do |f| %>
+		 <fieldset>
+		  <% if @point.errors.any? %>
+			<div id="error_explanation">
+			  <h2><%= pluralize(@point.errors.count, "error") %> prohibited this point from being saved:</h2>
 
-      <ul>
-      <% @point.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+			  <ul>
+			  <% @point.errors.full_messages.each do |msg| %>
+				<li><%= msg %></li>
+			  <% end %>
+			  </ul>
+			</div>
+		  <% end %>
 
-  <div class="field">
-    <%= f.label :description %><br>
-    <%= f.text_field :description %>
-  </div>
-  <div class="field">
-    <%= f.label :value %><br>
-    <%= f.text_field :value %>
-  </div>
-  <div class="field">
-    <%= f.label :credit %><br>
-    <%= f.check_box :credit %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+		  <div class="form-group">
+			<%= f.label :description, :class=>'col-sm-2 control-label' %>
+			 <div class="col-xs-4">
+				<%= f.text_field :description, :class=>'form-control' %>
+			</div>
+		  </div>
+		  <div class="form-group">
+			<%= f.label :value, :class=>'col-sm-2 control-label'  %>
+			 <div class="col-xs-4">
+				<%= f.number_field :value, :class=>'form-control' %>
+			</div>
+		  </div>
+		  <div class="form-group">
+			<%= f.label :credit, :class=>'col-sm-2 control-label'  %>
+			 <div class="col-xs-4">
+				<%= f.check_box :credit, :class=>'form-control' %>
+			</div>
+		  </div>
+  
+		  <p>
+		  <div class="form-actions">
+			<div class="col-sm-offset-2 col-sm-10">
+				<%= f.submit "Create Point", class: "btn-small btn-primary" %>
+			</div>
+		  </div>
+		  </p>
+  
+		  </fieldset>
+		<% end %>
+
+	</div>
+</div>
+

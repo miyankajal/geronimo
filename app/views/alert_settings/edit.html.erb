@@ -1,50 +1,79 @@
 <h1>Alert Settings</h1>
 
-<% if current_user.type == 1 %>
- <%= form_for(@alert_setting) do |f| %>
-  <% if @alert_setting.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@alert_setting.errors.count, "error") %> prohibited this alert_setting from being saved:</h2>
+<div class="row-fuild">
+	<div class="span4 well">
 
-      <ul>
-      <% @alert_setting.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+		<% if current_user.type == 1 %>
+			 <%= form_for @alert_setting, :html => {:class => 'form-horizontal'} do |f| %>
+				  <fieldset>
 
-  <div class="field">
-    <%= f.label :default_points %><br>
-    <%= f.number_field :default_points %>
-  </div>
-   <div class="field">
-    <%= f.label :min_points_required %><br>
-    <%= f.number_field :min_points_required %>
-  </div>
-   <div class="field">
-    <%= f.label :send_auto_email %><br>
-    <%= f.check_box :send_auto_email %>
-  </div>
-   <div class="field">
-    <%= f.label :max_warnings_before_email_alert %><br>
-    <%= f.number_field :max_warnings_before_email_alert %>
-  </div>
-   <div class="field">
-    <%= f.label :min_points_for_penalty %><br>
-    <%= f.number_field :min_points_for_penalty %>
-  </div>
-   <div class="field">
-    <%= f.label :repetition_of_mistake_before_email %><br>
-    <%= f.number_field :repetition_of_mistake_before_email %>
-  </div>
-   <div class="field">
-    <%= f.label :penalty_carried_over %><br>
-    <%= f.number_field :penalty_carried_over %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
- <% end %>
-<% end %>
+					  <% if @alert_setting.errors.any? %>
+						<div class="alert alert-dismissable alert-danger">
+				  			<h4><%= pluralize(@alert_setting.errors.count, "error") %> prohibited this alert_setting from being saved:</h4>
+				  			 <button type="button" class="close" data-dismiss="alert">x</button>
+						  
+							  <ul>
+							  <% @alert_setting.errors.full_messages.each do |msg| %>
+								<li><%= msg %></li>
+							  <% end %>
+							  </ul>
+						</div>
+					  <% end %>
+
+					  <div class="form-group">
+						<%= f.label :default_points, :class=>'col-sm-2 control-label' %>
+						<div class="col-xs-4">
+							<%= f.number_field :default_points, :class=>'form-control' %>
+						</div>
+					  </div>
+					   <div class="form-group">
+						<%= f.label :min_points_required, :class=>'col-sm-2 control-label' %>
+						<div class="col-xs-4">
+							<%= f.number_field :min_points_required, :class=>'form-control' %>
+						</div>
+					  </div>
+					   <div class="form-group">
+						<%= f.label :send_auto_email, :class=>'col-sm-2 control-label' %>
+						<div class="col-xs-4">
+							<%= f.check_box :send_auto_email, :class=>'form-control' %>
+						</div>
+					  </div>
+					   <div class="form-group">
+						<%= f.label :max_warnings_before_email_alert, :class=>'col-sm-2 control-label' %>
+						<div class="col-xs-4">
+							<%= f.number_field :max_warnings_before_email_alert, :class=>'form-control' %>
+						</div>
+					  </div>
+					   <div class="form-group">
+						<%= f.label :min_points_for_penalty, :class=>'col-sm-2 control-label' %>
+						<div class="col-xs-4">
+							<%= f.number_field :min_points_for_penalty, :class=>'form-control' %>
+						</div>
+					  </div>
+					   <div class="form-group">
+						<%= f.label :repetition_of_mistake_before_email, :class=>'col-sm-2 control-label' %>
+						<div class="col-xs-4">
+							<%= f.number_field :repetition_of_mistake_before_email, :class=>'form-control' %>
+						</div>
+					  </div>
+					   <div class="form-group">
+						<%= f.label :penalty_carried_over, :class=>'col-sm-2 control-label' %>
+						<div class="col-xs-4">
+							<%= f.number_field :penalty_carried_over, :class=>'form-control' %>
+						</div>
+					  </div>
+  
+			  		<p>
+					  <div class="form-actions">
+						<div class="col-sm-offset-2 col-sm-10">
+							<%= f.submit "Save Changes", class: "btn-small btn-primary" %>
+						</div>
+					  </div>
+					</p>
+  
+				  </fieldset>
+			<% end %>
+		<% end %>
+	</div>
+</div>
 

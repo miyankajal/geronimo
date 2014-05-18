@@ -1,0 +1,46 @@
+<%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
+
+<% @current_term = Term.select('id, term_from, term_to').where('term_from <= ?', Time.now).order('term_from desc').first %>
+<% pie = Hash.new %>
+
+<% @a = Point.select('id').joins(:student_points).where('student_points.created_at >= ? and student_points.created_at < ?', @current_term.term_from, @current_term.term_to).group("point_id").count %>
+
+<% @a.each do |k,v| %>
+	<% @point = Point.select('description').where('id = ?', k).first %>
+	<% pie[@point.description] = v %>
+<% end %>
+
+<%= pie_chart pie %>
+
+<% pie = Hash.new %>
+
+<% @a = Point.select('id').joins(:student_points).where('student_points.created_at >= ? and student_points.created_at < ?', @current_term.term_from, @current_term.term_to).where(:credit => false).group("point_id").count %>
+
+<% @a.each do |k,v| %>
+	<% @point = Point.select('description').where('id = ?', k).first %>
+	<% pie[@point.description] = v %>
+<% end %>
+
+<%= pie_chart pie %>
+
+<% pie = Hash.new %>
+
+<% @a = Point.select('id').joins(:student_points).where('student_points.created_at >= ? and student_points.created_at < ?', @current_term.term_from, @current_term.term_to).where(:credit => true).group("point_id").count %>
+
+<% @a.each do |k,v| %>
+	<% @point = Point.select('description').where('id = ?', k).first %>
+	<% pie[@point.description] = v %>
+<% end %>
+
+<%= pie_chart pie %>
+
+<% pie = Hash.new %>
+
+<% @a = StudentPoint.joins(:user).where(:is_credit => false).group("class_id").count %>
+
+<% @a.each do |k,v| %>
+	<% @class = ClassSection.select('description').where('id = ?', k).first %>
+	<% pie[@class.description] = v %>
+<% end %>
+
+<%= pie_chart pie %>

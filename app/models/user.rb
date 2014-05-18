@@ -1,11 +1,5 @@
 class User < ActiveRecord::Base
 
-	searchable do
-		text :username, :default_boost => 2
-		text :email, :first_name, :last_name
-		integer :enrollment_id, :class_id
-	end
-	
 	#attr_accessor :password, :verify_password, :new_password
 	before_save { self.email = email.downcase }
 	before_create :create_remember_token
@@ -34,7 +28,8 @@ class User < ActiveRecord::Base
 	has_secure_password
 	
 	validates_presence_of :username, :email, :password_digest, :first_name, :last_name
-	#validates_presence_of :class_id, :if => (:type == 3) #should have a class_id and enrollment_id only if the user is a student 
+	validates_presence_of :class_id, :if => :is_student? #should have a class_id and enrollment_id only if the user is a student 
+	validates_presence_of :enrollment_id, :if => :is_student?
 	
 	validates_format_of :email, 
 						:with => EMAIL_REGEX, 
@@ -43,13 +38,13 @@ class User < ActiveRecord::Base
 					
 	
 	validates_length_of :email, :within => 4..MAX_EMAIL
-	#validates_length_of :password, :within => 4..MAX_PASSWORD
+	validates_length_of :password, :within => 4..MAX_PASSWORD
 	validates_length_of :username, :maximum => MAX_USERNAME
 	validates_length_of :first_name, :maximum => MAX_FIRST_NAME
 	validates_length_of :last_name, :maximum => MAX_LAST_NAME
 	
 	validates_uniqueness_of :email, :case_sensitive => false
-	#validates_uniqueness_of :enrollment_id 
+	validates_uniqueness_of :enrollment_id, :if => :is_student?
 	
 	validates_confirmation_of :password,
 							  if: lambda { |m| m.password.present? }
@@ -67,6 +62,10 @@ class User < ActiveRecord::Base
 	private
 		def create_remember_token
 			self.remember_token = User.hash(User.new_remember_token)
+		end
+		
+		def is_student?
+			:type == 3
 		end
 
 end

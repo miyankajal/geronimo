@@ -1,11 +1,13 @@
 <h1>Listing points</h1>
-
-<table>
+</br>
+<%= link_to 'New Point', new_point_path %>
+<hr>
+<table class="table table-striped table-hover">
   <thead>
     <tr>
       <th>Description</th>
+	<th>Credit</th>
       <th>Value</th>
-      <th>Credit</th>
     </tr>
   </thead>
 
@@ -13,8 +15,8 @@
     <% @points.each do |point| %>
       <tr>
         <td><%= point.description %></td>
+	<td><%= point.credit %></td>
         <td><%= point.value %></td>
-        <td><%= point.credit %></td>
 
         <td><%= link_to 'Edit', edit_point_path(point) %></td>
         <td><%= link_to 'Destroy', point, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -24,5 +26,3 @@
 </table>
 
 <br>
-
-<%= link_to 'New Point', new_point_path %>

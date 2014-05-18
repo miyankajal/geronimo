@@ -1,19 +1,21 @@
-<li>
-        <%= link_to user.username, user %>
-        <%= user.enrollment_id %>
-	<%= user.first_name %>
-	<%= user.last_name %>
-
-        <% if (current_user.type == 2 && class_teacher?(current_user.id, user.class_id)) || current_user.type == 1 %>
+<tr>
+	<% if user.type == 3 %>
+		<td><%= user.enrollment_id %></td>
+	<% end %>
+	
+	<td><%= link_to user.username, user %></td>
+	<td><%= user.first_name %> <%= user.last_name %></td>
+	<td>
+	<% if (current_user.type == 2 && class_teacher?(current_user.id, user.class_id)) || current_user.type == 1 %>
 		<% unless params[:search].nil? %>
 			<%= link_to 'Add Ward', add_guardian_student_relationship(user.id, guardian_id) %>
 
 		<% else %>
-		
-		<%= link_to 'Edit', edit_user_path(user) %>
-        	<% unless user.type == 1%>
-			<%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %>
+			<% unless user.type == 1%>
+				<%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure you want to delete this user?' } %>
+			<% end %>
 		<% end %>
-		<% end %>
+	
 	<% end %>
-</li>
+	</td>	
+</tr>

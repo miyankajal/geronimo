@@ -1,16 +1,43 @@
 <h1>Sign in</h1>
 
-<div class="row">
-	<div class="span6 offset3">
-		<%= form_for(:session, url: sessions_path) do |f| %>
-			<%= f.label :email %>
-			<%= f.text_field :email %>
+<div class="row-fuild">
+	<div class="span4 well">
+		<%= form_for(:session, url: sessions_path, :html => {:class => 'form-horizontal'}) do |f| %>
+		<fieldset>
+			<% flash.each do |key, msg| %>
+				<div class="alert alert-dismissable alert-danger">
+				  <button type="button" class="close" data-dismiss="alert">×</button>
+				  <p><%= msg %></p>
+				</div>
+			<% end %>
 			
-			<%= f.label :password %>
-			<%= f.text_field :password %>
+			<div class="form-group">
+				<%= f.label :email, :class=>'col-sm-2 control-label' %>
+				<div class="col-xs-4">
+					<%= f.text_field :email, :class=>'form-control'%>
+				</div>
+			</div>
 			
-			<%= f.submit "Sign in", class: "btn btn-large btn-primary" %>
-			<p><a href = "">Forgot Password?</a></p>
+			<div class="form-group">
+				<%= f.label :password, :class=>'col-sm-2 control-label' %>
+				<div class="col-xs-4">
+					<%= f.password_field :password, :class=>'form-control'%>
+				</div>
+			</div>
+			
+			<div class="form-actions">
+				<div class="col-sm-offset-2 col-sm-10">
+					<%= f.submit "Sign in", class: "btn btn-primary" %>
+				</div>	
+			</div>
+			
+			<br><br><br>
+
+			<div class="col-sm-offset-2 col-sm-10">
+				<a href = "">Forgot Password?</a>
+			</div>	
+
+		<fieldset>
 		<% end %>
 	</div>
 </div>
