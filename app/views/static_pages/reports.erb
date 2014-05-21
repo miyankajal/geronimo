@@ -1,5 +1,10 @@
 <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 
+</br>
+<div class="alert alert-dismissable alert-success">
+	Percentage of points students were awarded/penalized during the current term for each defined activity  
+</div>
+
 <% @current_term = Term.select('id, term_from, term_to').where('term_from <= ?', Time.now).order('term_from desc').first %>
 <% pie = Hash.new %>
 
@@ -9,8 +14,14 @@
 	<% @point = Point.select('description').where('id = ?', k).first %>
 	<% pie[@point.description] = v %>
 <% end %>
+<div class="span4 well">
+	<%= pie_chart pie %>
+</div>
 
-<%= pie_chart pie %>
+</br>
+<div class="alert alert-dismissable alert-success">
+	Percentage of points students were penalized during the current term for each defined unfavourable behavior  
+</div>
 
 <% pie = Hash.new %>
 
@@ -21,7 +32,14 @@
 	<% pie[@point.description] = v %>
 <% end %>
 
-<%= pie_chart pie %>
+<div class="span4 well">
+	<%= pie_chart pie %>
+</div>
+
+</br>
+<div class="alert alert-dismissable alert-success">
+	Percentage of points students were awarded during the current term for each defined good behavior  
+</div>
 
 <% pie = Hash.new %>
 
@@ -32,15 +50,24 @@
 	<% pie[@point.description] = v %>
 <% end %>
 
-<%= pie_chart pie %>
+<div class="span4 well">
+	<%= pie_chart pie %>
+</div>
+
+</br>
+<div class="alert alert-dismissable alert-success">
+	Percentage of points awarded/penalized per class during the current term for each defined unfavourable behavior   
+</div>
 
 <% pie = Hash.new %>
 
-<% @a = StudentPoint.joins(:user).where(:is_credit => false).group("class_id").count %>
+<% @a = StudentPoint.joins(:user).where('student_points.created_at >= ? and student_points.created_at < ?', @current_term.term_from, @current_term.term_to).where(:is_credit => false).group("class_id").count %>
 
 <% @a.each do |k,v| %>
 	<% @class = ClassSection.select('description').where('id = ?', k).first %>
 	<% pie[@class.description] = v %>
 <% end %>
 
-<%= pie_chart pie %>
+<div class="span4 well">
+	<%= pie_chart pie %>
+</div>

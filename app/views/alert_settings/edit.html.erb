@@ -1,5 +1,6 @@
 <h1>Alert Settings</h1>
 
+
 <div class="row-fuild">
 	<div class="span4 well">
 
@@ -19,47 +20,81 @@
 							  </ul>
 						</div>
 					  <% end %>
-
+						
+					  <div class="alert alert-dismissable alert-success">
+						Default points, are the points awarded to every student in the beginning of each term.
+					  </div>
+					  
 					  <div class="form-group">
 						<%= f.label :default_points, :class=>'col-sm-2 control-label' %>
 						<div class="col-xs-4">
 							<%= f.number_field :default_points, :class=>'form-control' %>
 						</div>
 					  </div>
+					  
+					  <div class="alert alert-dismissable alert-success">
+						Penalty carried over, is the percentage of points deducted from the Default Points in the beginning of each term.
+					  </div>
+					  
+					   <div class="form-group">
+						<%= f.label :penalty_carried_over, :class=>'col-sm-2 control-label' %>
+						<div class="col-xs-4">
+							<%= f.number_field :penalty_carried_over, :class=>'form-control' %>
+						</div>
+					  </div>
+					  
+					  <div class="alert alert-dismissable alert-success">
+						Send auto email should be checked if the admin would like automatic emails to be sent to the parents of the student.
+					  </div>
+					  
+					  <div class="form-group">
+						<%= f.label :send_auto_email, :class=>'col-sm-2 control-label' %>
+						<div class="col-xs-4">
+							<%= f.check_box :send_auto_email, :class=>'form-control' %>
+						</div>
+					  </div>
+					  
+					  <div class="alert alert-dismissable alert-success">
+						Min Points Required, is the minimum points required by the end of each term before a student's guardians are sent an official letter of warning.
+					  </div>
+					  
 					   <div class="form-group">
 						<%= f.label :min_points_required, :class=>'col-sm-2 control-label' %>
 						<div class="col-xs-4">
 							<%= f.number_field :min_points_required, :class=>'form-control' %>
 						</div>
 					  </div>
-					   <div class="form-group">
-						<%= f.label :send_auto_email, :class=>'col-sm-2 control-label' %>
-						<div class="col-xs-4">
-							<%= f.check_box :send_auto_email, :class=>'form-control' %>
-						</div>
+					  
+					  <div class="alert alert-dismissable alert-success">
+						Max warnings before email alert, are the max number of warnings the student gets before an email alert is sent to the guardians.
 					  </div>
+					  
 					   <div class="form-group">
 						<%= f.label :max_warnings_before_email_alert, :class=>'col-sm-2 control-label' %>
 						<div class="col-xs-4">
 							<%= f.number_field :max_warnings_before_email_alert, :class=>'form-control' %>
 						</div>
 					  </div>
+					  
+					   <div class="alert alert-dismissable alert-success">
+						Min points for penalty, are the minimum points that are considered for a penalty to be a serious offence. Any negative points, below this will not have automatic emails sent to the guardians.
+					  </div>
+					  
 					   <div class="form-group">
 						<%= f.label :min_points_for_penalty, :class=>'col-sm-2 control-label' %>
 						<div class="col-xs-4">
 							<%= f.number_field :min_points_for_penalty, :class=>'form-control' %>
 						</div>
 					  </div>
+					  
+					  <div class="alert alert-dismissable alert-success">
+						Repetition of mistake before email, the number of times a penalty with 'Min Points Penalty' have to be repeated before an email is sent to the guardians.
+					  </div>
+					  
 					   <div class="form-group">
 						<%= f.label :repetition_of_mistake_before_email, :class=>'col-sm-2 control-label' %>
 						<div class="col-xs-4">
 							<%= f.number_field :repetition_of_mistake_before_email, :class=>'form-control' %>
-						</div>
-					  </div>
-					   <div class="form-group">
-						<%= f.label :penalty_carried_over, :class=>'col-sm-2 control-label' %>
-						<div class="col-xs-4">
-							<%= f.number_field :penalty_carried_over, :class=>'form-control' %>
 						</div>
 					  </div>
   

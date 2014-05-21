@@ -1,25 +1,26 @@
 <h2>Points</h2>
 
 <hr>
-<div class="col-md-9">
 
+<div class="row-fuild">
+	<div class="span4 well">
 
-<p>
-  <strong>Description:</strong>
-  <%= @point.description %>
-</p>
+	<p>
+	  <strong>Description:</strong>
+	  <%= @point.description %>
+	</p>
 
-<p id="value">
-  <strong>Value:</strong>
-  <%= @point.value %>
-</p>
+	<p id="value">
+	  <strong>Value:</strong>
+	  <% if @point.credit %>
+	  	<%= @point.value %>
+	  <% else %>
+		<%= @point.value * -1 %>
+	  <% end %>
+	</p>
 
-<p>
-  <strong>Credit:</strong>
-  <%= @point.credit %>
-</p>
+	<%= link_to 'Edit', edit_point_path(@point) %> |
+	<%= link_to 'Back', points_path %>
 
-<%= link_to 'Edit', edit_point_path(@point) %> |
-<%= link_to 'Back', points_path %>
-
+	</div>
 </div>

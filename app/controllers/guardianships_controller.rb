@@ -41,8 +41,9 @@ class GuardianshipsController < ApplicationController
 
   # DELETE /guardianships/1
   def destroy
+	@guardianship = Guardianship.find(params[:id])
     @guardianship.destroy
-    redirect_to guardianships_url, notice: 'Guardianship was successfully destroyed.'
+	redirect_to @guardianship, notice: 'Guardianship was successfully destroyed.'
   end
 
   private

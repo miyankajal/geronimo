@@ -32,4 +32,13 @@ module UsersHelper
   def get_wards(id)
 	@wards = User.joins(:guardianships).where('guardian_id = ?', id)
   end
+  
+  def get_user_type(id)
+	@user = User.select('type').where('id = ?', id).first
+  end
+  
+  def destroy_guardian_student_relationship(user_id, guardian_id)
+	@guardianship = Guardianship.select('id').where(['user_id = ? AND guardian_id = ?', user_id, guardian_id]).first
+	#Guardianship.destroy(@guardianship)
+  end
 end
