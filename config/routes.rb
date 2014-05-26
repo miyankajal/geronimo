@@ -3,9 +3,12 @@ require 'resque_scheduler'
  
 GeronimoSms::Application.routes.draw do
   
+  get "password_resets/new"
   resources :guardianships
 
   resources :terms
+  
+  resources :password_resets
 
   root 'sessions#new'
   

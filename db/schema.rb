@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140504215224) do
+ActiveRecord::Schema.define(version: 20140526030249) do
 
   create_table "alert_email_queues", force: true do |t|
     t.integer "alert_id"
@@ -111,6 +111,8 @@ ActiveRecord::Schema.define(version: 20140504215224) do
     t.integer  "class_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "password_reset_token"
+    t.datetime "password_reset_sent_at"
   end
 
   add_index "users", ["email"], name: "index_users_email", unique: true

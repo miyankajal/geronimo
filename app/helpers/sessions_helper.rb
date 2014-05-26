@@ -1,8 +1,12 @@
 module SessionsHelper
 	
-	def sign_in(user)
+	def sign_in(user, remember_me)
 		remember_token = User.new_remember_token
-		cookies.permanent[:remember_token] = remember_token
+		if remember_me
+			cookies.permanent[:remember_token] = remember_token
+		else
+			cookies[:remember_token] = remember_token
+		end
 		user.update_attribute(:remember_token, User.hash(remember_token))
 		self.current_user = user
 	end
@@ -37,6 +41,10 @@ module SessionsHelper
 		current_user.update_attribute(:remember_token, User.hash(User.new_remember_token))
 		cookies.delete(:remember_token)
 		self.current_user = nil
+	end
+	
+	def forgot_password
+		
 	end
 	
 end

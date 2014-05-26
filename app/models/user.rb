@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
 
 	#attr_accessor :password, :verify_password, :new_password
 	before_save { self.email = email.downcase }
-	before_create :create_remember_token
+	before_create :create_remember_token, :generate_token
 	
 	MAX_EMAIL = 64
 	MAX_PASSWORD = 64
@@ -38,7 +38,6 @@ class User < ActiveRecord::Base
 					
 	
 	validates_length_of :email, :within => 4..MAX_EMAIL
-	validates_length_of :password, :within => 4..MAX_PASSWORD
 	validates_length_of :username, :maximum => MAX_USERNAME
 	validates_length_of :first_name, :maximum => MAX_FIRST_NAME
 	validates_length_of :last_name, :maximum => MAX_LAST_NAME
@@ -59,6 +58,19 @@ class User < ActiveRecord::Base
 		Digest::SHA1.hexdigest(token.to_s)
 	end
 	
+	def	send_password_reset
+		generate_token(:password_reset_token)
+		self.password_reset_sent_at = Time.zone.now
+		save!
+		UserMailer.password_reset_email(self).deliver
+	end
+	
+	def generate_token(column)
+		begin 
+			self[column] = SecureRandom.urlsafe_base64(20, false)
+		end while User.exists?(column => self[column])
+	end
+		
 	private
 		def create_remember_token
 			self.remember_token = User.hash(User.new_remember_token)
@@ -67,5 +79,6 @@ class User < ActiveRecord::Base
 		def is_student?
 			:type == 3
 		end
+
 
 end

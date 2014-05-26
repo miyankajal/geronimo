@@ -31,4 +31,10 @@ class UserMailer < ActionMailer::Base
     mail(to: @user.email, subject: 'Too many issues')
   end
   
+  def password_reset_email(user)
+	@user = user
+	@url  = 'http://geronimo.com/login'
+	mail(to: @user.email, subject: 'Password Reset')
+  end
+  
 end
