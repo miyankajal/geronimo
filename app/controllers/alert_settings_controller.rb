@@ -8,6 +8,7 @@ class AlertSettingsController < ApplicationController
   # PATCH/PUT /alert_settings/1
   def update
 	@alert_setting = AlertSetting.first
+	
     if @alert_setting.update(alert_setting_params)
       redirect_to edit_alert_setting_path(), notice: 'Alert settings were successfully updated.'
     else

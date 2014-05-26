@@ -23,15 +23,38 @@ class StudentPointsController < ApplicationController
 		
 		@total_points = @total_positive_points - @total_negative_points
 		
+		@guardians = Guardianship.joins(:user).select('guardian_id').where('user_id = ?', @user.id)
+		@teachers = TeacherClassRelationship.joins('INNER JOIN users ON teacher_class_relationships.class_section_id = users.class_id AND users.class_id = ?', @user.class_id)
+
 		# Send Alert for min points required
 		if @total_points <= @alert_settings.min_points_required
 			UserMailer.min_points_email(@user).deliver
+			
+			@guardians.each do |guardian_id|
+				@email = User.select('email').where('id = ?', guardian_id).first
+				UserMailer.min_points_email(@email).deliver
+			end
+			
+			@teachers.each do |teacher_id|
+				@email = User.select('email').where('id = ?', teacher_id).first
+				UserMailer.min_points_email(@email).deliver
+			end
 		end
 			
 		unless @student_point.is_credit?
 			@number_of_repetitions = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and point_id = ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @student_point.point_id).where(:is_credit => false).count
 			if @number_of_repetitions > @alert_settings.repetition_of_mistake_before_email
 				UserMailer.repetition_email(@user).deliver
+				
+				@guardians.each do |guardian_id|
+					@email = User.select('email').where('id = ?', guardian_id).first
+					UserMailer.repetition_email(@email).deliver
+				end
+				
+				@teachers.each do |teacher_id|
+					@email = User.select('email').where('id = ?', teacher_id).first
+					UserMailer.repetition_email(@email).deliver
+				end
 			end
 			
 			if @student_point.assigned_points >= @alert_settings.min_points_for_penalty
@@ -39,6 +62,16 @@ class StudentPointsController < ApplicationController
 				@number_of_serious_offences = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and assigned_points <= ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @alert_settings.min_points_for_penalty).where(:is_credit => false).count
 				if @number_of_serious_offences > @alert_settings.max_warnings_before_email_alert
 					UserMailer.too_many_email(@user).deliver
+					
+					@guardians.each do |guardian_id|
+						@email = User.select('email').where('id = ?', guardian_id).first
+						UserMailer.too_many_email(@email).deliver
+					end
+					
+					@teachers.each do |teacher_id|
+						@email = User.select('email').where('id = ?', teacher_id).first
+						UserMailer.too_many_email(@email).deliver
+					end
 				end
 			end
 		end
@@ -64,7 +97,6 @@ class StudentPointsController < ApplicationController
 		StudentPoint.create!(:user_id => user_id, :point_id => 100, :is_credit => true, :assigned_points => @setting.default_points)
 		StudentPoint.create!(:user_id => user_id, :point_id => 101, :is_credit => false, :assigned_points => ((@setting.penalty_carried_over * points)/100).to_int)
 		@user = User.where('id = ?', user_id)
-		UserMailer.min_points_email(@user).deliver
 	end		
   end
   

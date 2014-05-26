@@ -22,7 +22,8 @@
 					  <% end %>
 						
 					  <div class="alert alert-dismissable alert-success">
-						Default points, are the points awarded to every student in the beginning of each term.
+						Default points, are the points awarded to every student in the beginning of each term. 
+						If the setting is changed in the middle of the term the changes will take effect only the next term.
 					  </div>
 					  
 					  <div class="form-group">
@@ -34,6 +35,7 @@
 					  
 					  <div class="alert alert-dismissable alert-success">
 						Penalty carried over, is the percentage of points deducted from the Default Points in the beginning of each term.
+						If the setting is changed in the middle of the term the changes will take effect only the next term.
 					  </div>
 					  
 					   <div class="form-group">
@@ -50,7 +52,7 @@
 					  <div class="form-group">
 						<%= f.label :send_auto_email, :class=>'col-sm-2 control-label' %>
 						<div class="col-xs-4">
-							<%= f.check_box :send_auto_email, :class=>'form-control' %>
+							<%= f.check_box :send_auto_email %>
 						</div>
 					  </div>
 					  

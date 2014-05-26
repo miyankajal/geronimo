@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
 
 	#attr_accessor :password, :verify_password, :new_password
 	before_save { self.email = email.downcase }
-	before_create :create_remember_token, :generate_token
+	before_create :create_remember_token
 	
 	MAX_EMAIL = 64
 	MAX_PASSWORD = 64
