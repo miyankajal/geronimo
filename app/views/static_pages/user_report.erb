@@ -1,0 +1,21 @@
+<%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
+
+</br>
+<div class="alert alert-dismissable alert-success">
+	Points scored by the student every school term
+</div>
+
+<% data = Array.new %>
+<% @terms = Term.all.select('name, term_from, term_to') %>
+
+<% @terms.each do |term| %>
+	<% @a = StudentPoint.where('student_points.created_at >= ? AND student_points.created_at < ? AND user_id = ?', term.term_from, term.term_to, params[:user_id]).sum(:assigned_points) %>
+	<% arr = Array.new %>
+	<% arr.push(term.name) %>
+	<% arr.push(@a) %>
+	<% data.push(arr) %>
+<% end %>
+
+<div class="span4 well">
+	<%= column_chart data %>
+</div>

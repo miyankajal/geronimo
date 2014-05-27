@@ -16,6 +16,7 @@ GeronimoSms::Application.routes.draw do
   match '/all_users' => 'static_pages#all_users', via: [:get]
   match '/settings' => 'static_pages#settings', via: [:get]
   match '/reports' => 'static_pages#reports', via: [:get]
+  match '/user_report' => 'static_pages#user_report', via: [:get]
   
   match '/signout' => 'sessions#destroy', via: [:delete]
 

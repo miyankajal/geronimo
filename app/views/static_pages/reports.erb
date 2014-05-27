@@ -2,6 +2,26 @@
 
 </br>
 <div class="alert alert-dismissable alert-success">
+	Points scored by all the students every school term
+</div>
+
+<% data = Array.new %>
+<% @terms = Term.all.select('name, term_from, term_to') %>
+
+<% @terms.each do |term| %>
+	<% @a = StudentPoint.where('student_points.created_at >= ? and student_points.created_at < ?', term.term_from, term.term_to).sum(:assigned_points) %>
+	<% arr = Array.new %>
+	<% arr.push(term.name) %>
+	<% arr.push(@a) %>
+	<% data.push(arr) %>
+<% end %>
+
+<div class="span4 well">
+	<%= column_chart data %>
+</div>
+
+</br>
+<div class="alert alert-dismissable alert-success">
 	Percentage of points students were awarded/penalized during the current term for each defined activity  
 </div>
 

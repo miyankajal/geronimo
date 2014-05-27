@@ -55,6 +55,9 @@
 				<%= link_to 'Add Points', new_student_point_path(:user_id => @user.id) %>
 			<% end %>
 		</p>
+		<p>	
+			<%= link_to 'Generate Report', user_report_path(:user_id => @user.id) %>
+		</p>
 	<% end %>
 	
 	<p>
