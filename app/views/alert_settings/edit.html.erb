@@ -1,8 +1,8 @@
 <h1>Alert Settings</h1>
 
-
-<div class="row-fuild">
-	<div class="span4 well">
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
 
 		<% if current_user.type == 1 %>
 			 <%= form_for @alert_setting, :html => {:class => 'form-horizontal'} do |f| %>
@@ -112,5 +112,6 @@
 			<% end %>
 		<% end %>
 	</div>
+    </div>
 </div>
 
