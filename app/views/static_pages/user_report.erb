@@ -1,8 +1,15 @@
+
 <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 
 </br>
-<div class="alert alert-dismissable alert-success">
-	Points scored by the student every school term
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<div class="alert alert-dismissable alert-success">
+				Points scored by the student every school term
+			</div>
+		</div>
+    </div>
 </div>
 
 <% data = Array.new %>
@@ -16,6 +23,46 @@
 	<% data.push(arr) %>
 <% end %>
 
-<div class="span4 well">
-	<%= column_chart data %>
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<%= column_chart data %>
+		</div>
+    </div>
 </div>
+
+</br>
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<div class="alert alert-dismissable alert-success">
+				Term-wise participation of the student for tracing the complete cll-around development down the years</br>
+				The target is not to merely earn higher points but to earn them by participating in multiple activities. Also these charts could be used to identify particular interests of a child and encourage him</br>
+			</div>
+		</div>
+    </div>
+</div>
+
+<% @terms = Term.select('id, name, term_from, term_to').load %>
+
+<% @terms.each do |term| %>
+
+	<h4><%= term.name %></h4>
+
+	<% pie = Hash.new %>
+	<% @a = Point.select('id').joins(:student_points).where("user_id = ? and point_id != 100 and student_points.created_at >= ? and student_points.created_at < ?", params[:user_id], term.term_from, term.term_to).group('point_id').sum(:assigned_points) %>
+	<% if @a.count > 0 %>
+		<% @a.each do |k,v| %>
+			<% @point = Point.select('description').where('id = ?', k).first %>
+			<% pie[@point.description] = v %>
+		<% end %>
+
+		<div class="span7">
+			<div class="row">
+				<div class="well" style="width:100%;">
+					<%= pie_chart pie %>
+				</div>
+			</div>
+		</div>
+	<% end %>
+<% end %>

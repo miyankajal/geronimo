@@ -1,4 +1,4 @@
-<h2>User Profile</h2>
+<h2>Welcome! <%= current_user.first_name %> <%= current_user.last_name %></h2>
 
 <hr>
 <div class="col-md-3">
@@ -9,10 +9,10 @@
 <div class="col-md-9">
 
 	<p>
-	  <strong>Full name:</strong>
-	  <%= @user.first_name %> <%= @user.last_name %>
+		<strong>Full name:</strong>
+		<%= @user.first_name %> <%= @user.last_name %>
 	</p>
-
+	
 	<p>
 	  <strong>Username:</strong>
 	  <%= @user.username %>
@@ -135,5 +135,24 @@
 			<% end %>
 		 </p>	
 	<% end %>
+	
+	</br>
+	</br>
+	</br>
+	<% if current_user.type == 1 &&  @user.type.to_s == "1" %>
+		<div class="span7">
+			<div class="row">
+				<div class="well" style="width:100%;">
+					<div class="alert alert-dismissable alert-success">
+					
+							As the Administrator of the site, you can edit Users (Teachers, Guardians and Classes > Students). Explore these options in the Users dropdown list in the navigation bar.</br></br>
+							To add new users go to the particular user type in the Users menu and click 'New User'. Every user can be edited and destroyed except the Administrators.</br></br>
+							The Reports section shows the school reports based on the data accumulated.</br></br>
+							The Settings section should be used to define School Terms (semester/yearly), Alert settings for the school term, and the Points pertaining to defined behaviors.</br></br>
 
+					</div>
+				</div>
+			</div>
+		</div>
+	<% end %>
 </div>

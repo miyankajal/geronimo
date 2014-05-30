@@ -53,3 +53,4 @@ Point.create(:id=>26, :description=>'Dormitory Misbehavior', :value=>20, :credit
 Point.create(:id=>27, :description=>'Sports Field Misbehavior', :value=>20, :credit=>false)
 Point.create(:id=>28, :description=>'Ragging/Bullying', :value=>300, :credit=>false)
 Point.create(:id=>29, :description=>'Extended Violent Behavior', :value=>250, :credit=>false)
+

@@ -1,8 +1,15 @@
 <%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 
 </br>
-<div class="alert alert-dismissable alert-success">
-	Points scored by all the students every school term
+
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<div class="alert alert-dismissable alert-success">
+				Points scored by all the students every school term
+			</div>
+		</div>
+    </div>
 </div>
 
 <% data = Array.new %>
@@ -16,13 +23,23 @@
 	<% data.push(arr) %>
 <% end %>
 
-<div class="span4 well">
-	<%= column_chart data %>
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<%= column_chart data %>
+		</div>
+    </div>
 </div>
 
 </br>
-<div class="alert alert-dismissable alert-success">
-	Percentage of points students were awarded/penalized during the current term for each defined activity  
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<div class="alert alert-dismissable alert-success">
+				Percentage of points students were awarded/penalized during the current term for each defined activity  
+			</div>
+		</div>
+    </div>
 </div>
 
 <% @current_term = Term.select('id, term_from, term_to').where('term_from <= ?', Time.now).order('term_from desc').first %>
@@ -34,13 +51,25 @@
 	<% @point = Point.select('description').where('id = ?', k).first %>
 	<% pie[@point.description] = v %>
 <% end %>
-<div class="span4 well">
-	<%= pie_chart pie %>
+
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<%= pie_chart pie %>
+		</div>
+    </div>
 </div>
 
+
 </br>
-<div class="alert alert-dismissable alert-success">
-	Percentage of points students were penalized during the current term for each defined unfavourable behavior  
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<div class="alert alert-dismissable alert-success">
+				Percentage of points students were penalized during the current term for each defined unfavourable behavior  
+			</div>
+		</div>
+    </div>
 </div>
 
 <% pie = Hash.new %>
@@ -52,13 +81,23 @@
 	<% pie[@point.description] = v %>
 <% end %>
 
-<div class="span4 well">
-	<%= pie_chart pie %>
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<%= pie_chart pie %>
+		</div>
+    </div>
 </div>
 
 </br>
-<div class="alert alert-dismissable alert-success">
-	Percentage of points students were awarded during the current term for each defined good behavior  
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<div class="alert alert-dismissable alert-success">
+				Percentage of points students were awarded during the current term for each defined good behavior  
+			</div>
+		</div>
+    </div>
 </div>
 
 <% pie = Hash.new %>
@@ -70,13 +109,24 @@
 	<% pie[@point.description] = v %>
 <% end %>
 
-<div class="span4 well">
-	<%= pie_chart pie %>
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<%= pie_chart pie %>
+		</div>
+    </div>
 </div>
 
 </br>
-<div class="alert alert-dismissable alert-success">
-	Percentage of points awarded/penalized per class during the current term for each defined unfavourable behavior   
+
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<div class="alert alert-dismissable alert-success">
+				Percentage of points awarded/penalized per class during the current term for each defined unfavourable behavior   
+			</div>
+		</div>
+    </div>
 </div>
 
 <% pie = Hash.new %>
@@ -88,6 +138,10 @@
 	<% pie[@class.description] = v %>
 <% end %>
 
-<div class="span4 well">
-	<%= pie_chart pie %>
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<%= pie_chart pie %>
+		</div>
+    </div>
 </div>
