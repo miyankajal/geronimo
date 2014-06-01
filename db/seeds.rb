@@ -54,3 +54,5 @@ Point.create(:id=>27, :description=>'Sports Field Misbehavior', :value=>20, :cre
 Point.create(:id=>28, :description=>'Ragging/Bullying', :value=>300, :credit=>false)
 Point.create(:id=>29, :description=>'Extended Violent Behavior', :value=>250, :credit=>false)
 
+#First user and make it the system admin
+User.create!(:username => 'geronimo', :email => 'team.geronimo.inc@gmail.com', :first_name => 'Geronimo', :last_name => 'Admin', :password => '1234', :password_confirmation => '1234', :type => 1)
