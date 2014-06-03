@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
 	
 	belongs_to :class_section
 	belongs_to :user_type
+	belongs_to :school
 	
 	has_many :student_points, dependent: :destroy
 	has_many :points, through: :student_points
@@ -27,7 +28,7 @@ class User < ActiveRecord::Base
 
 	has_secure_password
 	
-	validates_presence_of :username, :email, :password_digest, :first_name, :last_name
+	validates_presence_of :username, :email, :password_digest, :first_name, :last_name, :school_id
 	validates_presence_of :class_id, :if => :is_student? #should have a class_id and enrollment_id only if the user is a student 
 	validates_presence_of :enrollment_id, :if => :is_student?
 	

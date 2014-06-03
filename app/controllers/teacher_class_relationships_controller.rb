@@ -24,7 +24,7 @@ class TeacherClassRelationshipsController < ApplicationController
   end
   
   def teachers_all
-  	@teacher_classes = ClassSection.all.map{|class_section| [class_section.description, class_section.id]}
+  	@teacher_classes = ClassSection.where('school_id = ?', current_user.school_id).map{|class_section| [class_section.description, class_section.id]}
 	@teacher_roles = TeacherRole.all.map{|teacher_role| [teacher_role.description, teacher_role.id]}
   end 
   

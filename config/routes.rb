@@ -3,6 +3,8 @@ require 'resque_scheduler'
  
 GeronimoSms::Application.routes.draw do
   
+  resources :schools
+
   get "password_resets/new"
   resources :guardianships
 
@@ -18,6 +20,7 @@ GeronimoSms::Application.routes.draw do
   match '/reports' => 'static_pages#reports', via: [:get]
   match '/user_report' => 'static_pages#user_report', via: [:get]
   match '/contact_us' => 'static_pages#contact_us', via: [:get]
+  match '/demo' => 'static_pages#demo', via: [:get]
   
   match '/signout' => 'sessions#destroy', via: [:delete]
 

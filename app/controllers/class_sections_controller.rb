@@ -3,7 +3,7 @@ class ClassSectionsController < ApplicationController
 
   # GET /class_sections
   def index
-    @class_sections = ClassSection.all
+    @class_sections = ClassSection.where('school_id = ?', current_user.school_id).order('description')
   end
 
   # GET /class_sections/1
@@ -48,12 +48,12 @@ class ClassSectionsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_class_section
-      @class_section = ClassSection.find(params[:id])
+      @class_section = ClassSection.where('school_id = ?', current_user.school_id).find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def class_section_params
-      params.require(:class_section).permit(:description)
+      params.require(:class_section).permit(:description, :school_id)
     end
 	
 end

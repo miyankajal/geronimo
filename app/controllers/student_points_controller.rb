@@ -11,12 +11,12 @@ class StudentPointsController < ApplicationController
     @student_point = StudentPoint.new(student_point_params)
 	
 	#gets send_auto_email, min_points_required, min_points_for_penalty, max_warnings_before_email_alert, repetition_of_mistake_before_email
-	@alert_settings = AlertSetting.first
+	@alert_settings = AlertSetting.where('school_id = ?', current_user.school_id).first
 	
 	if @alert_settings.send_auto_email
-		@user = User.where('id = ?', @student_point.user_id).first
+		@user = User.where('id = ? AND school_id = ?', @student_point.user_id, current_user.school_id).first
 		#calculate total points
-		@current_term = Term.select('id, term_from, term_to').where('term_from <= ?', Time.now).order('term_from desc').first
+		@current_term = Term.select('id, term_from, term_to').where('term_from <= ? AND school_id = ?', Time.now, current_user.school_id).order('term_from DESC').first
 		
 		@total_positive_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @student_point.user_id, @current_term.term_from, @current_term.term_to).where(:is_credit => true).sum('assigned_points')
 		@total_negative_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @student_point.user_id, @current_term.term_from, @current_term.term_to).where(:is_credit => false).sum('assigned_points')

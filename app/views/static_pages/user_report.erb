@@ -13,7 +13,7 @@
 </div>
 
 <% data = Array.new %>
-<% @terms = Term.all.select('name, term_from, term_to') %>
+<% @terms = Term.select('name, term_from, term_to').where('school_id = ?', current_user.school_id) %>
 
 <% @terms.each do |term| %>
 	<% @a = StudentPoint.where('student_points.created_at >= ? AND student_points.created_at < ? AND user_id = ?', term.term_from, term.term_to, params[:user_id]).sum(:assigned_points) %>
@@ -43,17 +43,17 @@
     </div>
 </div>
 
-<% @terms = Term.select('id, name, term_from, term_to').load %>
+<% @terms = Term.select('id, name, term_from, term_to').where('school_id = ?', current_user.school_id) %>
 
 <% @terms.each do |term| %>
 
 	<h4><%= term.name %></h4>
 
 	<% pie = Hash.new %>
-	<% @a = Point.select('id').joins(:student_points).where("user_id = ? and point_id != 100 and student_points.created_at >= ? and student_points.created_at < ?", params[:user_id], term.term_from, term.term_to).group('point_id').sum(:assigned_points) %>
+	<% @a = Point.select('id').joins(:student_points).where("user_id = ? and point_id != 1 and point_id != 2 and student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?", params[:user_id], term.term_from, term.term_to, current_user.school_id).group('point_id').sum(:assigned_points) %>
 	<% if @a.count > 0 %>
 		<% @a.each do |k,v| %>
-			<% @point = Point.select('description').where('id = ?', k).first %>
+			<% @point = Point.select('description').where('id = ? AND school_id = ?', k, current_user.school_id).first %>
 			<% pie[@point.description] = v %>
 		<% end %>
 

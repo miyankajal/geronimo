@@ -3,12 +3,12 @@ class PointsController < ApplicationController
 
   # GET /points
   def index
-    @points = Point.all
+    @points = Point.where('school_id = ?', current_user.school_id)
   end
 
   # GET /points/1
   def show
-	@point_val = Point.where('id = ?', params[:id])
+	@point_val = Point.where('id = ? AND school_id = ?', params[:id], current_user.school_id)
 	
 	respond_to do |format|
       format.html
@@ -54,11 +54,11 @@ class PointsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_point
-      @point = Point.find(params[:id])
+      @point = Point.where('school_id = ?', current_user.school_id).find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def point_params
-      params.require(:point).permit(:description, :value, :credit)
+      params.require(:point).permit(:description, :value, :credit, :school_id)
     end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140526030249) do
+ActiveRecord::Schema.define(version: 20140601154758) do
 
   create_table "alert_email_queues", force: true do |t|
     t.integer "alert_id"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20140526030249) do
     t.integer "min_points_for_penalty"
     t.integer "repetition_of_mistake_before_email"
     t.integer "penalty_carried_over"
+    t.integer "school_id"
   end
 
   create_table "alerts", force: true do |t|
@@ -38,6 +39,7 @@ ActiveRecord::Schema.define(version: 20140526030249) do
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "school_id"
   end
 
   create_table "guardianships", force: true do |t|
@@ -51,6 +53,15 @@ ActiveRecord::Schema.define(version: 20140526030249) do
     t.string   "description"
     t.integer  "value"
     t.boolean  "credit"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "school_id"
+  end
+
+  create_table "schools", force: true do |t|
+    t.string   "name"
+    t.string   "address"
+    t.string   "phone_no"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -82,6 +93,7 @@ ActiveRecord::Schema.define(version: 20140526030249) do
     t.datetime "term_to"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "school_id"
   end
 
   create_table "user_points_relationships", force: true do |t|
@@ -113,6 +125,7 @@ ActiveRecord::Schema.define(version: 20140526030249) do
     t.datetime "updated_at"
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
+    t.integer  "school_id"
   end
 
   add_index "users", ["email"], name: "index_users_email", unique: true

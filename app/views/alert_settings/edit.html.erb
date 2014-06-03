@@ -99,6 +99,8 @@
 							<%= f.number_field :repetition_of_mistake_before_email, :class=>'form-control' %>
 						</div>
 					  </div>
+					  
+				 	  <%= f.hidden_field :school_id, :value => current_user.school_id %> 
   
 			  		<p>
 					  <div class="form-actions">

@@ -8,7 +8,7 @@ module UsersHelper
   end
   
   def get_teacher_class(id)
-	@teacher_class = ClassSection.select('description').where('id = ?', id).first
+	@teacher_class = ClassSection.select('description').where('id = ? AND school_id = ?', id, current_user.school_id).first
 	return @teacher_class.description
   end
   

@@ -23,6 +23,19 @@
 	  <%= @user.email %>
 	</p>
 
+	<p>
+	  <strong>User Type:</strong>
+	  <% if @user.type == 1 %>
+		Administrator
+	  <% elsif @user.type == 2 %>
+		Teacher
+	  <% elsif @user.type == 3 %>
+		Student
+	  <% else %>
+		Guardian
+	  <% end %>
+	</p>
+
 	<% if @user.type == 3 %>
 		<p>
 		  <strong>Enrollment:</strong>
@@ -62,10 +75,28 @@
 	
 	<p>
 		<% if current_user.type == 1 %>
-			<%= link_to 'Edit', edit_user_path(@user) %>
+			<%= link_to 'Edit User', edit_user_path(@user) %>
 		<% end %>
 	</p>
 
+	</br>
+	<% if @user.type.to_s == "1" %>
+		<p>
+			<b>School Info:</b>
+		</p>
+		<p>
+		  <strong>School:</strong>
+		  <%= @school.name %>
+		</p>
+		<p>
+		  <strong>Address:</strong>
+		  <%= @school.address %>
+		</p>
+		<p>
+		  <strong>Phone Number:</strong>
+		  <%= @school.phone_no %>
+		</p>
+	<% end %>
 	
 	<!--if the user is a guardian help them search for their ward-->
 	<% if @user.type.to_s == "4" %>
@@ -137,6 +168,7 @@
 	<% end %>
 	
 	<% if current_user.type == 1 &&  @user.type.to_s == "1" %>
+		
 		<div class="span7">
 			<div class="row">
 				<div class="well" style="width:100%;">

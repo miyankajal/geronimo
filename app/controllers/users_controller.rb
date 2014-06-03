@@ -7,11 +7,11 @@ class UsersController < ApplicationController
   # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
   def index
   	if params[:type] == '3'
-  		@users = User.where("type = ? AND class_id = ?", params[:type], params[:class_id])
+  		@users = User.where('type = ? AND class_id = ? AND school_id = ?', params[:type], params[:class_id], current_user.school_id).order('username')
 	elsif params[:search]
-        @users = User.where('enrollment_id = ?', params[:search]).order("created_at DESC")
+        @users = User.where('enrollment_id = ? AND school_id = ?', params[:search], current_user.school_id).order('username')
   	else
-  		@users = User.where("type = ?", params[:type])
+  		@users = User.where('type = ? AND school_id = ?', params[:type], current_user.school_id).order('username')
 		
   	end
   	
@@ -26,14 +26,15 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-	@user = User.find(params[:id])
+	@user = User.where('school_id = ?', current_user.school_id).find(params[:id])
+	@school = School.select('name, address, phone_no').where('id = ?', current_user.school_id).first
 	
 	if @user.type == 3
 	
 		@grade = ClassSection.where(:id => @user.class_id)
 		@user_grade =  @grade.first.description
 		
-		@current_term = Term.select('id, term_from, term_to').where('term_from <= ?', Time.now).order('term_from desc').first
+		@current_term = Term.select('id, term_from, term_to').where('term_from <= ? AND school_id = ?', Time.now, current_user.school_id).order('term_from desc').first
 		
 		@student_points_desc = Point.select("student_points.id, description, value, credit").joins(:student_points).where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @user.id, @current_term.term_from, @current_term.term_to).order("student_points.created_at")
 		
@@ -44,7 +45,7 @@ class UsersController < ApplicationController
 		
 	elsif @user.type == 2
 	
-		@teacher_class = TeacherClassRelationship.select('class_section_id, teacher_role_id, teacher_class_relationships.id, user_id').joins(:class_section).where('user_id = ?', @user.id)
+		@teacher_class = TeacherClassRelationship.select('class_section_id, teacher_role_id, teacher_class_relationships.id, user_id').joins(:class_section).where('user_id = ?   AND school_id = ?', @user.id, current_user.school_id)
 		
 	end
   end
@@ -56,7 +57,7 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-	@user = User.find(params[:id])
+	@user = User.where('school_id = ?', current_user.school_id).find(params[:id])
   end
 
   # POST /users
@@ -66,8 +67,8 @@ class UsersController < ApplicationController
     if @user.save
 	
 	  if @user.type == 3
-		@setting = AlertSetting.select('default_points').first
-		StudentPoint.create!(:user_id => @user.id, :point_id => 100, :is_credit => true, :assigned_points => @setting.default_points)
+		@setting = AlertSetting.select('default_points').where('school_id = ?', current_user.school_id).first
+		StudentPoint.create!(:user_id => @user.id, :point_id => 1, :is_credit => true, :assigned_points => @setting.default_points)
 	  end
 	  
 	  @guardians = Guardianship.joins(:user).select('guardian_id').where('user_id = ?', @user.id)
@@ -112,7 +113,7 @@ class UsersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:username, :email, :first_name, :last_name, :password, :password_confirmation, :type, :enrollment_id, :class_id, :password_reset_token, :password_reset_sent_at)
+      params.require(:user).permit(:username, :school_id, :email, :first_name, :last_name, :password, :password_confirmation, :type, :enrollment_id, :class_id, :password_reset_token, :password_reset_sent_at)
     end
 	
 	# Only allow signed in user update/edit profiles

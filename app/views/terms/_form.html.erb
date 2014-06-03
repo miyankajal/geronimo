@@ -33,6 +33,7 @@
 				<%= f.date_select :term_to, :class=>'form-control' %>
 			</div>
 		  </div>
+		  <%= f.hidden_field :school_id, :value => current_user.school_id %> 
 		  
 		  <p>
 			  <div class="form-actions">

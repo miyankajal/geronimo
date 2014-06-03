@@ -55,6 +55,7 @@
 
 			  <% if @user.type.nil? %>
 				 <%= f.hidden_field :type, :value => params[:type] %> 
+				 <%= f.hidden_field :school_id, :value => current_user.school_id %> 
 			  <% end %>
  
 			 <% if params[:type] == "3" || @user.type == 3 %>

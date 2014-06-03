@@ -1,7 +1,11 @@
 <header class="navbar navbar-fixed-top navbar-inverse">
 	<div class="navbar-inner">
 		<div class="container">
-			<a class="navbar-brand" href="#">GERONIMO!!!</a>
+			<% if current_user.nil? %>
+				<a class="navbar-brand" href="../demo">GERONIMO!!!</a>
+			<% else %>
+				<a class="navbar-brand" href="../geronimo_settings">GERONIMO!!!</a>
+			<% end %>
 			<nav>
 				<ul class="nav navbar-nav navbar-right">
 					<% if sign_in? %>
