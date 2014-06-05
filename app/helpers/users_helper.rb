@@ -33,6 +33,16 @@ module UsersHelper
 	@wards = User.joins(:guardianships).where('guardian_id = ?', id)
   end
   
+  def get_guardians(id)
+	@guardians = Guardianship.select('guardian_id').where('user_id = ?', id)
+	
+	@guardianArr = Array.new
+	@guardians.each do |a|
+		@guardianArr.push(User.where('id = ?', a.guardian_id))
+	end
+	return @guardianArr
+  end
+  
   def get_user_type(id)
 	@user = User.select('type').where('id = ?', id).first
   end
