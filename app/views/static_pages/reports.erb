@@ -31,7 +31,7 @@
 	<% data = Array.new %>
 
 	<% @terms.each do |term| %>
-		<% @a = StudentPoint.where('student_points.created_at >= ? and student_points.created_at < ?', term.term_from, term.term_to).sum(:assigned_points) %>
+		<% @a = StudentPoint.where('(student_points.point_id <> 1 AND student_points.point_id <> 2) AND student_points.created_at >= ? and student_points.created_at < ?', term.term_from, term.term_to).sum(:assigned_points) %>
 		<% arr = Array.new %>
 		<% arr.push(term.name) %>
 		<% arr.push(@a) %>
@@ -60,7 +60,7 @@
 	<% @current_term = Term.select('id, term_from, term_to').where('term_from <= ? AND school_id = ?', Time.now, current_user.school_id).order('term_from desc').first %>
 	<% pie = Hash.new %>
 
-	<% @a = Point.select('id').joins(:student_points).where('student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?', @current_term.term_from, @current_term.term_to, current_user.school_id).group("point_id").count %>
+	<% @a = Point.select('points.id').joins(:student_points).where('(student_points.point_id <> 1 AND student_points.point_id <> 2) AND student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?', @current_term.term_from, @current_term.term_to, current_user.school_id).group("point_id").count %>
 
 	<% @a.each do |k,v| %>
 		<% @point = Point.select('description').where('id = ? AND school_id = ?', k, current_user.school_id).first %>
@@ -89,7 +89,7 @@
 
 	<% pie = Hash.new %>
 
-	<% @a = Point.select('id').joins(:student_points).where('student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?', @current_term.term_from, @current_term.term_to, current_user.school_id).where(:credit => false).group("point_id").count %>
+	<% @a = Point.select('id').joins(:student_points).where('(student_points.point_id <> 1 AND student_points.point_id <> 2) AND student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?', @current_term.term_from, @current_term.term_to, current_user.school_id).where('assigned_points < 0').group("point_id").count %>
 
 	<% @a.each do |k,v| %>
 		<% @point = Point.select('description').where('id = ? AND school_id = ?', k, current_user.school_id).first %>
@@ -117,7 +117,7 @@
 
 	<% pie = Hash.new %>
 
-	<% @a = Point.select('id').joins(:student_points).where('student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?', @current_term.term_from, @current_term.term_to, current_user.school_id).where(:credit => true).group("point_id").count %>
+	<% @a = Point.select('id').joins(:student_points).where('(student_points.point_id <> 1 AND student_points.point_id <> 2) AND student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?', @current_term.term_from, @current_term.term_to, current_user.school_id).where('assigned_points > 0').group("point_id").count %>
 
 	<% @a.each do |k,v| %>
 		<% @point = Point.select('description').where('id = ? AND school_id = ?', k, current_user.school_id).first %>
@@ -146,7 +146,7 @@
 
 	<% pie = Hash.new %>
 
-	<% @a = StudentPoint.joins(:user).where('student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?', @current_term.term_from, @current_term.term_to, current_user.school_id).where(:is_credit => false).group("class_id").count %>
+	<% @a = StudentPoint.joins(:user).where('(student_points.point_id <> 1 AND student_points.point_id <> 2) AND student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?', @current_term.term_from, @current_term.term_to, current_user.school_id).where('assigned_points < 0').group("class_id").count %>
 
 	<% @a.each do |k,v| %>
 		<% @class = ClassSection.select('description').where('id = ? AND school_id = ?', k, current_user.school_id).first %>

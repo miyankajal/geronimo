@@ -4,7 +4,7 @@
     <div class="row">
         <div class="well" style="width:100%;">
 
-		<%= form_for(@student_point) do |f| %>
+		<%= form_for @student_point, :html => {:class => 'form-horizontal'} do |f| %>
 			<fieldset>
 			  <% if @student_point.errors.any? %>
 				<div id="error_explanation">
@@ -25,13 +25,13 @@
 			  	   </div>
 			  </div>
 
-			  <div class="field">
+			  <div class="form-group">
 				<%= f.label :assigned_points, :class=>'col-sm-2 control-label' %>
 				<div class="col-xs-4">
 					<%= f.number_field(:assigned_points, :id => "assigned_points_value")%>
 				</div>
 			  </div>
-  
+			  
 			  <%= f.hidden_field :user_id, :value => params[:user_id] %> 
 			  <!--%= f.hidden_field :is_credit, :value => @point_options.credit %-->
 		  

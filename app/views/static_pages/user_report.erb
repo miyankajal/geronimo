@@ -43,20 +43,19 @@
     </div>
 </div>
 
-<% @terms = Term.select('id, name, term_from, term_to').where('school_id = ?', current_user.school_id) %>
-
 <% @terms.each do |term| %>
-
-	<h4><%= term.name %></h4>
 
 	<% pie = Hash.new %>
 	<% @a = Point.select('id').joins(:student_points).where("user_id = ? and point_id != 1 and point_id != 2 and student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?", params[:user_id], term.term_from, term.term_to, current_user.school_id).group('point_id').sum(:assigned_points) %>
 	<% if @a.count > 0 %>
 		<% @a.each do |k,v| %>
 			<% @point = Point.select('description').where('id = ? AND school_id = ?', k, current_user.school_id).first %>
+			<% if v < 0 %>
+				<% v = v * -1 %>
+			<% end %>
 			<% pie[@point.description] = v %>
 		<% end %>
-
+		<h4><%= term.name %></h4>
 		<div class="span7">
 			<div class="row">
 				<div class="well" style="width:100%;">
