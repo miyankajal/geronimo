@@ -79,8 +79,10 @@
 		</p>
 		
 		</br>
+		<hr>
 		  <% @guardians = get_guardians(@user.id) %>
 		  <% if @guardians.any? %>
+		  	   <h3>Guardians</h3>
 			   <table class="table table-striped table-hover">
 				<thead>
 				<tr>
@@ -139,8 +141,10 @@
 	  <%= yield %>
 	  
 	  </br>
+	  <hr>
 	  <% @wards = get_wards(@user.id) %>
 	  <% if @wards.any? %>
+	  	   <h3>Wards</h3>
 		   <table class="table table-striped table-hover">
 			<thead>
 			<tr>
