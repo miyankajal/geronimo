@@ -35,7 +35,11 @@
 		<% @number_of_students = StudentPoint.joins(:user).select('DISTINCT users.id').where('school_id = ? AND student_points.created_at >= ? and student_points.created_at < ?', current_user.school_id, term.term_from, term.term_to).count %>
 		<% arr = Array.new %>
 		<% arr.push(term.name) %>
-		<% arr.push((@points/@number_of_students).to_int) %>
+		<% if @number_of_students > 0 %>
+			<% arr.push((@points/@number_of_students).to_int) %>
+		<% else %>
+			<% arr.push(0) %>
+		<% end %>
 		<% data.push(arr) %>
 	<% end %>
 
