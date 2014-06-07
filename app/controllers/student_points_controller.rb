@@ -25,16 +25,16 @@ class StudentPointsController < ApplicationController
 
 		# Send Alert for min points required
 		if @total_points <= @alert_settings.min_points_required
-			UserMailer.min_points_email(@user).deliver
+			UserMailer.min_points_email(@user, @user).deliver
 			
 			@guardians.each do |guardian|
 				@email = User.where('id = ?', guardian.guardian_id).first
-				UserMailer.min_points_email(@email).deliver
+				UserMailer.min_points_email(@email, @user).deliver
 			end
 			
 			@teachers.each do |teacher|
 				@email = User.where('id = ?', teacher.user_id).first
-				UserMailer.min_points_email(@email).deliver
+				UserMailer.min_points_email(@email, @user).deliver
 			end
 		end
 			

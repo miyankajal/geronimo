@@ -7,7 +7,7 @@ class UserMailer < ActionMailer::Base
     mail(to: @user.email, subject: 'Welcome to Geronimo!!!')
   end
   
-  def min_points_email(user)
+  def min_points_email(user, student)
     @user = user
 	@student = student
     @url  = 'http://geronimo.com/login'
