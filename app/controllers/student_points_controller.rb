@@ -25,7 +25,7 @@ class StudentPointsController < ApplicationController
 
 		# Send Alert for min points required
 		if @total_points <= @alert_settings.min_points_required
-			UserMailer.min_points_email(@user, @user).deliver
+			#UserMailer.min_points_email(@user, @user).deliver
 			
 			@guardians.each do |guardian|
 				@email = User.where('id = ?', guardian.guardian_id).first
@@ -41,16 +41,16 @@ class StudentPointsController < ApplicationController
 		unless @student_point.assigned_points > 0
 			@number_of_repetitions = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and point_id = ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @student_point.point_id).where('assigned_points < 0').count
 			if @number_of_repetitions > @alert_settings.repetition_of_mistake_before_email
-				UserMailer.repetition_email(@user).deliver
+				#UserMailer.repetition_email(@user).deliver
 				
 				@guardians.each do |guardian|
 					@email = User.where('id = ?', guardian.guardian_id).first
-					UserMailer.repetition_email(@email).deliver
+					UserMailer.repetition_email(@email, @user).deliver
 				end
 				
 				@teachers.each do |teacher|
 					@email = User.where('id = ?', teacher.user_id).first
-					UserMailer.repetition_email(@email).deliver
+					UserMailer.repetition_email(@email, @user).deliver
 				end
 			end
 			
@@ -58,16 +58,16 @@ class StudentPointsController < ApplicationController
 				#find the number of serious felanies committed
 				@number_of_serious_offences = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and assigned_points <= ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @alert_settings.min_points_for_penalty).where('assigned_points < 0').count
 				if @number_of_serious_offences > @alert_settings.max_warnings_before_email_alert
-					UserMailer.too_many_email(@user).deliver
+					#UserMailer.too_many_email(@user, @user).deliver
 					
 					@guardians.each do |guardian|
 						@email = User.where('id = ?', guardian.guardian_id).first
-						UserMailer.too_many_email(@email).deliver
+						UserMailer.too_many_email(@email, @user).deliver
 					end
 					
 					@teachers.each do |teacher|
 						@email = User.where('id = ?', teacher.user_id).first
-						UserMailer.too_many_email(@email).deliver
+						UserMailer.too_many_email(@email, @user).deliver
 					end
 				end
 			end

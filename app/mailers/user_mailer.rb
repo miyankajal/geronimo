@@ -14,7 +14,7 @@ class UserMailer < ActionMailer::Base
     mail(to: @user.email, subject: 'Minimum points')
   end
   
-  def repetition_email(user)
+  def repetition_email(user, student)
     @user = user
     @url  = 'http://geronimo.com/login'
     mail(to: @user.email, subject: 'Repetition')
@@ -26,7 +26,7 @@ class UserMailer < ActionMailer::Base
     mail(to: @user.email, subject: 'Session start')
   end
   
-  def too_many_email(user)
+  def too_many_email(user, student)
     @user = user
     @url  = 'http://geronimo.com/login'
     mail(to: @user.email, subject: 'Too many issues')

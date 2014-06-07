@@ -6,7 +6,7 @@
   <body>
     <h1>Hello, <%= @user.first_name %></h1>
     <p>
-      <%= @student.username %> has gone down the threshold of the least number of points achieved per year. We would like to have a word with you so please drop by the principal's office as soon as possible.<br>
+      <%= @student.first_name %> <%= @student.last_name %> has gone down the threshold of the least number of points achieved per year. We would like to have a word with you so please drop by the principal's office as soon as possible.<br>
     </p>
     <p>
       Please login to the site at <%= @url %>.
