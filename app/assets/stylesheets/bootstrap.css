@@ -5801,6 +5801,14 @@ button.close {
   filter: none;
   border-bottom: 1px solid #022241;
 }
+.navbar-inverse {
+  background-image: -webkit-linear-gradient(#04519b, #044687 60%, #033769);
+  background-image: linear-gradient(#04519b, #044687 60%, #033769);
+  background-repeat: no-repeat;
+  filter: progid:DXImageTransform.Microsoft.gradient(enable=false);
+  filter: none;
+  border-bottom: 1px solid #022241;
+}
 .navbar-inverse .badge {
   background-color: #fff;
   color: #033c73;

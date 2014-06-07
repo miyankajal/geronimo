@@ -5,6 +5,7 @@ gem 'railties'
 gem 'turbolinks'
 gem 'devise', '3.0.0.rc'
 gem 'kaminari'
+gem 'roo'
 
 gem 'jquery-rails'
 gem 'bootstrap-sass', '2.0.0'
