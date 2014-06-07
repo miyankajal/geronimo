@@ -18,8 +18,7 @@ class StudentPointsController < ApplicationController
 		#calculate total points
 		@current_term = Term.select('id, term_from, term_to').where('term_from <= ? AND school_id = ?', Time.now, current_user.school_id).order('term_from DESC').first
 		
-		@total_positive_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @student_point.user_id, @current_term.term_from, @current_term.term_to).where('assigned_points > 0').sum('assigned_points')
-		@total_negative_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @student_point.user_id, @current_term.term_from, @current_term.term_to).where('assigned_points < 0').sum('assigned_points')
+		@total_positive_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @student_point.user_id, @current_term.term_from, @current_term.term_to).sum('assigned_points')
 		
 		@total_points = @total_positive_points - @total_negative_points
 		

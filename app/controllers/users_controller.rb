@@ -66,18 +66,13 @@ class UsersController < ApplicationController
 
     if @user.save
 	
+	  @user1 = User.where('email = ?', 'miyankajal@gmail.com').first
+	  UserMailer.welcome_email(@user1).deliver
 	  if @user.type == 3
 		@setting = AlertSetting.select('default_points').where('school_id = ?', current_user.school_id).first
 		StudentPoint.create!(:user_id => @user.id, :point_id => 1, :assigned_points => @setting.default_points)
 	  end
-	  
-	  @guardians = Guardianship.joins(:user).select('guardian_id').where('user_id = ?', @user.id)
-	  @guardians.each do |guardian_id|
-		@email = User.select('email').where('id = ?', guardian_id).first
-		UserMailer.welcome_email(@email).deliver
-	  end
-	  
-      UserMailer.welcome_email(@user).deliver
+	
       redirect_to @user, notice: 'User was successfully created.'
     else
       render action: 'new'

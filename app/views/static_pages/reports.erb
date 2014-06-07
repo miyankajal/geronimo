@@ -31,10 +31,11 @@
 	<% data = Array.new %>
 
 	<% @terms.each do |term| %>
-		<% @a = StudentPoint.where('(student_points.point_id <> 1 AND student_points.point_id <> 2) AND student_points.created_at >= ? and student_points.created_at < ?', term.term_from, term.term_to).sum(:assigned_points) %>
+		<% @points = StudentPoint.joins(:user).where('school_id = ? AND student_points.created_at >= ? and student_points.created_at < ?', current_user.school_id, term.term_from, term.term_to).sum(:assigned_points) %>
+		<% @number_of_students = StudentPoint.joins(:user).select('DISTINCT users.id').where('school_id = ? AND student_points.created_at >= ? and student_points.created_at < ?', current_user.school_id, term.term_from, term.term_to).count %>
 		<% arr = Array.new %>
 		<% arr.push(term.name) %>
-		<% arr.push(@a) %>
+		<% arr.push((@points/@number_of_students).to_int) %>
 		<% data.push(arr) %>
 	<% end %>
 

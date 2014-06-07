@@ -58,4 +58,4 @@ Point.create(:id=>29, :description=>'Extended Violent Behavior', :value=>250, :c
 School.create!(:name => 'Geronimo Academy', :address => 'Canfield, Ohio, USA', :phone_no => '+1 0000000000')
 
 #First user and make it the system admin
-User.create!(:username => 'geronimo', :email => 'team.geronimo.inc@gmail.com', :first_name => 'Geronimo', :last_name => 'Admin', :password => '1234', :password_confirmation => '1234', :type => 1)
+User.create!(:username => 'geronimo', :email => 'team.geronimo.inc@gmail.com', :first_name => 'Geronimo', :last_name => 'Admin', :password => '1234', :password_confirmation => '1234', :type => 1, :school_id = 1)
