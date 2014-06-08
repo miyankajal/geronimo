@@ -3,7 +3,7 @@ class ClassSectionsController < ApplicationController
 
   # GET /class_sections
   def index
-    @class_sections = ClassSection.where('school_id = ?', current_user.school_id).order('description')
+    @class_sections = ClassSection.select('id, description').where('school_id = ?', current_user.school_id).order('description')
   end
 
   # GET /class_sections/1
