@@ -1,5 +1,6 @@
 class PointsController < ApplicationController
   before_action :set_point, only: [:show, :edit, :update, :destroy]
+  before_action :card_offenses
 
   # GET /points
   def index
@@ -8,7 +9,7 @@ class PointsController < ApplicationController
 
   # GET /points/1
   def show
-	@point_val = Point.where('id = ? AND school_id = ?', params[:id], current_user.school_id)
+	@point_val = Point.joins('INNER JOIN card_offense_types ON card_offense_types.id = points.card_offense_id').select('points.*, card_offense_types.description AS card_offense').where('points.id = ? AND school_id = ?', params[:id], current_user.school_id)
 	
 	respond_to do |format|
       format.html
@@ -56,9 +57,13 @@ class PointsController < ApplicationController
     def set_point
       @point = Point.where('school_id = ?', current_user.school_id).find(params[:id])
     end
+	
+	def card_offenses
+		@card_offense_options = CardOffenseType.all.map{|card_offense| [card_offense.description, card_offense.id]	}
+	end
 
     # Only allow a trusted parameter "white list" through.
     def point_params
-      params.require(:point).permit(:description, :value, :credit, :school_id)
+      params.require(:point).permit(:description, :value, :credit, :school_id, :card_offense_id)
     end
 end

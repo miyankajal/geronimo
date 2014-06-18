@@ -4,14 +4,16 @@
 function get_point(id)
 {
 		jQuery.getJSON('/points/' + id, function(data){
-		 if(data[0].credit)
-		 {
-       	 	$("#assigned_points_value").val(data[0].value);
-       	 }
-       	 else
-       	 {
-       	 	$("#assigned_points_value").val(data[0].value * -1);
-       	 }
+			 if(data[0].credit)
+			 {
+				$("#assigned_points_value").val(data[0].value);
+			 }
+			 else
+			 {
+				$("#assigned_points_value").val(data[0].value * -1);
+			 }
+			 
+			 $("#assigned_points_card").val(data[0].card_offense);
     	})
     	return false;
 }

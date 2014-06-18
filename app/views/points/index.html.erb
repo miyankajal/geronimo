@@ -7,6 +7,7 @@
     <tr>
       <th>Description</th>
       <th>Value</th>
+      <th>Carded Offenses</th>
     </tr>
   </thead>
 
@@ -19,8 +20,10 @@
 	<% else %>
 		<td><%= point.value * -1 %></td>
 	<% end %>
+	<% @desc = CardOffenseType.select('description').where('id = ?', point.card_offense_id).first %>
+	<td><%= @desc.description %></td>
         <td><%= link_to 'Edit', edit_point_path(point) %></td>
-        <td><%= link_to 'Destroy', point, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Remove', point, method: :delete, data: { confirm: 'Are you sure you want to remove this point?' } %></td>
       </tr>
     <% end %>
   </tbody>

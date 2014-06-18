@@ -31,6 +31,13 @@
 					<%= f.number_field(:assigned_points, :id => "assigned_points_value")%>
 				</div>
 			  </div>
+
+			  <div class="form-group">
+				<%= f.label :card_offense, :class=>'col-sm-2 control-label' %>
+				<div class="col-xs-4">
+					<%= f.text_field(:assigned_points, :id => "assigned_points_card", :readonly => true) %>
+				</div>
+			  </div>
 			  
 			  <%= f.hidden_field :user_id, :value => params[:user_id] %> 
 			  <!--%= f.hidden_field :is_credit, :value => @point_options.credit %-->

@@ -42,15 +42,16 @@ class StudentPointsController < ApplicationController
 			@number_of_repetitions = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and point_id = ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @student_point.point_id).where('assigned_points < 0').count
 			if @number_of_repetitions > @alert_settings.repetition_of_mistake_before_email
 				#UserMailer.repetition_email(@user).deliver
+				@point = Point.where('id = ?', @student_point.point_id).first
 				
 				@guardians.each do |guardian|
 					@email = User.where('id = ?', guardian.guardian_id).first
-					UserMailer.repetition_email(@email, @user).deliver
+					UserMailer.repetition_email(@email, @user, @point).deliver
 				end
 				
 				@teachers.each do |teacher|
 					@email = User.where('id = ?', teacher.user_id).first
-					UserMailer.repetition_email(@email, @user).deliver
+					UserMailer.repetition_email(@email, @user, @point).deliver
 				end
 			end
 			
@@ -83,7 +84,7 @@ class StudentPointsController < ApplicationController
   end
   
   def points_all
-  	@point_options = Point.where('id != 1 and id != 2').map{|point| [point.description, point.credit, point.value, point.id]	}
+  	@point_options = Point.where('id != 1 and id != 2').map{|point| [point.description, point.credit, point.value, point.card_offense_id, point.id]	}
   end 
   
   def self.calcInitPoints(prev_term)
@@ -101,6 +102,6 @@ class StudentPointsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def student_point_params
-      params.require(:student_point).permit(:user_id, :point_id, :assigned_points)
+      params.require(:student_point).permit(:user_id, :point_id, :assigned_points, :card_offense_id)
     end
 end

@@ -4,13 +4,14 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1>Hello, <%= @user.first_name %></h1>
+    <p>Dear Sir/Ma'am,</p>
     <p>
-      <%= @student.first_name %> <%= @student.last_name %> has been caught committing the same fellony far too many times.<br>
+      This is to inform you that your ward, <%= @student.first_name %> <%= @student.last_name %>, was found engaging in <% @point.description %> in the campus and a total of <% @point.value %> points have been deducted from this disciplinary points. We will have no other option but to request you to withdraw him from the school if he is found repeating the same offense.<br>
     </p>
     <p>
-      Please login to the site at <%= @url %>.
+      This is for your immediate attention. Please login to the site to see your ward's disciplinary points at <%= @url %>.
     </p>
-    <p>Have a great day!</p>
+    <p>Yours sincerely,</p>
+    <p>School Administration.</p>
   </body>
 </html>

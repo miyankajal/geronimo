@@ -1,10 +1,14 @@
-<li>
-	<span class="content"><%= point.description %></span>
-	<span class="content">
-		<% if point.credit %>
-			<%= point.value %>
-		<% else %>
-			<%= -point.value %>
-		<% end %>
-	</span>
-</li>
+<td> <%= point.description %> </td>
+<% if point.credit %>
+	<td> <%= @credit = point.value %>
+	     <% @sum += point.value %>
+	 </td>
+	<td></td>
+<% else %>
+	<td></td>
+	<td> <%= @debit = -point.value %> 
+		<% @sum -= point.value %>
+	</td>
+<% end %>
+
+<td> <%= @sum %> </td>

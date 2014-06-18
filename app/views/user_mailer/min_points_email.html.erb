@@ -4,13 +4,15 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1>Hello, <%= @user.first_name %></h1>
+    <p>Dear Sir/Ma'am,</p>
     <p>
-      <%= @student.first_name %> <%= @student.last_name %> has gone down the threshold of the least number of points achieved per year. We would like to have a word with you so please drop by the principal's office as soon as possible.<br>
+      This is to inform you that your ward, <%= @student.first_name %> <%= @student.last_name %>'s, disciplinary points have reached the minimum required and if he fails to perform better and add to his discipline points we may be constrained to request to withdraw your ward from the school.<br>
     </p>
     <p>
-      Please login to the site at <%= @url %>.
+      This is for your immediate attention. Please login to the disciplinary points site at <%= @url %>.
     </p>
-    <p>Have a great day!</p>
+    
+    <p>Yours sincerely,</p>
+    <p>School Administration.</p>
   </body>
 </html>

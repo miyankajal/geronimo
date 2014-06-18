@@ -15,7 +15,7 @@
 				<% if params[:id].present? && get_user_type(params[:id]).type == 4 %>
 					<%= link_to 'Remove Ward', destroy_guardian_student_relationship(user.id, params[:id]), method: :delete %>
 				<% else %>
-					<%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure you want to delete this user?' } %>
+					<%= link_to 'Remove', user, method: :delete, data: { confirm: 'Are you sure you want to remove this user?' } %>
 				<% end %>
 			<% end %>
 		<% end %>

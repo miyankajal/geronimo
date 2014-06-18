@@ -26,9 +26,10 @@ class UserMailer < ActionMailer::Base
     mail(to: @user.email, subject: 'Session start')
   end
   
-  def too_many_email(user, student)
+  def too_many_email(user, student, point)
     @user = user
     @url  = 'http://geronimo.com/login'
+	@point = point
     mail(to: @user.email, subject: 'Too many issues')
   end
   
