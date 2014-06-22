@@ -35,10 +35,6 @@ ActiveRecord::Schema.define(version: 20140611031955) do
     t.datetime "updated_at"
   end
 
-  create_table "card_offence_types", force: true do |t|
-    t.string "description"
-  end
-
   create_table "card_offense_types", force: true do |t|
     t.string "description"
   end
@@ -64,7 +60,6 @@ ActiveRecord::Schema.define(version: 20140611031955) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "school_id"
-    t.integer  "card_offence_id", default: 1
     t.integer  "card_offense_id", default: 1
   end
 
@@ -107,15 +102,6 @@ ActiveRecord::Schema.define(version: 20140611031955) do
     t.integer  "school_id"
   end
 
-  create_table "user_points_relationships", force: true do |t|
-    t.integer  "user_id"
-    t.string   "points_id"
-    t.integer  "point"
-    t.boolean  "is_credit"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "user_types", force: true do |t|
     t.string   "description"
     t.datetime "created_at"
@@ -139,8 +125,8 @@ ActiveRecord::Schema.define(version: 20140611031955) do
     t.integer  "school_id"
   end
 
-  add_index "users", ["email"], name: "index_users_email", unique: true
-  add_index "users", ["first_name", "last_name"], name: "index_users_names"
-  add_index "users", ["remember_token"], name: "index_users_remember_token", unique: true
+  add_index "users", ["email"], name: "index_users_email", unique: true, using: :btree
+  add_index "users", ["first_name", "last_name"], name: "index_users_names", using: :btree
+  add_index "users", ["remember_token"], name: "index_users_remember_token", unique: true, using: :btree
 
 end

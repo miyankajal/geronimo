@@ -13,7 +13,8 @@ class StudentPointsController < ApplicationController
 	#gets send_auto_email, min_points_required, min_points_for_penalty, max_warnings_before_email_alert, repetition_of_mistake_before_email
 	@alert_settings = AlertSetting.where('school_id = ?', current_user.school_id).first
 	
-	if @alert_settings.send_auto_email
+	if !@student_point.is_credit
+	
 		@user = User.where('id = ? AND school_id = ?', @student_point.user_id, current_user.school_id).first
 		#calculate total points
 		@current_term = Term.select('id, term_from, term_to').where('term_from <= ? AND school_id = ?', Time.now, current_user.school_id).order('term_from DESC').first
@@ -23,13 +24,43 @@ class StudentPointsController < ApplicationController
 		@guardians = Guardianship.joins(:user).select('guardian_id').where('user_id = ?', @user.id)
 		@teachers = TeacherClassRelationship.joins('INNER JOIN users ON teacher_class_relationships.class_section_id = users.class_id').select('user_id').where('class_id = ?',  @user.class_id)
 
+		#if Pink card OR Yellow card OR Red card
+		if @student_point.card_offense_id == 3 || @student_point.card_offense_id == 4 || @student_point.card_offense_id == 2
+			@point = Point.where('id = ?', @student_point.point_id).first
+				
+			if @alert_settings.send_auto_email
+				@guardians.each do |guardian|
+					@email = User.where('id = ?', guardian.guardian_id).first
+					if @student_point.card_offense_id == 3
+						UserMailer.pink_card_email(@email, @user, @point).deliver
+					elsif @student_point.card_offense_id == 4
+						UserMailer.yellow_card_email(@email, @user, @point).deliver
+					elsif @student_point.card_offense_id == 2
+						UserMailer.red_card_email(@email, @user, @point).deliver
+					end
+				end
+			end
+			
+			@teachers.each do |teacher|
+				@email = User.where('id = ?', teacher.user_id).first
+				if @student_point.card_offense_id == 3
+					UserMailer.pink_card_email(@email, @user, @point).deliver
+				elsif @student_point.card_offense_id == 4
+					UserMailer.yellow_card_email(@email, @user, @point).deliver
+				elsif @student_point.card_offense_id == 2
+					UserMailer.red_card_email(@email, @user, @point).deliver
+				end
+			end
+		end
+		
 		# Send Alert for min points required
 		if @total_points <= @alert_settings.min_points_required
-			#UserMailer.min_points_email(@user, @user).deliver
 			
-			@guardians.each do |guardian|
-				@email = User.where('id = ?', guardian.guardian_id).first
-				UserMailer.min_points_email(@email, @user).deliver
+			if @alert_settings.send_auto_email
+				@guardians.each do |guardian|
+					@email = User.where('id = ?', guardian.guardian_id).first
+					UserMailer.min_points_email(@email, @user).deliver
+				end
 			end
 			
 			@teachers.each do |teacher|
@@ -41,12 +72,14 @@ class StudentPointsController < ApplicationController
 		unless @student_point.assigned_points > 0
 			@number_of_repetitions = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and point_id = ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @student_point.point_id).where('assigned_points < 0').count
 			if @number_of_repetitions > @alert_settings.repetition_of_mistake_before_email
-				#UserMailer.repetition_email(@user).deliver
+				
 				@point = Point.where('id = ?', @student_point.point_id).first
 				
-				@guardians.each do |guardian|
-					@email = User.where('id = ?', guardian.guardian_id).first
-					UserMailer.repetition_email(@email, @user, @point).deliver
+				if @alert_settings.send_auto_email
+					@guardians.each do |guardian|
+						@email = User.where('id = ?', guardian.guardian_id).first
+						UserMailer.repetition_email(@email, @user, @point).deliver
+					end
 				end
 				
 				@teachers.each do |teacher|
@@ -59,11 +92,12 @@ class StudentPointsController < ApplicationController
 				#find the number of serious felanies committed
 				@number_of_serious_offences = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ? and assigned_points <= ?', @student_point.user_id, @current_term.term_from, @current_term.term_to, @alert_settings.min_points_for_penalty).where('assigned_points < 0').count
 				if @number_of_serious_offences > @alert_settings.max_warnings_before_email_alert
-					#UserMailer.too_many_email(@user, @user).deliver
 					
-					@guardians.each do |guardian|
-						@email = User.where('id = ?', guardian.guardian_id).first
-						UserMailer.too_many_email(@email, @user).deliver
+					if @alert_settings.send_auto_email
+						@guardians.each do |guardian|
+							@email = User.where('id = ?', guardian.guardian_id).first
+							UserMailer.too_many_email(@email, @user).deliver
+						end
 					end
 					
 					@teachers.each do |teacher|

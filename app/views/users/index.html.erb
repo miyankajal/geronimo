@@ -23,3 +23,14 @@
 </table>
 
 <br>
+
+<h3>Import Users</h3>
+
+<%= link_to "Sample Excel File", :controller => 'users', :action => 'download_sample', :id => current_user.id %>
+</br>
+
+<%= form_tag import_users_path, multipart: true do %>
+  <%= file_field_tag :file %>
+  </br>
+  <%= submit_tag "Import" %>
+<% end %>

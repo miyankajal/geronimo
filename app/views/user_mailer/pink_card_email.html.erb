@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>Dear Sir/Ma'am,</p>
+    <p>
+      This is to inform you that your ward, <%= @student.first_name %> <%= @student.last_name %>, has been given a Pink Card for <% @point.description %> and a total of <% @point.value %> points have been deducted from his disciplinary points. Getting two Pink Cards results in suspension from the school.<br>
+    </p>
+    <p>
+      This is for your immediate attention. Please meet the Principal as soon as possible. You can login to the site to see your ward's disciplinary points at <%= @url %>.
+    </p>
+    <p>Yours sincerely,</p>
+    <p>School Administration.</p>
+  </body>
+</html>

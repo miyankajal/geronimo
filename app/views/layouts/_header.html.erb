@@ -25,6 +25,10 @@
       						</li>
 						<% end %>
 						
+						<% if current_user.type != 1 %>
+							<li><%= link_to "Points", points_path %></li>
+						<% end %>
+
 						<% if current_user.type == 1 %>
 							<li><%= link_to "Reports", reports_path %></li>
 							<li class="dropdown">

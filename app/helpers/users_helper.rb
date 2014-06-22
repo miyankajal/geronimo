@@ -51,4 +51,5 @@ module UsersHelper
 	@guardianship = Guardianship.select('id').where(['user_id = ? AND guardian_id = ?', user_id, guardian_id]).first
 	#Guardianship.destroy(@guardianship)
   end
+  
 end

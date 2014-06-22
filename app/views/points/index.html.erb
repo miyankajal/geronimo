@@ -22,8 +22,12 @@
 	<% end %>
 	<% @desc = CardOffenseType.select('description').where('id = ?', point.card_offense_id).first %>
 	<td><%= @desc.description %></td>
-        <td><%= link_to 'Edit', edit_point_path(point) %></td>
-        <td><%= link_to 'Remove', point, method: :delete, data: { confirm: 'Are you sure you want to remove this point?' } %></td>
+
+	<% if current_user.type == 1 %>
+        	<td><%= link_to 'Edit', edit_point_path(point) %></td>
+       		<td><%= link_to 'Remove', point, method: :delete, data: { confirm: 'Are you sure you want to remove this point?' } %></td>
+	<% end %>
+
       </tr>
     <% end %>
   </tbody>

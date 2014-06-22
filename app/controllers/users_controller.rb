@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  skip_filter :download_sample
   before_action :set_user, only: [:show]
   before_action :signed_in_user, only: [:index, :show, :edit, :update, :destroy]
   before_action :can_edit_users?, only: [:index, :edit, :update, :destroy]
@@ -96,6 +97,16 @@ class UsersController < ApplicationController
   
   def classes_all
 	@class_options = ClassSection.all.map{|class_section| [class_section.description, class_section.id]}
+  end
+  
+  def import
+	User.import(params[:file])
+	redirect_to root_url, notice: "Users imported."
+  end
+  
+  def download_sample
+    file_path = "#{Rails.root}/public/users.xlsx"
+    send_file file_path, :filename => 'users.xlsx'
   end
 
   private
