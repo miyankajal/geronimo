@@ -5,6 +5,8 @@ class UsersController < ApplicationController
   before_action :can_edit_users?, only: [:index, :edit, :update, :destroy]
   before_action :classes_all
 
+  
+
   # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
   def index
   	if params[:type] == '3'
@@ -98,6 +100,8 @@ class UsersController < ApplicationController
   def classes_all
 	@class_options = ClassSection.all.map{|class_section| [class_section.description, class_section.id]}
   end
+  
+  
   
   def import
 	User.import(params[:file])

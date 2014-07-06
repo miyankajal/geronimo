@@ -1,0 +1,21 @@
+<%= form_for(@posting_portal) do |f| %>
+  <% if @posting_portal.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@posting_portal.errors.count, "error") %> prohibited this posting_portal from being saved:</h2>
+
+      <ul>
+      <% @posting_portal.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

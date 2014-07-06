@@ -1,0 +1,31 @@
+<h1>Listing tag_comment_ideas</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Tag</th>
+      <th>Comment</th>
+      <th>Idea</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @tag_comment_ideas.each do |tag_comment_idea| %>
+      <tr>
+        <td><%= tag_comment_idea.tag_id %></td>
+        <td><%= tag_comment_idea.comment_id %></td>
+        <td><%= tag_comment_idea.idea_id %></td>
+        <td><%= link_to 'Show', tag_comment_idea %></td>
+        <td><%= link_to 'Edit', edit_tag_comment_idea_path(tag_comment_idea) %></td>
+        <td><%= link_to 'Destroy', tag_comment_idea, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Tag comment idea', new_tag_comment_idea_path %>

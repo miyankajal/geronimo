@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Tag:</strong>
+  <%= @tag_comment_idea.tag_id %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @tag_comment_idea.comment_id %>
+</p>
+
+<p>
+  <strong>Idea:</strong>
+  <%= @tag_comment_idea.idea_id %>
+</p>
+
+<%= link_to 'Edit', edit_tag_comment_idea_path(@tag_comment_idea) %> |
+<%= link_to 'Back', tag_comment_ideas_path %>

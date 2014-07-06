@@ -1,0 +1,40 @@
+<h2><%= @user.first_name %> <%= @user.last_name %></h2>
+
+<hr>
+<div class="col-md-3">
+
+<%= gravatar_for(@user) %>
+</div>
+
+<div class="col-md-9">
+
+	<p>
+	  <strong>Username:</strong>
+	  <%= @user.username %>
+	</p>
+
+	<p>
+	  <strong>Email:</strong>
+	  <%= @user.email %>
+	</p>
+
+	<p>
+	  <strong>User Type:</strong>
+	  <%if @user.type == 2 %>
+		Teacher
+	  <% elsif @user.type == 3 %>
+		Student
+	  <% end %>
+	</p>
+
+	<p>
+	  <strong>Enrollment:</strong>
+	  <%= @user.enrollment_id %>
+	</p>
+
+	<p>
+	  <strong>Class:</strong>
+	  <%= @user_grade %>
+	</p>
+
+</div>		

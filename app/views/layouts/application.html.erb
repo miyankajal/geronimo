@@ -21,8 +21,12 @@
 </head>
 
 <body>
-	<%= render 'layouts/header'%>
-
+	<% if session[:product] == 1 %>
+		<%= render 'layouts/header'%>
+	<% else %>
+		<%= render 'layouts/ideas_header'%>
+  	<% end %>
+  	
 	<div class = "container">
 		<%= yield %>
 	</div>

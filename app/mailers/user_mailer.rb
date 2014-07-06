@@ -60,4 +60,10 @@ class UserMailer < ActionMailer::Base
     mail(to: @user.email, subject: 'For Immediate Attention of the Guardian')
   end
   
+  def new_idea_email(user)
+    @user = user
+    @url  = 'http://geronimo.com/login'
+    mail(to: @user.email, subject: 'New Idea on Geronimo!!!')
+  end
+  
 end

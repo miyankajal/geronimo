@@ -3,6 +3,19 @@ require 'resque_scheduler'
  
 GeronimoSms::Application.routes.draw do
   
+  resources :tag_comment_ideas
+
+  resources :comments
+
+  resources :ideas
+  get '/ideas/get_ideas/:portal_id/:class_id/:accepted', to: 'ideas#index', as: 'get_portal_ideas'
+  get '/ideas/like/:idea_id', to: 'ideas#add_like', as: 'add_like'
+  get '/ideas/accept/:idea_id', to: 'ideas#accept_idea', as: 'accept'
+
+  resources :posting_portals
+
+  resources :tags
+
   resources :schools
 
   get "password_resets/new"
@@ -19,6 +32,7 @@ GeronimoSms::Application.routes.draw do
   match '/settings' => 'static_pages#settings', via: [:get]
   match '/reports' => 'static_pages#reports', via: [:get]
   match '/user_report' => 'static_pages#user_report', via: [:get]
+  
   match '/contact_us' => 'static_pages#contact_us', via: [:get]
   match '/demo' => 'static_pages#demo', via: [:get]
   
@@ -31,7 +45,6 @@ GeronimoSms::Application.routes.draw do
   resources :points
 
   resources :users
-  
   match 'user/:type' => 'users#index', via: [:get]
   
   resources :users do

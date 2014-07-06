@@ -1,0 +1,38 @@
+<tr>
+	<td colspan="4" class="separate-below-none"><b><%= link_to idea.first_name + ' ' + idea.last_name, user_path(idea.user_id)%></b></td>
+</tr>
+<tr>
+	<td/>
+	<td colspan="2" rowspan="2"> <%= idea.idea %> </td>
+	<td><% if idea.user_id == current_user.id %> <%= link_to 'Edit', edit_idea_path(idea) %> <% end %></td>
+</tr>
+<tr>
+	<td/>
+	<td><% if idea.user_id == current_user.id %> <%= link_to 'Remove', idea, method: :delete, data: { confirm: 'Are you sure you want to remove this idea from the bank?' } %> <% end %> </td>
+</tr>
+<tr>
+	<td colspan="4" class="separate-below-none"/>
+</tr>
+<tr>
+	<td/>
+	<td><b>Last Updated:</b> <%= idea.updated_at %></td>
+	<td><%= idea.likes_count %> <% if params[:portal_id] != '1' && current_user.id != idea.user_id %> <%= link_to 'likes', add_like_path(idea.id) %> <% else %> likes <% end %> </td>
+	<td>	
+		<% if idea.accepted == false %>
+			<% if current_user.type == 2 && idea.moderator_id == current_user.id%>
+				<%= link_to 'Accept', accept_path(idea.id) %>
+			<% else %>
+				To be accepted
+			<% end %>
+		<% else %>
+			Accepted
+		<% end %>
+	</td>
+</tr>
+<tr>
+	<td colspan="3" class="separate-below-none"/>
+</tr>
+<tr class="separate-below">
+	<td colspan="2"><b>Tags: </b> </td>
+	<td colspan="2"> <% if current_user.type == 2 || params[:portal_id] == '1' %> <b>Moderator:</b> <%= idea.moderator_user_first_name + ' ' + idea.moderator_user_last_name %> <% end %></td>
+</tr>

@@ -25,6 +25,9 @@ class User < ActiveRecord::Base
 	has_many :guardians, :through => :guardianships
 	has_many :inverse_guardianships, :class_name => "GuardianShip", :foreign_key => "guardian_id"
 	has_many :inverse_guardians, :through => :inverse_guardianships, :source => :user
+	
+	has_many :comments
+	has_many :ideas
 
 	has_secure_password
 	

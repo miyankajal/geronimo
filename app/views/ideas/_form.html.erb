@@ -1,0 +1,63 @@
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+		<% @idea = Idea.new %>
+		<h3>New idea</h3>
+        	<%= form_for @idea, :html => {:class => 'form-horizontal'} do |f| %>
+				<fieldset>
+					  <% if @idea.errors.any? %>
+						<div id="error_explanation">
+						  <h2><%= pluralize(@idea.errors.count, "error") %> prohibited this idea from being saved:</h2>
+
+						  <ul>
+						  <% @idea.errors.full_messages.each do |msg| %>
+							<li><%= msg %></li>
+						  <% end %>
+						  </ul>
+						</div>
+					  <% end %>
+
+					  <div class="form-group">
+						<%= f.label :idea, :class=>'col-sm-2 control-label' %><br>
+						<div class="col-xs-4">
+							<%= f.text_area :idea, :cols => "60", :rows => "5" %>
+						</div>
+					  </div>
+
+					  <%= f.hidden_field :user_id, :value => current_user.id %> 
+					
+					  <div class="form-group">
+						   <%= f.label :moderator_id, :class=>'col-sm-2 control-label' %>
+						   <div class="col-xs-4">
+								<%= f.select :moderator_id, @moderator_options, {:include_blank =>'select one'}%>
+						   </div>
+					  </div> 
+					  
+					  <% if current_user.type == 2 %>
+						  <div class="form-group">
+							<%= f.label :tag_id, :class=>'col-sm-2 control-label' %><br>
+							<div class="col-xs-4">
+								<%= f.number_field :tag_id, :class=>'form-control' %>
+							</div>
+						  </div>
+						  <div class="form-group">
+							<%= f.label :portal_id, :class=>'col-sm-2 control-label' %><br>
+							<div class="col-xs-4">
+								<%= f.number_field :portal_id, :class=>'form-control' %>
+							</div>
+						  </div>
+					  <% end %>
+					  	
+					    <p>
+						  <div class="form-actions">
+							<div class="col-sm-offset-2 col-sm-10">
+								<%= f.submit "Create Idea", class: "btn-small btn-primary" %>
+							</div>
+						  </div>
+					   </p>
+		  
+				</fieldset>
+			<% end %>
+		</div>
+    </div>
+</div>
