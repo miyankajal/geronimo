@@ -21,19 +21,21 @@ class CommentsController < ApplicationController
 
   # POST /comments
   def create
+	session[:return_to] ||= request.referer
     @comment = Comment.new(comment_params)
 
     if @comment.save
-      redirect_to @comment, notice: 'Comment was successfully created.'
+      redirect_to session.delete(:return_to), notice: 'Comment was successfully created.'
     else
-      render action: 'new'
-    end
+      redirect_to session.delete(:return_to), notice: 'Comment was not created.'
+	end
   end
 
   # PATCH/PUT /comments/1
   def update
+	session[:return_to] ||= request.referer
     if @comment.update(comment_params)
-      redirect_to @comment, notice: 'Comment was successfully updated.'
+      redirect_to session.delete(:return_to), notice: 'Comment was successfully updated.'
     else
       render action: 'edit'
     end
@@ -41,8 +43,9 @@ class CommentsController < ApplicationController
 
   # DELETE /comments/1
   def destroy
+	session[:return_to] ||= request.referer
     @comment.destroy
-    redirect_to comments_url, notice: 'Comment was successfully destroyed.'
+    redirect_to session.delete(:return_to), notice: 'Comment was successfully destroyed.'
   end
 
   private

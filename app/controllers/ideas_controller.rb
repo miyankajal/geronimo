@@ -2,6 +2,8 @@ class IdeasController < ApplicationController
   before_action :set_idea, only: [:show, :edit, :update, :destroy]
   before_action :teachers_all
   before_action :teacher_class_all
+  before_action :tags_all
+  before_action :get_idea_tag
   
   # GET /ideas
   def index
@@ -29,19 +31,33 @@ class IdeasController < ApplicationController
 	
   end
   
+  def get_idea_tag
+	@idea_tags = Tag.joins(:tag_comment_ideas).select(:description).where('idea_id = 6')
+  end
+  
   def teacher_class_all
 	@teacher_class_options = TeacherClassRelationship.joins(:class_section).select('class_sections.id, description').where('user_id = ?', current_user.id).map{|class_section| [class_section.description, class_section.id]}
   end
   
+  def tags_all
+	@tag_options = Tag.select('id, description').where('school_id = ?', current_user.school_id).map{|tag| [tag.description, tag.id]}
+  end
+  
   def add_like
+	session[:return_to] ||= request.referer
 	Idea.where('id = ? AND user_id <> ?', params[:idea_id], current_user.id).update_all('likes_count = likes_count + 1')
-	redirect_to get_portal_ideas_path(2,0,0)
+	redirect_to session.delete(:return_to)
+	#redirect_to get_portal_ideas_path(2,0,0)
   end
   
   def accept_idea
+	session[:return_to] ||= request.referer
 	Idea.where('id = ? AND moderator_id = ?', params[:idea_id], current_user.id).update_all(accepted: true)
-	redirect_to get_portal_ideas_path(2,0,0)
+	redirect_to session.delete(:return_to)
+	#redirect_to get_portal_ideas_path(2,0,0)
   end
+  
+
 
   # GET /ideas/1
   def show
@@ -58,13 +74,15 @@ class IdeasController < ApplicationController
 
   # POST /ideas
   def create
+	session[:return_to] ||= request.referer
     @idea = Idea.new(idea_params)
 
     if @idea.save
 	  @moderator = User.select(:username, :email).where('id = ?', @idea.moderator_id)
+	  redirect_to session.delete(:return_to)
 	  #UserMailer.new_idea_email(@moderator[0]).deliver
 	  
-      redirect_to get_portal_ideas_path(1,0,0), notice: 'Idea was successfully created.'
+      #redirect_to get_portal_ideas_path(1,0,0), notice: 'Idea was successfully created.'
     else
       render action: 'new'
     end
@@ -72,8 +90,9 @@ class IdeasController < ApplicationController
 
   # PATCH/PUT /ideas/1
   def update
+	session[:return_to] ||= request.referer
     if @idea.update(idea_params)
-      redirect_to @idea, notice: 'Idea was successfully updated.'
+      redirect_to session.delete(:return_to), notice: 'Idea was successfully updated.'
     else
       render action: 'edit'
     end
@@ -81,8 +100,10 @@ class IdeasController < ApplicationController
 
   # DELETE /ideas/1
   def destroy
+	session[:return_to] ||= request.referer
     @idea.destroy
-    redirect_to get_portal_ideas_path(1,0,0), notice: 'Idea was successfully destroyed.'
+    redirect_to session.delete(:return_to)
+	#redirect_to get_portal_ideas_path(1,0,0), notice: 'Idea was successfully destroyed.'
   end
 
   def teachers_all

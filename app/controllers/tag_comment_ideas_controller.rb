@@ -21,10 +21,11 @@ class TagCommentIdeasController < ApplicationController
 
   # POST /tag_comment_ideas
   def create
+	session[:return_to] ||= request.referer
     @tag_comment_idea = TagCommentIdea.new(tag_comment_idea_params)
 
     if @tag_comment_idea.save
-      redirect_to @tag_comment_idea, notice: 'Tag comment idea was successfully created.'
+      redirect_to session.delete(:return_to)
     else
       render action: 'new'
     end
@@ -41,10 +42,17 @@ class TagCommentIdeasController < ApplicationController
 
   # DELETE /tag_comment_ideas/1
   def destroy
+	session[:return_to] ||= request.referer
     @tag_comment_idea.destroy
-    redirect_to tag_comment_ideas_url, notice: 'Tag comment idea was successfully destroyed.'
+    redirect_to session.delete(:return_to)
   end
 
+  def add_tag
+	session[:return_to] ||= request.referer
+	TagCommentIdea.create(:tag_id => params[:tag_id], :idea_id => params[:idea_id])
+	redirect_to session.delete(:return_to)
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_tag_comment_idea

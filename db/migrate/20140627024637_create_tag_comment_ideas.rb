@@ -8,7 +8,7 @@ class CreateTagCommentIdeas < ActiveRecord::Migration
       t.timestamps
     end
 	
-	add_index :tag_comment_ideas, [:tag_id, :comment_id, :idea_id, name: 'IX_Tag_Comment_Ideas'
+	add_index :tag_comment_ideas, [:tag_id, :comment_id, :idea_id]
   end
   
   def self.down

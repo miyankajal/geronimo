@@ -1,21 +1,43 @@
-<%= form_for(@tag) do |f| %>
-  <% if @tag.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@tag.errors.count, "error") %> prohibited this tag from being saved:</h2>
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+		<% if @tag.nil? %>
+			<% @tag = Tag.new %>
+		<% end %>
+		
+		<h3>New tag</h3>
+		
+		<%= form_for @tag, :html => {:class => 'form-horizontal'} do |f| %>
+		  <fieldset>
+			  <% if @tag.errors.any? %>
+				<div id="error_explanation">
+				  <h2><%= pluralize(@tag.errors.count, "error") %> prohibited this tag from being saved:</h2>
 
-      <ul>
-      <% @tag.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+				  <ul>
+				  <% @tag.errors.full_messages.each do |msg| %>
+					<li><%= msg %></li>
+				  <% end %>
+				  </ul>
+				</div>
+			  <% end %>
+
+			  <div class="form-group">
+				<%= f.label :description, :class=>'col-sm-2 control-label' %><br>
+				<div class="col-xs-4">
+					<%= f.text_field :description %>
+				</div>
+			  </div>
+			  <%= f.hidden_field :school_id, :value => current_user.school_id %> 
+			  <p>
+				  <div class="form-actions">
+					<div class="col-sm-offset-2 col-sm-10">
+						<%= f.submit "Create Tag", class: "btn-small btn-primary" %>
+					</div>
+				  </div>
+			   </p>
+			   
+			</fieldset>
+		<% end %>
+		</div>
     </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :description %><br>
-    <%= f.text_field :description %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+</div>

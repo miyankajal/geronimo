@@ -4,4 +4,5 @@ class School < ActiveRecord::Base
 	has_many :points
 	has_many :class_sections
 	has_one :alert_settings
+	has_many :tags
 end

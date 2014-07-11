@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140627012540) do
+ActiveRecord::Schema.define(version: 20140706145111) do
 
   create_table "alert_email_queues", force: true do |t|
     t.integer "alert_id"
@@ -109,10 +109,21 @@ ActiveRecord::Schema.define(version: 20140627012540) do
     t.integer  "card_offense_id", default: 1
   end
 
+  create_table "tag_comment_ideas", force: true do |t|
+    t.integer  "tag_id"
+    t.integer  "comment_id"
+    t.integer  "idea_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "tag_comment_ideas", ["tag_id", "comment_id", "idea_id"], name: "index_tag_comment_ideas_on_tag_id_and_comment_id_and_idea_id", using: :btree
+
   create_table "tags", force: true do |t|
     t.string   "description", limit: 64
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "school_id"
   end
 
   add_index "tags", ["id"], name: "FK_Tags", using: :btree
