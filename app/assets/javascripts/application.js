@@ -19,3 +19,15 @@
 //= require student_points
 //= require jsapi
 //= require chartkick
+//= require jquery.purr
+//= require best_in_place
+//= require chosen-jquery
+
+$(document).ready(function() {
+  /* Activating Best In Place */
+  jQuery(".best_in_place").best_in_place();
+});
+
+$(document).ready(function(){
+  $(".chzn-select").chosen();
+});

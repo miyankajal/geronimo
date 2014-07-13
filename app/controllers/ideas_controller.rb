@@ -79,7 +79,10 @@ class IdeasController < ApplicationController
 
     if @idea.save
 	  @moderator = User.select(:username, :email).where('id = ?', @idea.moderator_id)
-	  redirect_to session.delete(:return_to)
+	  respond_to do |format|
+			format.html { redirect_to session.delete(:return_to) }
+			format.json { render json: session.delete(:return_to)  }
+	  end
 	  #UserMailer.new_idea_email(@moderator[0]).deliver
 	  
       #redirect_to get_portal_ideas_path(1,0,0), notice: 'Idea was successfully created.'
@@ -92,7 +95,10 @@ class IdeasController < ApplicationController
   def update
 	session[:return_to] ||= request.referer
     if @idea.update(idea_params)
-      redirect_to session.delete(:return_to), notice: 'Idea was successfully updated.'
+		respond_to do |format|
+			format.html { redirect_to session.delete(:return_to) }
+			format.json { render json: session.delete(:return_to)  }
+		end
     else
       render action: 'edit'
     end

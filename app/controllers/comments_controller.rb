@@ -1,6 +1,8 @@
 class CommentsController < ApplicationController
   before_action :set_comment, only: [:show, :edit, :update, :destroy]
 
+  respond_to :html, :json
+  
   # GET /comments
   def index
     @comments = Comment.all
@@ -25,9 +27,10 @@ class CommentsController < ApplicationController
     @comment = Comment.new(comment_params)
 
     if @comment.save
-      redirect_to session.delete(:return_to), notice: 'Comment was successfully created.'
-    else
-      redirect_to session.delete(:return_to), notice: 'Comment was not created.'
+		respond_to do |format|
+			format.html { redirect_to session.delete(:return_to) }
+			format.json { render json: session.delete(:return_to)  }
+		end
 	end
   end
 
@@ -35,8 +38,11 @@ class CommentsController < ApplicationController
   def update
 	session[:return_to] ||= request.referer
     if @comment.update(comment_params)
-      redirect_to session.delete(:return_to), notice: 'Comment was successfully updated.'
-    else
+		respond_to do |format|
+			format.html { redirect_to session.delete(:return_to) }
+			format.json { render json: session.delete(:return_to)  }
+		end
+	else
       render action: 'edit'
     end
   end
@@ -56,6 +62,6 @@ class CommentsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def comment_params
-      params.require(:comment).permit(:comment, :idea_id, :user_id, :likes_count, :accepted)
+      params.require(:comment).permit(:comment, :idea_id, :user_id, :accepted)
     end
 end

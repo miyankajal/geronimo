@@ -22,13 +22,18 @@ class TagCommentIdeasController < ApplicationController
   # POST /tag_comment_ideas
   def create
 	session[:return_to] ||= request.referer
-    @tag_comment_idea = TagCommentIdea.new(tag_comment_idea_params)
+    
+	@idea_id = tag_comment_idea_params[:idea_id]
+	TagCommentIdea.where('idea_id = ?', @idea_id).delete_all
+	
+	@tag_selected = tag_comment_idea_params[:tag_id]
 
-    if @tag_comment_idea.save
-      redirect_to session.delete(:return_to)
-    else
-      render action: 'new'
-    end
+	@tag_selected.each do |id|
+		  TagCommentIdea.create(:tag_id => id , :idea_id => @idea_id)
+	end
+	
+	redirect_to session.delete(:return_to)
+
   end
 
   # PATCH/PUT /tag_comment_ideas/1
@@ -61,6 +66,6 @@ class TagCommentIdeasController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def tag_comment_idea_params
-      params.require(:tag_comment_idea).permit(:tag_id, :comment_id, :idea_id)
+      params.require(:tag_comment_idea).permit(:comment_id, :idea_id, :tag_id => [])
     end
 end
