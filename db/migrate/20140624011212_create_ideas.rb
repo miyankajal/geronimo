@@ -18,7 +18,7 @@ class CreateIdeas < ActiveRecord::Migration
 	add_index :ideas, [:tag_id], name: 'IX_Ideas_Tags'
 	add_index :ideas, [:portal_id], name: 'IX_Ideas_Portals'
 	add_index :ideas, [:moderator_id, :accepted], name: 'IX_Ideas_Moderator'
-	add_index :ideas, [:class_id, name: 'IX_Ideas_Classes'
+	add_index :ideas, [:class_id], name: 'IX_Ideas_Classes'
   end
   
   def self.down

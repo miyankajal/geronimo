@@ -1,10 +1,3 @@
-<script type="text/javascript">
-	$(document).ready(function() {
-	  /* Activating Best In Place */
-	  jQuery(".best_in_place").best_in_place();
-	});
-</script>
-
 <tr>
 	<td colspan="4" class="separate-below-none"><b><%= link_to idea.first_name + ' ' + idea.last_name, user_path(idea.user_id)%></b></td>
 </tr>
@@ -37,19 +30,15 @@
 	</td>
 </tr>
 <tr>
-	<td colspan="3" class="separate-below-none"/>
+	<td colspan="4" class="separate-below-none"/>
 </tr>
 <tr>
 	<td colspan="1"/>
 	<td colspan="3"> <% if current_user.type == 2 || params[:portal_id] == '1' %> <b>Moderator:</b> <%= idea.moderator_user_first_name + ' ' + idea.moderator_user_last_name %> <% end %></td>
 </tr>
 <tr>
-	<td colspan="3" class="separate-below-none"/>
+	<td colspan="4" class="separate-below-none"/>
 </tr>
-<tr>
-	<td colspan="3" class="separate-below-none"/>
-</tr>
-
 <tr>
 	<td colspan="1"/>
 	<td colspan="3">
@@ -65,7 +54,7 @@
 </tr>
 
 <tr>
-	<td colspan="3" class="separate-below-none"/>
+	<td colspan="4" class="separate-below-none"/>
 </tr>
 
 <tr>
@@ -73,7 +62,7 @@
 </tr>
 
 <tr>
-	<td colspan="3" class="separate-below-none"/>
+	<td colspan="4" class="separate-below-none"/>
 </tr>
 
 <% @comments = Comment.joins(:user).select('comments.id AS id, user_id, comment, users.first_name AS user_first_name, users.last_name AS user_last_name').where('idea_id = ?', idea.id) %> 
@@ -91,18 +80,16 @@
 			<% end %>
 		</td>
 		
-		<td><%= link_to 'Remove', comment, method: :delete, data: { confirm: 'Are you sure you want to remove comment?' } %></td>
+		<td>
+			<%= link_to 'Remove', comment, method: :delete, data: { confirm: 'Are you sure you want to remove comment?' } %>
+		</td>
 	</tr>
 <% end %>
 
 <tr>
-	<td colspan="3" class="separate-below-none"/>
+	<td colspan="4" class="separate-below-none"/>
 </tr>
 
-<tr>
-	<td><b>Comment: </b> </td>	
-	<td colspan="3"/> 
-</tr>
 
 <tr class="separate-below">
 	<td colspan="1"/> 

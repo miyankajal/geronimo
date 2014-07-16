@@ -14,7 +14,7 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require bootstrap
-//= require turbolinks
+//= require jquery.turbolinks
 //= require_tree .
 //= require student_points
 //= require jsapi
