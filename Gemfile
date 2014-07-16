@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 4.0.0'
 gem 'railties' 
-gem 'turbolinks'
+gem 'jquery-turbolinks'
 gem 'devise', '3.0.0.rc'
 gem 'kaminari'
 gem 'roo'

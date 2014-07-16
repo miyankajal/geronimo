@@ -32,8 +32,13 @@ class TagsController < ApplicationController
 
   # PATCH/PUT /tags/1
   def update
+	session[:return_to] ||= request.referer
+	
     if @tag.update(tag_params)
-      redirect_to tags_url, notice: 'Tag was successfully updated.'
+      respond_to do |format|
+			format.html { redirect_to @tags }
+			format.json { render json: @tags }
+	  end
     else
       render action: 'edit'
     end
