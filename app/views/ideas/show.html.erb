@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Idea:</strong>
+  <%= @idea.idea %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @idea.user_id %>
+</p>
+
+<p>
+  <strong>Moderator:</strong>
+  <%= @idea.moderator_id %>
+</p>
+
+<p>
+  <strong>Likes count:</strong>
+  <%= @idea.likes_count %>
+</p>
+
+<p>
+  <strong>Tag:</strong>
+  <%= @idea.tag_id %>
+</p>
+
+<p>
+  <strong>Portal:</strong>
+  <%= @idea.portal_id %>
+</p>
+
+<p>
+  <strong>Accepted:</strong>
+  <%= @idea.accepted %>
+</p>
+
+<%= link_to 'Edit', edit_idea_path(@idea) %> |
+<%= link_to 'Back', ideas_path %>

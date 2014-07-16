@@ -8,7 +8,9 @@ gem 'kaminari'
 gem 'roo'
 gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
 gem 'mysql2'
-gem 'roo'
+gem 'foreigner'
+gem 'best_in_place', github: 'bernat/best_in_place', branch: "rails-4"
+gem 'chosen-rails'
 
 gem 'jquery-rails'
 gem 'bootstrap-sass', '2.0.0'

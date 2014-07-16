@@ -1,0 +1,27 @@
+<h1>Listing posting_portals</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @posting_portals.each do |posting_portal| %>
+      <tr>
+        <td><%= posting_portal.description %></td>
+        <td><%= link_to 'Show', posting_portal %></td>
+        <td><%= link_to 'Edit', edit_posting_portal_path(posting_portal) %></td>
+        <td><%= link_to 'Destroy', posting_portal, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Posting portal', new_posting_portal_path %>

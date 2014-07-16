@@ -1,0 +1,35 @@
+<header class="navbar navbar-fixed-top navbar-inverse">
+	<div class="navbar-inner">
+		<div class="container">
+			<% if current_user.nil? %>
+				<a class="navbar-brand" href="../demo">GERONIMO!!!</a>
+			<% else %>
+				<a class="navbar-brand" href="../geronimo_settings">GERONIMO!!!</a>
+			<% end %>
+			<nav>
+				<ul class="nav navbar-nav navbar-right">
+					<% if sign_in? %>
+						
+						<% if current_user.type == 3 %>
+							<li><%= link_to "My Ideas", get_portal_ideas_path(1,0,0) %></li>
+						<% elsif current_user.type == 2 %>
+							<li><%= link_to "Idea Tags", tags_path() %></li>
+						<% end %>
+						<% if current_user.type == 2 %>
+							<li><%= link_to "My Class Ideas", get_portal_ideas_path(2,0,0) %></li>
+						<% else %>
+							<li><%= link_to "My Class Ideas", get_portal_ideas_path(2,0,1) %></li>
+						<% end %>
+						<li><%= link_to "My School Ideas", get_portal_ideas_path(3,0,0) %></li>
+						
+						<li><%= link_to "POINTS BANK", user_path(current_user) %></li>
+						
+ 						<li><%= link_to "Sign out", signout_path, :method => 'delete' %></li>
+ 						
+ 					<% end %>
+ 					
+				</ul>
+			</nav>
+		</div>
+	</div>	
+</header>

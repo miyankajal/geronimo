@@ -9,6 +9,7 @@ module SessionsHelper
 		end
 		user.update_attribute(:remember_token, User.hash(remember_token))
 		self.current_user = user
+		set_product_points
 	end
 	
 	def current_user=(user)
@@ -31,6 +32,18 @@ module SessionsHelper
 	
 	def store_location
 		session[:return_to] = request.url if request.get?
+	end
+	
+	def set_product_points
+		#1 = Student Points
+		session[:product] = 1
+		#redirect_to user_path(current_user)
+	end
+	
+	def set_product_ideas
+		#2 = Ideas Tank
+		session[:product] = 2
+		#redirect_to user_path(current_user)
 	end
 	
 	def sign_in?

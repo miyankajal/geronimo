@@ -65,3 +65,7 @@ Point.create(:id=>27, :description=>'Dormitory Misbehavior', :value=>20, :credit
 Point.create(:id=>28, :description=>'Sports Field Misbehavior', :value=>20, :credit=>false, :card_offense_id => 1, :school_id => 1)
 Point.create(:id=>29, :description=>'Ragging/Bullying', :value=>300, :credit=>false, :card_offense_id => 4, :school_id => 1)
 Point.create(:id=>30, :description=>'Extended Violent Behavior', :value=>250, :credit=>false, :card_offense_id => 3, :school_id => 1)
+
+PostingPortal.create(:id=>1, :description=>'None')
+PostingPortal.create(:id=>2, :description=>'Class')
+PostingPortal.create(:id=>3, :description=>'School')

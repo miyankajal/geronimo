@@ -1,0 +1,114 @@
+<script type="text/javascript">
+	$(document).ready(function() {
+	  /* Activating Best In Place */
+	  jQuery(".best_in_place").best_in_place();
+	});
+</script>
+
+<tr>
+	<td colspan="4" class="separate-below-none"><b><%= link_to idea.first_name + ' ' + idea.last_name, user_path(idea.user_id)%></b></td>
+</tr>
+<tr>
+	<td/>
+	<td colspan="2" rowspan="2"> <%= idea.idea %> </td>
+	<td><% if idea.user_id == current_user.id %> <%= best_in_place idea, :idea, :type => :textarea  %> <% end %></td>
+</tr>
+<tr>
+	<td/>
+	<td><% if idea.user_id == current_user.id %> <%= link_to 'Remove', idea, method: :delete, data: { confirm: 'Are you sure you want to remove this idea from the bank?' } %> <% end %> </td>
+</tr>
+<tr>
+	<td colspan="4" class="separate-below-none"/>
+</tr>
+<tr>
+	<td/>
+	<td><b>Last Updated:</b> <%= idea.updated_at %></td>
+	<td><%= idea.likes_count %> <% if params[:portal_id] != '1' && current_user.id != idea.user_id %> <%= link_to 'likes', add_like_path(idea.id) %> <% else %> likes <% end %> </td>
+	<td>	
+		<% if idea.accepted == false %>
+			<% if current_user.type == 2 && idea.moderator_id == current_user.id%>
+				<%= link_to 'Accept', accept_path(idea.id) %>
+			<% else %>
+				To be accepted
+			<% end %>
+		<% else %>
+			Accepted
+		<% end %>
+	</td>
+</tr>
+<tr>
+	<td colspan="3" class="separate-below-none"/>
+</tr>
+<tr>
+	<td colspan="1"/>
+	<td colspan="3"> <% if current_user.type == 2 || params[:portal_id] == '1' %> <b>Moderator:</b> <%= idea.moderator_user_first_name + ' ' + idea.moderator_user_last_name %> <% end %></td>
+</tr>
+<tr>
+	<td colspan="3" class="separate-below-none"/>
+</tr>
+<tr>
+	<td colspan="3" class="separate-below-none"/>
+</tr>
+
+<tr>
+	<td colspan="1"/>
+	<td colspan="3">
+	<% @tag_comment_ideas = TagCommentIdea.new %>
+	<%= form_for @tag_comment_ideas, :html => {:class => 'form-horizontal'} do |f| %>
+      <%= f.hidden_field :idea_id, :value => idea.id %> 
+      <% @idea_tags = Tag.joins(:tag_comment_ideas).select('description, tag_comment_ideas.id as tag_idea_id, tag_comment_ideas.tag_id as tag_idea_tag_id, tag_comment_ideas.idea_id as tag_idea_idea_id').where('idea_id = ?', idea.id) %> 
+			
+	  <%= f.select :tag_id, options_for_select(@tag_options, @idea_tags.map { |j| j.tag_idea_tag_id}), {}, { :multiple => true, :class => "chzn-select", :style => "width:450px;" }%>
+	  <%= f.submit "Save Tags", class: "btn-small btn-primary" %>
+	<% end %>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="3" class="separate-below-none"/>
+</tr>
+
+<tr>
+	<td><b>Comments: </b> </td>	
+</tr>
+
+<tr>
+	<td colspan="3" class="separate-below-none"/>
+</tr>
+
+<% @comments = Comment.joins(:user).select('comments.id AS id, user_id, comment, users.first_name AS user_first_name, users.last_name AS user_last_name').where('idea_id = ?', idea.id) %> 
+<% @comments.each do |comment| %>
+	<tr>
+		<td colspan="1"> 	
+			<a><%= comment.user_first_name + ' ' + comment.user_last_name + ' - '%></a> 
+			
+		</td>
+		<td colspan="2"> 
+			<% if comment.user_id == current_user.id %>
+				<%= best_in_place comment, :comment, :type => :textarea  %>
+			<% else %>
+				<%= comment.comment %>
+			<% end %>
+		</td>
+		
+		<td><%= link_to 'Remove', comment, method: :delete, data: { confirm: 'Are you sure you want to remove comment?' } %></td>
+	</tr>
+<% end %>
+
+<tr>
+	<td colspan="3" class="separate-below-none"/>
+</tr>
+
+<tr>
+	<td><b>Comment: </b> </td>	
+	<td colspan="3"/> 
+</tr>
+
+<tr class="separate-below">
+	<td colspan="1"/> 
+	<td colspan="3">
+		<%= render 'comment', :idea_id => idea.id  %>
+	<td>
+</tr>
+
+

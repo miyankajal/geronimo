@@ -1,5 +1,7 @@
 <h2>Welcome! <%= current_user.first_name %> <%= current_user.last_name %></h2>
 
+<% set_product_points %>
+
 <hr>
 <div class="col-md-3">
 
@@ -7,7 +9,6 @@
 </div>
 
 <div class="col-md-9">
-
 	<p>
 		<strong>Full name:</strong>
 		<%= @user.first_name %> <%= @user.last_name %>
@@ -34,6 +35,22 @@
 	  <% else %>
 		Guardian
 	  <% end %>
+	</p>
+	<p>
+	  <strong>School:</strong>
+	  <%= @school.name %>
+	</p>
+	<p>
+	  <strong>School ID:</strong>
+	  <%= current_user.school_id %>
+	</p>
+	<p>
+	  <strong>Address:</strong>
+	  <%= @school.address %>
+	</p>
+	<p>
+	  <strong>Phone Number:</strong>
+	  <%= @school.phone_no %>
 	</p>
 
 	<% if @user.type == 3 %>
@@ -120,27 +137,6 @@
 	<% end %>
 
 	</br>
-	<% if @user.type.to_s == "1" %>
-		<p>
-			<b>School Info:</b>
-		</p>
-		<p>
-		  <strong>School:</strong>
-		  <%= @school.name %>
-		</p>
-		<p>
-		  <strong>School ID:</strong>
-		  <%= current_user.school_id %>
-		</p>
-		<p>
-		  <strong>Address:</strong>
-		  <%= @school.address %>
-		</p>
-		<p>
-		  <strong>Phone Number:</strong>
-		  <%= @school.phone_no %>
-		</p>
-	<% end %>
 	
 	<!--if the user is a guardian help them search for their ward-->
 	<% if @user.type.to_s == "4" %>
