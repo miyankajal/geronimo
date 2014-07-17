@@ -3,8 +3,13 @@
 </tr>
 <tr>
 	<td/>
-	<td colspan="2" rowspan="2"> <%= idea.idea %> </td>
-	<td><% if idea.user_id == current_user.id %> <%= best_in_place idea, :idea, :type => :textarea  %> <% end %></td>
+	<td colspan="2" rowspan="2"> 
+		<% if idea.user_id == current_user.id %> 
+			<%= best_in_place idea, :idea, :type => :textarea  %> 
+		<% else %>
+			<%= idea.idea %>
+		<% end %>
+	</td>
 </tr>
 <tr>
 	<td/>
