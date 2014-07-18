@@ -24,7 +24,7 @@
 	<td><%= idea.likes_count %> <% if params[:portal_id] != '1' && current_user.id != idea.user_id %> <%= link_to 'likes', add_like_path(idea.id) %> <% else %> likes <% end %> </td>
 	<td>	
 		<% if idea.accepted == false %>
-			<% if current_user.type == 2 && idea.moderator_id == current_user.id%>
+			<% if current_user.type == 2 && idea.moderator_id == current_user.id %>
 				<%= link_to 'Accept', accept_path(idea.id) %>
 			<% else %>
 				To be accepted
@@ -39,7 +39,27 @@
 </tr>
 <tr>
 	<td colspan="1"/>
-	<td colspan="3"> <% if current_user.type == 2 || params[:portal_id] == '1' %> <b>Moderator:</b> <%= idea.moderator_user_first_name + ' ' + idea.moderator_user_last_name %> <% end %></td>
+	<td colspan="3"> 
+		<b>Moderator:</b> 
+		<% if current_user.id == idea.user_id %>
+			<%= form_for idea do |f| %>
+				<%= f.select :moderator_id, options_for_select( @moderator_options.map { |j| [j[0], j[2]]}, selected_key = idea.moderator_id) %>
+				<%= f.submit "Change", class: "btn-small btn-primary" %>
+			<% end %>
+		<% elsif current_user.type == 2 %> 
+			<%= idea.moderator_user_first_name + ' ' + idea.moderator_user_last_name %> 
+			
+			<% if current_user.id == idea.moderator_id %>
+				<%= form_for idea do |f| %>
+					<%= f.select :portal_id, options_for_select( @portal_options, selected_key = params[:portal_id]) %>
+					<% if params[:portal_id] == 3 %>
+						<%= f.hidden_field :accepted, :value => true %>
+					<% end %>
+					<%= f.submit "Change", class: "btn-small btn-primary" %>
+				<% end %>
+			<% end %>
+		<% end %>
+	</td>
 </tr>
 <tr>
 	<td colspan="4" class="separate-below-none"/>

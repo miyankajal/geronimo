@@ -2,7 +2,7 @@ class CreateIdeas < ActiveRecord::Migration
   def self.up
   
       create_table :ideas do |t|
-      t.string :idea, :limit => 500
+      t.text :idea
       t.integer :user_id
       t.integer :moderator_id
       t.integer :likes_count, default: 0
