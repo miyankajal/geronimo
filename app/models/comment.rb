@@ -6,5 +6,4 @@ class Comment < ActiveRecord::Base
 	
 	belongs_to :user
 	
-	validates_length_of :comment, :within => 5..5000
 end

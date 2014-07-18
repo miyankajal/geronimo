@@ -2,7 +2,7 @@ class CreateComments < ActiveRecord::Migration
   def self.up
     create_table :comments do |t|
       t.integer :idea_id
-      t.string :comment, :limit => 500
+      t.text :comment
       t.integer :user_id
       t.boolean :accepted
 	  t.integer :likes_count
