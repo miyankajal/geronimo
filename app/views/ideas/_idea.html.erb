@@ -70,10 +70,12 @@
 	<% @tag_comment_ideas = TagCommentIdea.new %>
 	<%= form_for @tag_comment_ideas, :html => {:class => 'form-horizontal'} do |f| %>
       <%= f.hidden_field :idea_id, :value => idea.id %> 
-      <% @idea_tags = Tag.joins(:tag_comment_ideas).select('description, tag_comment_ideas.id as tag_idea_id, tag_comment_ideas.tag_id as tag_idea_tag_id, tag_comment_ideas.idea_id as tag_idea_idea_id').where('idea_id = ?', idea.id) %> 
+      <% @idea_tags = Tag.joins(:tag_comment_ideas).select('tags.id as tag_id, description, tag_comment_ideas.id as tag_idea_id, tag_comment_ideas.tag_id as tag_idea_tag_id, tag_comment_ideas.idea_id as tag_idea_idea_id').where('idea_id = ?', idea.id) %> 
 			
 	  <%= f.select :tag_id, options_for_select(@tag_options, @idea_tags.map { |j| j.tag_idea_tag_id}), {}, { :multiple => true, :class => "chzn-select", :style => "width:450px;" }%>
-	  <%= f.submit "Save Tags", class: "btn-small btn-primary" %>
+	  <% if current_user.type == 2 %>
+		  <%= f.submit "Save Tags", class: "btn-small btn-primary" %>
+	  <% end %>  
 	<% end %>
 	</td>
 </tr>

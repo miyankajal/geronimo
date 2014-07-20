@@ -9,6 +9,7 @@
   <thead>
     <tr>
       <th>Description</th>
+      <th>Point</th>
       <th></th>
       <th></th>
     </tr>
@@ -17,8 +18,10 @@
   <tbody>
     <% @tags.each do |tag| %>
       <tr>
-        <td><%= best_in_place tag, :description, :type => :input, :activator => "#edit_#{tag.id}" %></td>
-        <td><a href="#" id="edit_<%= tag.id %>">Edit</a></td>
+        <td><%= best_in_place tag, :description, :type => :input %></td>
+	<td><%= best_in_place tag, :points, :type => :input, :activator => "#edit_#{tag.id}" %></td>
+
+        <td><a href="#" id="edit_<%= tag.id %>">Edit Point</a></td>
         <td><%= link_to 'Remove', tag, method: :delete, data: { confirm: 'Are you sure you want to remove the tag?' } %></td>
       </tr>
     <% end %>

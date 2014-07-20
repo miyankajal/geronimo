@@ -10,6 +10,12 @@ class StudentPointsController < ApplicationController
   def create
 	@student_point = StudentPoint.new(student_point_params)
 	
+	if @student_point.assigned_points < 0
+		@student_point.is_credit = false
+	else	
+		@student_point.is_credit = true
+	end
+	
 	#gets send_auto_email, min_points_required, min_points_for_penalty, max_warnings_before_email_alert, repetition_of_mistake_before_email
 	@alert_settings = AlertSetting.where('school_id = ?', current_user.school_id).first
 	

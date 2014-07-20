@@ -1,13 +1,13 @@
 <td> <%= point.description %> </td>
 <% if point.credit %>
-	<td> <%= @credit = point.value %>
-	     <% @sum += point.value %>
+	<td> <%= @credit = point.assigned_point %>
+		 <% @sum += point.assigned_point %>
 	 </td>
 	<td></td>
 <% else %>
 	<td></td>
-	<td> <%= @debit = -point.value %> 
-		<% @sum -= point.value %>
+	<td> <%= @debit = point.assigned_point %> 
+		<% @sum += point.assigned_point %>
 	</td>
 <% end %>
 
