@@ -9,7 +9,7 @@ class PointsController < ApplicationController
 
   # GET /points/1
   def show
-	@point_val = Point.joins('INNER JOIN card_offense_types ON card_offense_types.id = points.card_offense_id').select('points.*, card_offense_types.description AS card_offense').where('points.id = ? AND school_id = ?', params[:id], current_user.school_id)
+	@point_val = Point.joins('INNER JOIN card_offense_types ON card_offense_types.id = points.card_offense_id').select('points.description, points.value, points.credit, card_offense_types.description AS card_offense, card_offense_types.id AS card_offense_id').where('points.id = ? AND school_id = ?', params[:id], current_user.school_id)
 	
 	respond_to do |format|
       format.html

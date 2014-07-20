@@ -24,12 +24,25 @@ class TagCommentIdeasController < ApplicationController
 	session[:return_to] ||= request.referer
     
 	@idea_id = tag_comment_idea_params[:idea_id]
-	TagCommentIdea.where('idea_id = ?', @idea_id).delete_all
 	
 	@tag_selected = tag_comment_idea_params[:tag_id]
-
+	#@new_tags_arr = @tag_selected.map {|i| i[:tag_idea_tag_id]}
+	
+	@old_tags = TagCommentIdea.select('id, tag_id').where('idea_id = ?', @idea_id)
+	@old_tags_arr = @old_tags.map {|j| j[:tag_id].to_s}
+	
+	diff_added = @tag_selected - @old_tags_arr
+	diff_added.each do |id|
+		if id != ""
+			@tag_point = Tag.select('points').where('id = ?', id).first
+			@user_id = Idea.select('user_id').where('id = ?', @idea_id).first
+			StudentPoint.create(:user_id => @user_id.user_id, :point_id => 31, :assigned_points => @tag_point.points, :is_credit => 't' )
+		end
+	end
+	
+	TagCommentIdea.where('idea_id = ?', @idea_id).delete_all
 	@tag_selected.each do |id|
-		  TagCommentIdea.create(:tag_id => id , :idea_id => @idea_id)
+		TagCommentIdea.create(:tag_id => id, :idea_id => @idea_id)
 	end
 	
 	redirect_to session.delete(:return_to)

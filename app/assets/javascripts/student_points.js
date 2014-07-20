@@ -14,6 +14,7 @@ function get_point(id)
 			 }
 			 
 			 $("#assigned_points_card").val(data[0].card_offense);
+			 $("#assigned_points_card_id").val(data[0].card_offense_id);
     	})
     	return false;
 }

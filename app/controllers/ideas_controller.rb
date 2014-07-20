@@ -3,7 +3,6 @@ class IdeasController < ApplicationController
   before_action :teachers_all
   before_action :teacher_class_all
   before_action :tags_all
-  before_action :get_idea_tag
   before_action :portals_all
   
   # GET /ideas
@@ -13,27 +12,23 @@ class IdeasController < ApplicationController
 		@user_data = User.select(:class_id, :school_id).where('id = ?', current_user.id)
 		
 		if params[:portal_id] == '1'
-			@ideas = Idea.all.joins('LEFT OUTER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('user_id = ?', current_user.id).order('accepted, ideas.created_at DESC')
+			@ideas = Idea.all.joins('LEFT OUTER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('user_id = ?', current_user.id).order('accepted, ideas.updated_at DESC')
 		elsif params[:portal_id] == '2'
-			@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id').select('ideas.id, ideas.updated_at, idea, likes_count, tag_id, user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('portal_id = 2 AND users.class_id = ? AND accepted = 1', current_user.class_id).order('ideas.created_at DESC')
+			@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id').select('ideas.id, ideas.updated_at, idea, likes_count, tag_id, user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('portal_id = 2 AND users.class_id = ? AND accepted = 1', current_user.class_id).order('ideas.updated_at DESC')
 		elsif params[:portal_id] == '3'
-			@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id').select('ideas.id, ideas.updated_at, idea, likes_count, tag_id, user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('portal_id = 3 AND users.school_id = ? AND accepted = 1', current_user.school_id).order('ideas.created_at DESC')
+			@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id').select('ideas.id, ideas.updated_at, idea, likes_count, tag_id, user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('portal_id = 3 AND users.school_id = ? AND accepted = 1', current_user.school_id).order('ideas.updated_at DESC')
 		end
 
 	elsif current_user.type == 2 #if teacher
 		
 		if params[:portal_id] == '2'
-			@ideas = Idea.all.joins('LEFT OUTER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('portal_id = ? AND users.class_id = ? AND accepted = ?', params[:portal_id], params[:class_id], params[:accepted]).order('ideas.created_at DESC')
+			@ideas = Idea.all.joins('LEFT OUTER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('portal_id = ? AND users.class_id = ? AND accepted = ?', params[:portal_id], params[:class_id], params[:accepted]).order('ideas.updated_at DESC')
 		elsif params[:portal_id] == '3'
-			@ideas = Idea.all.joins('LEFT OUTER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('portal_id = ? AND users.school_id = ?', params[:portal_id], current_user.school_id).order('ideas.created_at DESC')
+			@ideas = Idea.all.joins('LEFT OUTER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('portal_id = ? AND users.school_id = ?', params[:portal_id], current_user.school_id).order('ideas.updated_at DESC')
 		end
 		
 	end
 	
-  end
-  
-  def get_idea_tag
-	@idea_tags = Tag.joins(:tag_comment_ideas).select(:description).where('idea_id = 6')
   end
   
   def teacher_class_all
