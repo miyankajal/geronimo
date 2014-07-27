@@ -4,33 +4,55 @@
 <tr>
 	<td/>
 	<td colspan="2" rowspan="2"> 
-		<% if idea.user_id == current_user.id %> 
-			<%= best_in_place idea, :idea, :type => :textarea  %> 
-		<% else %>
-			<%= idea.idea %>
-		<% end %>
+		<%= best_in_place idea, :idea, :type => :textarea, :activator => "#edit_#{idea.id}"  %> 
 	</td>
 </tr>
 <tr>
 	<td/>
-	<td><% if idea.user_id == current_user.id %> <%= link_to 'Remove', idea, method: :delete, data: { confirm: 'Are you sure you want to remove this idea from the bank?' } %> <% end %> </td>
+	<td>
+		<% if idea.user_id == current_user.id %> 
+			<%= link_to idea, :id=>"edit_"+idea.id.to_s,  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Idea" do %> 
+				<i class="glyphicon glyphicon-pencil"></i> 
+			<% end %>
+			
+			<%= link_to idea, method: :delete, data: { confirm: 'Are you sure you want to remove this idea from the bank?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Idea" do %> 
+				<i class="glyphicon glyphicon-trash"></i> 
+			<% end %>
+		<% end %> 
+	</td>
 </tr>
 <tr>
 	<td colspan="4" class="separate-below-none"/>
 </tr>
 <tr>
 	<td/>
-	<td><b>Last Updated:</b> <%= idea.updated_at %></td>
-	<td><%= idea.likes_count %> <% if params[:portal_id] != '1' && current_user.id != idea.user_id %> <%= link_to 'likes', add_like_path(idea.id) %> <% else %> likes <% end %> </td>
+	<td><b>Updated On:</b> <%= idea.updated_at %></td>
+	<td>
+		<% @l = Array.new %>
+			<% if idea.likes_count != 0 %> 
+				<% @l = User.joins('INNER JOIN user_idea_relationships ON user_idea_relationships.user_id = users.id').where('idea_id = ?', idea.id).map{|liker| [liker.last_name + ' ' + liker.last_name + ', ']} %>
+			<% end %>
+		<%= link_to "#{idea.likes_count} Likes", '', :class => "popover-test", :title => "This idea was liked by:", "data-content" => @l %> 
+	</td>
 	<td>	
+		<% if params[:portal_id] != '1' && current_user.id != idea.user_id %> 
+			<%= link_to add_like_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Like" do %> 
+				<i class="glyphicon glyphicon-thumbs-up"></i> 
+			<% end %>
+		<% end %> 
+		
 		<% if idea.accepted == false %>
 			<% if current_user.type == 2 && idea.moderator_id == current_user.id %>
-				<%= link_to 'Accept', accept_path(idea.id) %>
+				<%= link_to accept_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Accept" do %>
+					<i class="glyphicon glyphicon-ok"></i> 
+				<% end %>
 			<% else %>
 				To be accepted
 			<% end %>
-		<% else %>
-			Accepted
+		<% elsif current_user.id != idea.user_id %>
+			<%= link_to report_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Report" do %>
+				<i class="glyphicon glyphicon-thumbs-down"></i> 
+			<% end %>
 		<% end %>
 	</td>
 </tr>
@@ -38,46 +60,65 @@
 	<td colspan="4" class="separate-below-none"/>
 </tr>
 <tr>
-	<td colspan="1"/>
-	<td colspan="3"> 
-		<b>Moderator:</b> 
-		<% if current_user.id == idea.user_id %>
-			<%= form_for idea do |f| %>
-				<%= f.select :moderator_id, options_for_select( @moderator_options.map { |j| [j[0], j[2]]}, selected_key = idea.moderator_id) %>
-				<%= f.submit "Change", class: "btn-small btn-primary" %>
-			<% end %>
-		<% elsif current_user.type == 2 %> 
-			<%= idea.moderator_user_first_name + ' ' + idea.moderator_user_last_name %> 
-			
-			<% if current_user.id == idea.moderator_id %>
-				<%= form_for idea do |f| %>
-					<%= f.select :portal_id, options_for_select( @portal_options, selected_key = params[:portal_id]) %>
-					<% if params[:portal_id] == 3 %>
-						<%= f.hidden_field :accepted, :value => true %>
-					<% end %>
-					<%= f.submit "Change", class: "btn-small btn-primary" %>
+	<td/>
+	
+	<% if current_user.id == idea.user_id %>
+		<%= form_for idea do |f| %>
+			<td colspan="2"> 
+				<%= f.label 'Moderator: ' %>
+				<%= f.select :moderator_id, options_for_select( [['None', '']] + @moderator_options.map { |j| [j[0], j[2]]}, selected_key = idea.moderator_id ) %>
+			</td>
+			<td>
+				<%= button_tag(type: 'Change', class: "btn-small btn-primary", rel: "tooltip", title: "Change Moderator") do %>
+					<span class="glyphicon glyphicon-pencil"></span> 
 				<% end %>
+  			</td>
+		<% end %>
+	<% elsif current_user.type == 2 %> 
+		<td colspan="3"> 
+			<b>Moderator:</b> 
+			<%= idea.moderator_user_first_name + ' ' + idea.moderator_user_last_name %> 
+		</td>
+		<% if current_user.id == idea.moderator_id %>
+			<%= form_for idea do |f| %>
+				<td>
+				<%= f.select :portal_id, options_for_select( @portal_options, selected_key = params[:portal_id]) %>
+				<% if params[:portal_id] == 3 %>
+					<%= f.hidden_field :accepted, :value => true %>
+				<% end %>
+				</td>
+				<td>
+					<%= button_tag(type: 'Change', class: "btn-small btn-primary", rel: "tooltip", title: "Change Portal") do %>
+					  <span class="glyphicon glyphicon-pencil"></span> 
+					<% end %>
+				</td>
 			<% end %>
 		<% end %>
-	</td>
+	<% end %>
 </tr>
 <tr>
 	<td colspan="4" class="separate-below-none"/>
 </tr>
 <tr>
-	<td colspan="1"/>
-	<td colspan="3">
+	<td/>
+	
 	<% @tag_comment_ideas = TagCommentIdea.new %>
 	<%= form_for @tag_comment_ideas, :html => {:class => 'form-horizontal'} do |f| %>
-      <%= f.hidden_field :idea_id, :value => idea.id %> 
-      <% @idea_tags = Tag.joins(:tag_comment_ideas).select('tags.id as tag_id, description, tag_comment_ideas.id as tag_idea_id, tag_comment_ideas.tag_id as tag_idea_tag_id, tag_comment_ideas.idea_id as tag_idea_idea_id').where('idea_id = ?', idea.id) %> 
+		<td colspan="2">
+		  <%= f.label 'Tags: ' %>
+		  <%= f.hidden_field :idea_id, :value => idea.id %> 
+		  <% @idea_tags = Tag.joins(:tag_comment_ideas).select('tags.id as tag_id, description, tag_comment_ideas.id as tag_idea_id, tag_comment_ideas.tag_id as tag_idea_tag_id, tag_comment_ideas.idea_id as tag_idea_idea_id').where('idea_id = ?', idea.id) %> 
 			
-	  <%= f.select :tag_id, options_for_select(@tag_options, @idea_tags.map { |j| j.tag_idea_tag_id}), {}, { :multiple => true, :class => "chzn-select", :style => "width:450px;" }%>
-	  <% if current_user.type == 2 %>
-		  <%= f.submit "Save Tags", class: "btn-small btn-primary" %>
-	  <% end %>  
+		  <%= f.select :tag_id, options_for_select(@tag_options, @idea_tags.map { |j| j.tag_idea_tag_id}), {}, { :multiple => true, :class => "chzn-select", :style => "width:420px;" }%>
+	  	</td>
+	  	
+	  	<td>
+		  <%= button_tag(type: 'Save Tags', class: "btn-small btn-primary", rel: "tooltip", title: "Add Tag") do %>
+			  <span class="glyphicon glyphicon-plus"></span> 
+		  <% end %>
+		</td>
 	<% end %>
-	</td>
+
 </tr>
 
 <tr>
@@ -100,15 +141,18 @@
 			
 		</td>
 		<td colspan="2"> 
-			<% if comment.user_id == current_user.id %>
-				<%= best_in_place comment, :comment, :type => :textarea  %>
-			<% else %>
-				<%= comment.comment %>
-			<% end %>
+			<%= best_in_place comment, :comment, :type => :textarea, :activator => "#edit_#{comment.id}"  %>
 		</td>
 		
 		<td>
-			<%= link_to 'Remove', comment, method: :delete, data: { confirm: 'Are you sure you want to remove comment?' } %>
+			<% if comment.user_id == current_user.id %>
+				<%= link_to idea, :id=>"edit_"+comment.id.to_s,  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Comment" do %> 
+					<i class="glyphicon glyphicon-pencil"></i> 
+				<% end %>
+				<%= link_to comment, method: :delete, data: { confirm: 'Are you sure you want to remove comment?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Comment" do %> 
+					<i class="glyphicon glyphicon-trash"></i> 
+				<% end %>
+			<% end %>
 		</td>
 	</tr>
 <% end %>

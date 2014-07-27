@@ -9,7 +9,7 @@ class CreateIdeas < ActiveRecord::Migration
       t.integer :tag_id
       t.integer :portal_id, default: 1
 	  t.integer :class_id
-      t.boolean :accepted, null: false, default: false
+      t.boolean :accepted, default: false
 	  
 	  t.timestamps
     end

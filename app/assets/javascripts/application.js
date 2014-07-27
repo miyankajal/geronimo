@@ -22,6 +22,12 @@
 //= require jquery.purr
 //= require best_in_place
 //= require chosen-jquery
+//= require bootstrap-tooltip.js
+//= require bootstrap-popover.js
+
+$(function () {
+$('.popover-test').popover();
+});
 
 $(document).ready(function() {
   /* Activating Best In Place */

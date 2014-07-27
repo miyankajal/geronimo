@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
 	
 	has_many :comments
 	has_many :ideas
+	has_many :user_idea_relationships
 
 	has_secure_password
 	
