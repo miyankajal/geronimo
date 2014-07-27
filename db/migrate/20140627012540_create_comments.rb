@@ -14,8 +14,10 @@ class CreateComments < ActiveRecord::Migration
   end
   
   def self.down
+	remove_index(:comments, :name => 'IX_Comments')
+	
 	drop_table :comments
 	
-	remove_index(:comments, :name => 'IX_Comments')
+	
   end
 end

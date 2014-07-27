@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140706145111) do
+ActiveRecord::Schema.define(version: 20140723020024) do
 
   create_table "alert_email_queues", force: true do |t|
     t.integer "alert_id"
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20140706145111) do
 
   create_table "comments", force: true do |t|
     t.integer  "idea_id"
-    t.string   "comment",    limit: 500
+    t.text     "comment"
     t.integer  "user_id"
     t.boolean  "accepted"
     t.datetime "created_at"
@@ -59,13 +59,13 @@ ActiveRecord::Schema.define(version: 20140706145111) do
   end
 
   create_table "ideas", force: true do |t|
-    t.string   "idea",         limit: 500
+    t.text     "idea"
     t.integer  "user_id"
     t.integer  "moderator_id"
     t.integer  "likes_count"
     t.integer  "tag_id"
-    t.integer  "portal_id",                default: 1
-    t.boolean  "accepted",                 default: false, null: false
+    t.integer  "portal_id",    default: 1
+    t.boolean  "accepted",     default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -124,6 +124,7 @@ ActiveRecord::Schema.define(version: 20140706145111) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "school_id"
+    t.integer  "points"
   end
 
   add_index "tags", ["id"], name: "FK_Tags", using: :btree
@@ -148,6 +149,17 @@ ActiveRecord::Schema.define(version: 20140706145111) do
     t.datetime "updated_at"
     t.integer  "school_id"
   end
+
+  create_table "user_idea_relationships", force: true do |t|
+    t.integer  "idea_id"
+    t.integer  "user_id"
+    t.boolean  "like"
+    t.boolean  "report"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_idea_relationships", ["idea_id", "user_id"], name: "IX_User_Idea", using: :btree
 
   create_table "user_types", force: true do |t|
     t.string   "description"

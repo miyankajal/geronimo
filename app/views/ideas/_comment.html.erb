@@ -17,16 +17,15 @@
 
 			<div class="form-group">
 				<div class="col-xs-4">
-					<%= f.text_area :comment, :cols => "60", :rows => "2" %>
+					<%= f.text_area :comment, :cols => "80", :rows => "2" %>
+					<%= button_tag(type: 'Add Comment', class: "btn-small btn-primary") do %>
+				  		<span class="glyphicon glyphicon-plus-sign">Add</span> 
+					<% end %>
 				</div>
 			</div>
 
 			<%= f.hidden_field :user_id, :value => current_user.id %> 
 			<%= f.hidden_field :idea_id, :value => idea_id %>
 			
-			<div class="form-actions">
-				<%= f.submit "Add Comment", class: "btn-small btn-primary" %>
-			</div>
-  
 		</fieldset>
 	<% end %>

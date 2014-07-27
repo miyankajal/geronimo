@@ -11,6 +11,7 @@ GeronimoSms::Application.routes.draw do
   get '/ideas/get_ideas/:portal_id/:class_id/:accepted', to: 'ideas#index', as: 'get_portal_ideas'
   get '/ideas/like/:idea_id', to: 'ideas#add_like', as: 'add_like'
   get '/ideas/accept/:idea_id', to: 'ideas#accept_idea', as: 'accept'
+  get '/ideas/report/:idea_id', to: 'ideas#report_idea', as: 'report'
   get '/tag_comment_ideas/add_tag/:idea_id/:tag_id', to: 'tag_comment_ideas#add_tag', as: 'add_tag'
 
   resources :posting_portals

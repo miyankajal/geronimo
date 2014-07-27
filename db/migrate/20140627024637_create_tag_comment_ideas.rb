@@ -12,8 +12,9 @@ class CreateTagCommentIdeas < ActiveRecord::Migration
   end
   
   def self.down
+	remove_index(:tag_comment_ideas, :name => 'IX_Tag_Comment_Ideas')
+	
 	drop_table :tag_comment_ideas
 	
-	remove_index(:tag_comment_ideas, :name => 'IX_Tag_Comment_Ideas')
   end
 end
