@@ -1,5 +1,4 @@
 class StudentPointsController < ApplicationController
-  before_action :points_all
 	
   # GET /student_points/new
   def new
@@ -122,10 +121,6 @@ class StudentPointsController < ApplicationController
       render action: 'new'
     end
   end
-  
-  def points_all
-  	@point_options = Point.where('id != 1 and id != 2').map{|point| [point.description, point.credit, point.value, point.card_offense_id, point.id]	}
-  end 
   
   def self.calcInitPoints(prev_term)
 	@setting = AlertSetting.select('penalty_carried_over, default_points').first

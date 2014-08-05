@@ -47,7 +47,7 @@ GeronimoSms::Application.routes.draw do
   resources :points
 
   resources :users
-  match 'user/:type' => 'users#index', via: [:get]
+  match 'user/:type/:ward' => 'users#index', via: [:get]
   
   resources :users do
     collection { post :import }
