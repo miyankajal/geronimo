@@ -2,24 +2,37 @@
 	<% if user.type == 3 %>
 		<td><%= user.enrollment_id %></td>
 	<% end %>
-	
+
 	<td><%= link_to user.username, user %></td>
 	<td><%= user.first_name %> <%= user.last_name %></td>
 	<td>
-	<% if (current_user.type == 2 && class_teacher?(current_user.id, user.class_id)) || current_user.type == 1 %>
-		<% unless params[:search].nil? %>
-			<%= link_to 'Add Ward', add_guardian_student_relationship(user.id, guardian_id) %>
+		<%= link_to edit_user_path(user), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit User" do %> 
+			<i class="glyphicon glyphicon-pencil"></i> 
+		<% end %>
+	</td>
+	<td>
+		<% if (current_user.type == 2 && class_teacher?(current_user.id, user.class_id)) || current_user.type == 1 %>
+			<% unless params[:search].nil? %>
+				<%= link_to add_guardian_student_relationship(user.id, guardian_id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Add Ward" do %> 
+					<i class="glyphicon glyphicon-plus"></i> 
+				<% end %>
 
-		<% else %>
-			<% unless user.type == 1%>
-				<% if params[:id].present? && get_user_type(params[:id]).type == 4 %>
-					<%= link_to 'Remove Ward', destroy_guardian_student_relationship(user.id, params[:id]), method: :delete %>
-				<% else %>
-					<%= link_to 'Remove', user, method: :delete, data: { confirm: 'Are you sure you want to remove this user?' } %>
+			<% else %>
+				<% unless user.type == 1 %>
+					<% if params[:id].present? && get_user_type(params[:id]).type == 4 %>
+						<%= link_to destroy_guardian_student_relationship(user.id, params[:id]), method: :delete, data: { confirm: 'Are you sure you want to remove this ward?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove Ward" do %> 
+							<i class="glyphicon glyphicon-trash"></i> 
+						<% end %>
+					<% else %>
+						<%= link_to user, method: :delete, data: { confirm: 'Are you sure you want to remove this user?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove User" do %> 
+							<i class="glyphicon glyphicon-trash"></i> 
+						<% end %>
+					<% end %>
 				<% end %>
 			<% end %>
-		<% end %>
 	
-	<% end %>
-	</td>	
+		<% end %>
+		
+		
+	</td>
 </tr>

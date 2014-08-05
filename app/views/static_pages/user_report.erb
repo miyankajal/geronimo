@@ -36,7 +36,31 @@
     <div class="row">
         <div class="well" style="width:100%;">
 			<div class="alert alert-dismissable alert-success">
-				Term-wise participation of the student for tracing the complete cll-around development down the years</br>
+				Tags of ideas contributed by the student. Also these charts could be used to identify particular interests of a child and encourage him</br>
+			</div>
+		</div>
+    </div>
+</div>
+
+<% pie = Hash.new %>
+<% @a = Tag.joins('INNER JOIN tag_comment_ideas ON tags.id = tag_comment_ideas.tag_id').joins('INNER JOIN user_idea_relationships ON user_idea_relationships.idea_id = tag_comment_ideas.idea_id').where('user_idea_relationships.user_id = ?', 9).select('tags.description, count(tags.id) AS tag_count').group('tags.description') %>
+
+<% if @a.length > 0 %>
+	<div class="span7">
+		<div class="row">
+			<div class="well" style="width:100%;">
+				<%= pie_chart @a.count %>
+			</div>
+		</div>
+	</div>
+<% end %>
+
+</br>
+<div class="span7">
+    <div class="row">
+        <div class="well" style="width:100%;">
+			<div class="alert alert-dismissable alert-success">
+				Term-wise participation of the student for tracing the complete all-around development down the years</br>
 				The target is not to merely earn higher points but to earn them by participating in multiple activities. Also these charts could be used to identify particular interests of a child and encourage him</br>
 			</div>
 		</div>

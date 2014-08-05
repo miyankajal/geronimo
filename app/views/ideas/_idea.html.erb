@@ -1,14 +1,14 @@
 <tr>
 	<td colspan="4" class="separate-below-none"><b><%= link_to idea.first_name + ' ' + idea.last_name, user_path(idea.user_id)%></b></td>
 </tr>
+<% @email = User.select('email, id, type').where('id = ?', idea.user_id).first %>
 <tr>
-	<td/>
+	<td rowspan="2"><%= gravatar_for_idea(@email.email.downcase, @email.type) %></td>
 	<td colspan="2" rowspan="2"> 
 		<%= best_in_place idea, :idea, :type => :textarea, :activator => "#edit_#{idea.id}"  %> 
 	</td>
 </tr>
 <tr>
-	<td/>
 	<td>
 		<% if idea.user_id == current_user.id %> 
 			<%= link_to idea, :id=>"edit_"+idea.id.to_s,  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Idea" do %> 

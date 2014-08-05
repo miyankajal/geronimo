@@ -4,117 +4,104 @@
 
 <hr>
 <div class="col-md-3">
-
-<%= gravatar_for(@user) %>
+	<%= gravatar_for(@user) %>
 </div>
 
 <div class="col-md-9">
-	<p>
-		<strong>Full name:</strong>
-		<%= @user.first_name %> <%= @user.last_name %>
-	</p>
-	
-	<p>
-	  <strong>Username:</strong>
-	  <%= @user.username %>
-	</p>
-
-	<p>
-	  <strong>Email:</strong>
-	  <%= @user.email %>
-	</p>
-
-	<p>
-	  <strong>User Type:</strong>
-	  <% if @user.type == 1 %>
-		Administrator
-	  <% elsif @user.type == 2 %>
-		Teacher
-	  <% elsif @user.type == 3 %>
-		Student
-	  <% else %>
-		Guardian
-	  <% end %>
-	</p>
-	<p>
-	  <strong>School:</strong>
-	  <%= @school.name %>
-	</p>
-	<p>
-	  <strong>School ID:</strong>
-	  <%= current_user.school_id %>
-	</p>
-	<p>
-	  <strong>Address:</strong>
-	  <%= @school.address %>
-	</p>
-	<p>
-	  <strong>Phone Number:</strong>
-	  <%= @school.phone_no %>
-	</p>
-
-	<% if @user.type == 3 %>
-		<p>
-		  <strong>Enrollment:</strong>
-		  <%= @user.enrollment_id %>
-		</p>
-
-		<p>
-		  <strong>Class:</strong>
-		  <%= @user_grade %>
-		</p>
-
-		</br>
-		<% if current_user.type != 1 %>
-			<div class="span8">
-				<% if @student_points_desc.any? %>	
-					<h3>Total Points earned this semester: <%= @total_points %></h3>
-					<hr>
-					
-					<table class="table table-striped table-hover">
-					  <thead>
-						<tr>
-						  <th>Description</th>
-						  <th>Credit</th>
-						  <th>Debit</th>
-						  <th>Cummulative Points</th>
-						</tr>
-					  </thead>
-	
-					  <tbody>
-						<% @sum = 0 %>
-						<% @student_points_desc.each do |point| %>
-						<tr>
-							<%= render point %>
-						</tr>	
-						<% end %>
-					  </tbody>
-					</table>
-
+	<table class="btn-group-vertical">
+		<tr>
+			<td><strong>Full name</strong></td>
+			<td><strong> : </strong></td>
+			<td class="col-xs-10"><%= @user.first_name %> <%= @user.last_name %></td>
+			<td> 	
+				<% if current_user.type == 1 || current_user.type == 2 %>
+					<%= link_to edit_user_path(@user), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit User" do %> 
+						<i class="glyphicon glyphicon-pencil"></i> 
+					<% end %>
 				<% end %>
-			</div>
+			</td>
+		</tr>
+		<tr>
+		  <td><strong>Username</strong></td>
+		  <td><strong> : </strong></td>
+		  <td class="col-xs-10"><%= @user.username %></td>
+		</tr>
+
+		<tr>
+		  <td><strong>Email</strong></td>
+		  <td><strong> : </strong></td>
+		  <td class="col-xs-10"><%= @user.email %></td>
+		</tr>
+
+		<tr>
+		  <td><strong>User Type</strong></td>
+		  <td><strong> : </strong></td>
+		  <td class="col-xs-10">
+			  <% if @user.usr_type == 1 %>
+				Administrator
+			  <% elsif @user.usr_type == 2 %>
+				Teacher
+			  <% elsif @user.usr_type == 3 %>
+				Student
+			  <% else @user.usr_type == 4 %>
+				Guardian
+			  <% end %>
+		  </td>
+		</tr>
+		
+		<% unless @user.usr_type == 4 || @user.id != current_user.id %>
+			<tr>
+			  <td><strong>School</strong></td>
+			  <td><strong> : </strong></td>
+			  <td class="col-xs-10"><%= @user.name %></td>
+			</tr>
+			
+			<% if @user.usr_type == 1 || @user.usr_type == 2 %>
+				<tr>
+				  <td><strong>School ID</strong></td>
+				  <td><strong> : </strong></td>
+				  <td class="col-xs-10"><%= current_user.school_id %></td>
+				</tr>
+			<% end %>
+		
+			<tr>
+			  <td><strong>Address</strong></td>
+			  <td><strong> : </strong></td>
+			  <td class="col-xs-10"><%= @user.address %></td>
+			</tr>
+
+			<tr>
+			  <td><strong>Phone Number</strong></td>
+			  <td><strong> : </strong></td>
+			  <td class="col-xs-10"><%= @user.phone_no %></td>
+			</tr>
 		<% end %>
-		
-		<p>
-			<% if current_user.type == 1 %>
-				<%= link_to 'Edit User', edit_user_path(@user) %>
-			<% end %>
-		</p>
 	
-		<p>
-			<% if current_user.type == 2 && class_teacher?(current_user.id, @user.class_id)%>
-				<%= link_to 'Add Points', new_student_point_path(:user_id => @user.id) %>
-			<% end %>
-		</p>
-		<p>	
-			<%= link_to 'Generate Report', user_report_path(:user_id => @user.id) %>
-		</p>
-		
-		</br>
+		<% if @user.usr_type == 3 %>
+			<tr>
+			  <td><strong>Enrollment</strong></td>
+			  <td><strong> : </strong></td>
+			  <td class="col-xs-10"><%= @user.enrollment_id %></td>
+			</tr>
+
+			<tr>
+			  <td><strong>Class</strong></td>
+			  <td><strong> : </strong></td>
+			  <td class="col-xs-10"><%= @user_grade %></td>
+			</tr>
+		<% end %>
+	</table>
+	
+	<% if @user.usr_type == 4 %>
 		<hr>
 		  <% @guardians = get_guardians(@user.id) %>
 		  <% if @guardians.any? %>
-		  	   <h3>Guardians</h3>
+			   <h3>
+			   	Guardians
+				<%= link_to new_user_path(:type => 4, :ward => @user.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Add Guardians" do %>
+					<i class="glyphicon glyphicon-plus-sign"></i> 
+				<% end %>
+			   </h3>
 			   <table class="table table-striped table-hover">
 				<thead>
 				<tr>
@@ -130,23 +117,116 @@
 				</tbody>
 			   </table>
 		<% end %>
-	
-		<p>	
-			<%= link_to 'Add Guardian', new_user_path(:type => 4) %>
-		</p>
+		
 	<% end %>
+	
+	<p>
+		<% if current_user.type == 2 && class_teacher?(current_user.id, @user.class_id)%>
+			<hr>
 
-	</br>
+			<h4>New Point</h4>
+			<div class="span7">
+				<div class="row">
+					<div class="well" style="width:100%;">
+					<% if @student_point.nil? %>
+						<% @student_point = StudentPoint.new %>
+					<% end %>
+					<%= form_for @student_point, :html => {:class => 'form-horizontal'} do |f| %>
+						<fieldset>
+						  <% if @student_point.errors.any? %>
+							<div id="error_explanation">
+							  <h2><%= pluralize(@student_point.errors.count, "error") %> prohibited this point from being saved:</h2>
+
+							  <ul>
+							  <% @student_point.errors.full_messages.each do |msg| %>
+								<li><%= msg %></li>
+							  <% end %>
+							  </ul>
+							</div>
+						  <% end %>
+
+						  <div class="form-group">
+							   <%= f.label :point_id, :class=>'col-sm-2 control-label' %>
+							   <div class="col-xs-4">
+								<%= f.select :point_id, @point_options, {:include_blank =>'select one'}, :onchange => 'get_point(this.value)', :id => "point", :style => "width:300px"%>
+							   </div>
+						  </div>
+
+						  <div class="form-group">
+							<%= f.label :assigned_points, :class=>'col-sm-2 control-label' %>
+							<div class="col-xs-4">
+								<%= f.number_field :assigned_points, :id => "assigned_points_value"%>
+							</div>
+						  </div>
+
+						  <div class="form-group">
+							<%= f.label :card_offense_id, :class=>'col-sm-2 control-label' %>
+							<div class="col-xs-4">
+								<%= f.text_field(:card_offense_id, :id => "assigned_points_card", :readonly => true, :value => "None") %>
+							</div>
+						  </div>
+			  
+						  <%= f.hidden_field :user_id, :value => @user.id %> 
+						  <%= f.hidden_field :card_offense_id, :id => "assigned_points_card_id" %> 
+		  
+						  <%= button_tag(type: 'Add Point', class: "btn-small btn-primary", rel: "tooltip", title: "Add Point") do %>
+							<span class="glyphicon glyphicon-plus"></span> 
+						  <% end %>
+						  
+						</fieldset>	  
+					<% end %>
+
+				</div>
+				</div>
+			</div>
+		<% end %>
+		
+		<% unless current_user.type == 1 %>
+			<hr>
+			<div class="span8">
+				<% if @student_points_desc.nil? == false && @student_points_desc.any? %>	
+					<h3>
+						
+						<%= link_to user_report_path(:user_id => @user.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Generate Report" do %>
+							Total Points earned this semester : <%= @total_points %> <i class="glyphicon glyphicon-cog"></i> 
+						<% end %>
+					</h3>
+					<hr>
+				
+					<table class="table table-striped table-hover">
+					  <thead>
+						<tr>
+						  <th>Description</th>
+						  <th>Credit</th>
+						  <th>Debit</th>
+						  <th>Cummulative Points</th>
+						</tr>
+					  </thead>
+
+					  <tbody>
+						<% @sum = 0 %>
+						<% @student_points_desc.each do |point| %>
+						<tr>
+							<%= render point %>
+						</tr>	
+						<% end %>
+					  </tbody>
+					</table>
+
+				<% end %>
+			</div>
+		<% end %>
+	</p>
 	
 	<!--if the user is a guardian help them search for their ward-->
-	<% if @user.type.to_s == "4" %>
+	<% if @user.usr_type == 4 %>
 		<hr>
 		<h3>Add Ward</h3>
 		</br>
 		
 	   <%= form_tag(users_path, :method => "get", class: "form-search", id: "search-form") do %>
 			<div class="input-append">
-			  <%= text_field_tag :search, params[:search], class: "span2 search-query", placeholder: "Search Users" %>
+			  <%= text_field_tag :search, params[:search], class: "span2 search-query", placeholder: "Student Enrollment ID" %>
 			  <%= hidden_field_tag 'guardian_id', @user.id %>
 			  <!-- In order to have the "search" icon int the button, we need to use plain HTML instead 
 				   of using a Rails form helper -->
@@ -155,10 +235,11 @@
 	  <% end %>
 	  <%= yield %>
 	  
-	  </br>
-	  <hr>
+	  
 	  <% @wards = get_wards(@user.id) %>
 	  <% if @wards.any? %>
+	  	   </br>
+	  	   <hr>
 	  	   <h3>Wards</h3>
 		   <table class="table table-striped table-hover">
 			<thead>
@@ -178,8 +259,18 @@
 	   <% end %>
 	<% end %>
 
-	</br></br>
-	<% if @user.type.to_s == "2" %>
+	
+	<% if @user.usr_type == 2 %>
+
+		<h3>Classes</h3>
+		
+		 <p>
+			<% if current_user.type == 1 %>
+				<%= link_to new_teacher_class_relationship_path(:user_id => @user.id) do %>
+					Add Classes <i class="glyphicon glyphicon-plus"></i> 
+				<% end %>
+			<% end %>
+		 </p>	
 		 <% if @teacher_class.any? %>
 			 <table class="table table-striped table-hover">
 			  <thead>
@@ -195,21 +286,20 @@
 				  <tr>
 					<td><%= link_to get_teacher_class(class_section.class_section_id), users_path(type: 3, desc: 'Students', class_id: class_section.class_section_id)%></td>
 					<td><%= get_teacher_role(class_section.teacher_role_id) %></td>
-					<td><%= link_to 'Remove', class_section, method: :delete, data: { confirm: 'Are you sure you want to remove this user?' } %></td>
+					<td>
+						<%= link_to class_section, method: :delete, data: { confirm: 'Are you sure you want to remove this user?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove" do %> 
+							<i class="glyphicon glyphicon-trash"></i> 
+						<% end %>
+					</td>
 				  </tr>
 				<% end %>
 			  </tbody>
 			 </table>
 		 <% end %>
  
-		 <p>
-			<% if current_user.type == 1 %>
-				<%= link_to 'Add Classes', new_teacher_class_relationship_path(:user_id => @user.id) %>
-			<% end %>
-		 </p>	
 	<% end %>
 	
-	<% if current_user.type == 1 &&  @user.type.to_s == "1" %>
+	<% if current_user.type == 1 &&  @user.usr_type == 1 %>
 		
 		<div class="span7">
 			<div class="row">

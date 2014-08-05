@@ -780,6 +780,7 @@ pre code {
 }
 .col-xs-10 {
   width: 83.33333333%;
+  height: 30px;
 }
 .col-xs-9 {
   width: 75%;

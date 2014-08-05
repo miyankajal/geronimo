@@ -31,7 +31,7 @@ class PointsController < ApplicationController
     @point = Point.new(point_params)
 
     if @point.save
-      redirect_to @point, notice: 'Point was successfully created.'
+      redirect_to points_path, notice: 'Point was successfully created.'
     else
       render action: 'new'
     end
@@ -40,7 +40,7 @@ class PointsController < ApplicationController
   # PATCH/PUT /points/1
   def update
     if @point.update(point_params)
-      redirect_to @point, notice: 'Point was successfully updated.'
+      redirect_to points_path, notice: 'Point was successfully updated.'
     else
       render action: 'edit'
     end

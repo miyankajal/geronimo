@@ -32,9 +32,10 @@ class User < ActiveRecord::Base
 
 	has_secure_password
 	
-	validates_presence_of :username, :email, :password_digest, :first_name, :last_name, :school_id
+	validates_presence_of :username, :email, :password_digest, :first_name, :last_name
 	validates_presence_of :class_id, :if => :is_student? #should have a class_id and enrollment_id only if the user is a student 
 	validates_presence_of :enrollment_id, :if => :is_student?
+	validates_presence_of :school_id, :unless => :is_guardian?
 	
 	validates_format_of :email, 
 						:with => EMAIL_REGEX, 
@@ -114,6 +115,9 @@ class User < ActiveRecord::Base
 		def is_student?
 			:type == 3
 		end
-
+		
+		def is_guardian?
+			:type == 4
+		end
 
 end

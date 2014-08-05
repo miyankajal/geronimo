@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_action :signed_in_user, only: [:index, :show, :edit, :update, :destroy]
   before_action :can_edit_users?, only: [:index, :edit, :update, :destroy]
   before_action :classes_all
-
+  before_action :points_all
   
 
   # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
@@ -29,10 +29,10 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-	@user = User.where('school_id = ?', current_user.school_id).find(params[:id])
-	@school = School.select('name, address, phone_no').where('id = ?', current_user.school_id).first
+	#for some reason 'users.type' wasnt working hence the alias was added
+	@user = User.joins(:school).where('school_id = ? AND users.id = ?', current_user.school_id, params[:id]).select('users.id, username, first_name, last_name, email, type AS usr_type, enrollment_id, class_id, schools.name, address, phone_no').first
 	
-	if @user.type == 3
+	if @user.usr_type == 3
 	
 		@grade = ClassSection.where(:id => @user.class_id)
 		@user_grade =  @grade.first.description
@@ -46,11 +46,12 @@ class UsersController < ApplicationController
 		
 		@total_points = @total_positive_points - @total_negative_points
 		
-	elsif @user.type == 2
+	elsif @user.usr_type == 2
 	
 		@teacher_class = TeacherClassRelationship.select('class_section_id, teacher_role_id, teacher_class_relationships.id, user_id').joins(:class_section).where('user_id = ?   AND school_id = ?', @user.id, current_user.school_id)
 		
 	end
+	
   end
 
   # GET /users/new
@@ -73,6 +74,10 @@ class UsersController < ApplicationController
 	  if @user.type == 3
 		@setting = AlertSetting.select('default_points').where('school_id = ?', current_user.school_id).first
 		StudentPoint.create!(:user_id => @user.id, :point_id => 1, :assigned_points => @setting.default_points)
+	  end
+	  
+	  if @user.type == 4
+		Guardianship.create!(:guardian_id => @user.id, :user_id => params[:user][:ward])
 	  end
 	
       redirect_to @user, notice: 'User was successfully created.'
@@ -112,11 +117,15 @@ class UsersController < ApplicationController
     file_path = "#{Rails.root}/public/users.xlsx"
     send_file file_path, :filename => 'users.xlsx'
   end
+  
+  def points_all
+  	@point_options = Point.where('id != 1 and id != 2').map{|point| [point.description, point.credit, point.value, point.card_offense_id, point.id]	}
+  end 
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      @user = User.joins(:school).where('school_id = ? AND users.id = ?', current_user.school_id, params[:id]).select('users.id, username, first_name, last_name, email, type, enrollment_id, class_id, schools.name, address, phone_no').first
     end
 
     # Only allow a trusted parameter "white list" through.

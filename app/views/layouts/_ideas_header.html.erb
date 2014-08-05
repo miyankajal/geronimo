@@ -2,29 +2,57 @@
 	<div class="navbar-inner">
 		<div class="container">
 			<% if current_user.nil? %>
-				<a class="navbar-brand" href="../demo">GERONIMO!!!</a>
+				<a class="navbar-brand" href="../demo"><i class="glyphicon glyphicon-tower"></i> GERONIMO!!!</a>
 			<% else %>
-				<a class="navbar-brand" href="../geronimo_settings">GERONIMO!!!</a>
+				<a class="navbar-brand" href="../geronimo_settings"><i class="glyphicon glyphicon-tower"></i> GERONIMO!!!</a>
 			<% end %>
 			<nav>
 				<ul class="nav navbar-nav navbar-right">
 					<% if sign_in? %>
 						
 						<% if current_user.type == 3 %>
-							<li><%= link_to "My Ideas", get_portal_ideas_path(1,0,0) %></li>
+							<li>
+								<%= link_to get_portal_ideas_path(1,0,0) do %> 
+									My Ideas <i class="glyphicon glyphicon-edit"></i> 
+								<% end %>
+							</li>
 						<% elsif current_user.type == 2 %>
-							<li><%= link_to "Idea Tags", tags_path() %></li>
+							<li>
+								<%= link_to tags_path() do %> 
+									Idea Tags <i class="glyphicon glyphicon-book"></i> 
+								<% end %>
+							</li>
 						<% end %>
 						<% if current_user.type == 2 %>
-							<li><%= link_to "My Class Ideas", get_portal_ideas_path(2,0,0) %></li>
+							<li>
+								<%= link_to get_portal_ideas_path(2,0,0) do %> 
+									My Class Ideas <i class="glyphicon glyphicon-list-alt"></i> 
+								<% end %>
+							</li>
 						<% else %>
-							<li><%= link_to "My Class Ideas", get_portal_ideas_path(2,0,1) %></li>
+							<li>
+								<%= link_to get_portal_ideas_path(2,0,1) do %> 
+									My Class Ideas <i class="glyphicon glyphicon-list-alt"></i> 
+								<% end %>
+							</li>
 						<% end %>
-						<li><%= link_to "My School Ideas", get_portal_ideas_path(3,0,0) %></li>
+						<li>
+							<%= link_to get_portal_ideas_path(3,0,0) do %> 
+								My School Ideas <i class="glyphicon glyphicon-list-alt"></i> 
+							<% end %>
+						</li>
 						
-						<li><%= link_to "POINTS BANK", user_path(current_user) %></li>
+						<li>
+							<%= link_to user_path(current_user) do %> 
+								POINTS BANK <i class="glyphicon glyphicon-star-empty"></i> 
+							<% end %>
+						</li>
 						
- 						<li><%= link_to "Sign out", signout_path, :method => 'delete' %></li>
+ 						<li>
+ 							<%= link_to signout_path, :method => 'delete' do %> 
+								Sign out <i class="glyphicon glyphicon-off"></i> 
+							<% end %>
+ 						</li>
  						
  					<% end %>
  					

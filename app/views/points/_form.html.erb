@@ -10,7 +10,10 @@
 <div class="span7">
     <div class="row">
         <div class="well" style="width:100%;">
-
+		<% if @point.nil? %>
+			<% @point = Point.new %>
+		<% end %>
+		<h3>New point</h3>
 		<%= form_for @point, :html => {:class => 'form-horizontal'} do |f| %>
 		 <fieldset>
 		  <% if @point.errors.any? %>
