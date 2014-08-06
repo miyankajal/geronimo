@@ -93,9 +93,10 @@
 	</table>
 	
 	<% if @user.usr_type == 4 %>
-		<hr>
+		
 		  <% @guardians = get_guardians(@user.id) %>
 		  <% if @guardians.any? %>
+		  	   <hr>
 			   <h3>
 			   	Guardians
 				<%= link_to new_user_path(:type => 4, :ward => @user.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Add Guardians" do %>
@@ -230,12 +231,14 @@
 			  <%= hidden_field_tag 'guardian_id', @user.id %>
 			  <!-- In order to have the "search" icon int the button, we need to use plain HTML instead 
 				   of using a Rails form helper -->
-			  <button class="btn-small btn-primary" type="submit">Search</button>
+			  <%= button_tag(type: 'submit', class: "btn-small btn-primary", rel: "tooltip", title: "Search") do %>
+					<span class="glyphicon glyphicon-search"></span> 
+			<% end %>
 			</div>
 	  <% end %>
 	  <%= yield %>
 	  
-	  
+	  <% @temp = @user%>
 	  <% @wards = get_wards(@user.id) %>
 	  <% if @wards.any? %>
 	  	   </br>
@@ -258,8 +261,10 @@
 		   </table>
 	   <% end %>
 	<% end %>
-
 	
+	<!-- temp is used to temporarily store user object because it is overwritten by render user -->
+	<% @user = @temp %>
+	<% @user.usr_type %>
 	<% if @user.usr_type == 2 %>
 
 		<h3>Classes</h3>
