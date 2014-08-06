@@ -96,7 +96,7 @@
 		
 		  <% @guardians = get_guardians(@user.id) %>
 		  <% if @guardians.any? %>
-		  	   <hr>
+		  	    <hr>
 			   <h3>
 			   	Guardians
 				<%= link_to new_user_path(:type => 4, :ward => @user.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Add Guardians" do %>
@@ -263,8 +263,9 @@
 	<% end %>
 	
 	<!-- temp is used to temporarily store user object because it is overwritten by render user -->
-	<% @user = @temp %>
-	<% @user.usr_type %>
+	<% unless @temp.nil? %>
+		<% @user = @temp %>
+	<% end %>
 	<% if @user.usr_type == 2 %>
 
 		<h3>Classes</h3>

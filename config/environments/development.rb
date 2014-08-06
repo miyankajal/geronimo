@@ -36,8 +36,8 @@ GeronimoSms::Application.configure do
   address:              'smtp.gmail.com',
   port:                 587,
   domain:               'gmail.com',
-  user_name:            'team.geronimo.inc@gmail.com',
-  password:             'O2Hsurewaves',
+  user_name:            'geronimoq12@gmail.com',
+  password:             'T0pc0der321',
   authentication:       'plain',
   enable_starttls_auto: true  }
 end
