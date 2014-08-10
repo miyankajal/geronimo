@@ -9,13 +9,15 @@ class UsersController < ApplicationController
 
   # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
   def index
+	session[:return_to] ||= request.referer
   	if params[:type] == '3'
   		@users = User.where('type = ? AND class_id = ? AND school_id = ?', params[:type], params[:class_id], current_user.school_id).order('username')
 	elsif params[:search]
-        @users = User.where('enrollment_id = ? AND school_id = ?', params[:search], current_user.school_id).order('username')
+        @user = User.select('id').where('enrollment_id = ? AND school_id = ?', params[:search], current_user.school_id).order('username').first
+		Guardianship.create!(:guardian_id => params[:guardian_id], :user_id => @user.id)
+		redirect_to session.delete(:return_to)
   	else
   		@users = User.where('type = ? AND school_id = ?', params[:type], current_user.school_id).order('username')
-		
   	end
   	
   end
@@ -79,7 +81,7 @@ class UsersController < ApplicationController
 	  if @user.type == 4
 		Guardianship.create!(:guardian_id => @user.id, :user_id => params[:user][:ward])
 	  end
-	
+	  
       redirect_to @user, notice: 'User was successfully created.'
     else
       render action: 'new'
