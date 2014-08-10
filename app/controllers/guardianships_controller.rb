@@ -21,13 +21,15 @@ class GuardianshipsController < ApplicationController
 
   # POST /guardianships
   def create
+	session[:return_to] ||= request.referer
     @guardianship = Guardianship.new(guardianship_params)
 
     if @guardianship.save
-      redirect_to @guardianship, notice: 'Guardianship was successfully created.'
+      redirect_to session.delete(:return_to)
     else
       render action: 'new'
     end
+	redirect_to session.delete(:return_to)
   end
 
   # PATCH/PUT /guardianships/1
@@ -41,9 +43,10 @@ class GuardianshipsController < ApplicationController
 
   # DELETE /guardianships/1
   def destroy
+	session[:return_to] ||= request.referer
 	@guardianship = Guardianship.find(params[:id])
     @guardianship.destroy
-	redirect_to @guardianship, notice: 'Guardianship was successfully destroyed.'
+	redirect_to session.delete(:return_to)
   end
 
   private
