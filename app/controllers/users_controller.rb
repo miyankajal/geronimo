@@ -105,7 +105,7 @@ class UsersController < ApplicationController
   end
   
   def classes_all
-	@class_options = ClassSection.all.map{|class_section| [class_section.description, class_section.id]}
+	@class_options = ClassSection.where('school_id = ?', current_user.school_id).map{|class_section| [class_section.description, class_section.id]}
   end
   
   
@@ -121,7 +121,7 @@ class UsersController < ApplicationController
   end
   
   def points_all
-  	@point_options = Point.where('id != 1 and id != 2').map{|point| [point.description, point.credit, point.value, point.card_offense_id, point.id]	}
+  	@point_options = Point.where('id != 1 and id != 2 and school_id = ?', current_user.school_id).map{|point| [point.description, point.credit, point.value, point.card_offense_id, point.id]	}
   end 
 
   private

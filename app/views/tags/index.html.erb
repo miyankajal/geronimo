@@ -29,10 +29,14 @@
     <% @tags.each do |tag| %>
       <tr>
         <td><%= best_in_place tag, :description, :type => :input %></td>
-	<td><%= best_in_place tag, :points, :type => :input, :activator => "#edit_#{tag.id}" %></td>
+		<td><%= best_in_place tag, :points, :type => :input, :activator => "#edit_#{tag.id}" %></td>
 
         <td><a href="#" id="edit_<%= tag.id %>">Edit Point</a></td>
-        <td><%= link_to 'Remove', tag, method: :delete, data: { confirm: 'Are you sure you want to remove the tag?' } %></td>
+        <td>
+        	<%= link_to tag, method: :delete, data: { confirm: 'Are you sure you want to remove this tag?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove" do %> 
+				<i class="glyphicon glyphicon-trash"></i> 
+			<% end %>	
+        </td>
       </tr>
     <% end %>
   </tbody>
