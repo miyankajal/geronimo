@@ -32,8 +32,13 @@ class ClassSectionsController < ApplicationController
 
   # PATCH/PUT /class_sections/1
   def update
+	session[:return_to] ||= request.referer
+	
     if @class_section.update(class_section_params)
-      redirect_to @class_section, notice: 'Class section was successfully updated.'
+		respond_to do |format|
+			format.html { redirect_to @class_section }
+			format.json { render json: @class_section }
+		end
     else
       render action: 'edit'
     end

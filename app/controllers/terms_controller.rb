@@ -23,13 +23,14 @@ class TermsController < ApplicationController
 
   # POST /terms
   def create
+	session[:return_to] ||= request.referer
     @term = Term.new(term_params)
 
     if @term.save
 	  @prev_term = Term.select('id, term_from, term_to').where('term_from < ? AND school_id = ?', @term.term_from, current_user.school_id).order('term_from DESC').first
 	  Resque.enqueue_at(@term.term_from, StudentInitPoints, @prev_term)
 	  Resque.remove_delayed(StudentInitPoints, @prev_term)
-      redirect_to @term, notice: 'Term was successfully created.'
+      redirect_to session.delete(:return_to), notice: 'Term was successfully created.'
     else
       render action: 'new'
     end
@@ -55,7 +56,8 @@ class TermsController < ApplicationController
 		
 		redirect_to terms_url, notice: 'Term was successfully destroyed.'
 	else 
-		redirect_to terms_url, notice: 'Unable to destroy the Term as points were assigned to students.'
+		@term.destroy
+		redirect_to terms_url, notice: 'Term was successfully destroyed.'
 	end
     
   end
