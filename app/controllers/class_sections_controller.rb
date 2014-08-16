@@ -21,10 +21,11 @@ class ClassSectionsController < ApplicationController
 
   # POST /class_sections
   def create
+	session[:return_to] ||= request.referer
     @class_section = ClassSection.new(class_section_params)
 
     if @class_section.save
-      redirect_to @class_section, notice: 'Class section was successfully created.'
+      redirect_to session.delete(:return_to), notice: 'Class section was successfully created.'
     else
       render action: 'new'
     end
