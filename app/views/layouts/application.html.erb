@@ -22,9 +22,11 @@
 
 <body>
 	<% flash.each do |key, msg| %>
-		<div class="alert alert-dismissable alert-info">
-		  <button type="button" class="close" data-dismiss="alert">×</button>
-		  <p><%= msg %></p>
+		<div class="span7">
+			<div class="alert alert-dismissable alert-info">
+			  <button type="button" class="close" data-dismiss="alert">×</button>
+			  <p><%= msg %></p>
+			</div>
 		</div>
 	<% end %>
     
