@@ -1,9 +1,9 @@
-<h1>Teacher Class</h1>
-
 <div class="span7">
     <div class="row">
         <div class="well" style="width:100%;">
-
+		<% if @teacher_class_relationship.nil? %>
+			<% @teacher_class_relationship = TeacherClassRelationship.new %>
+		<% end %>
 		<%= form_for @teacher_class_relationship, :html => {:class => 'form-horizontal'} do |f| %>
 			<fieldset>
 				<% if @teacher_class_relationship.errors.any? %>
@@ -31,7 +31,7 @@
 					</div>
 				  </div>
   
-				  <%= f.hidden_field :user_id, :value => params[:user_id] %> 
+				  <%= f.hidden_field :user_id, :value => params[:id] %> 
 				  <!--%= f.hidden_field :is_credit, :value => @point_options.credit %-->
   
 				  <p>

@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   before_action :can_edit_users?, only: [:index, :edit, :update, :destroy]
   before_action :classes_all
   before_action :points_all
+  before_action :teachers_all
   
 
   # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
@@ -122,6 +123,11 @@ class UsersController < ApplicationController
   
   def points_all
   	@point_options = Point.where('id != 1 and id != 2 and school_id = ?', current_user.school_id).map{|point| [point.description, point.credit, point.value, point.card_offense_id, point.id]	}
+  end 
+  
+  def teachers_all
+  	@teacher_classes = ClassSection.where('school_id = ?', current_user.school_id).map{|class_section| [class_section.description, class_section.id]}
+	@teacher_roles = TeacherRole.all.map{|teacher_role| [teacher_role.description, teacher_role.id]}
   end 
 
   private

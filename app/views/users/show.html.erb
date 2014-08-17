@@ -272,9 +272,7 @@
 		
 		 <p>
 			<% if current_user.type == 1 %>
-				<%= link_to new_teacher_class_relationship_path(:user_id => @user.id) do %>
-					Add Classes <i class="glyphicon glyphicon-plus"></i> 
-				<% end %>
+				<%= render 'class' %>
 			<% end %>
 		 </p>	
 		 <% if @teacher_class.any? %>
