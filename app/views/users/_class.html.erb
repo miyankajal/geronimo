@@ -1,50 +1,53 @@
 <div class="span7">
     <div class="row">
         <div class="well" style="width:100%;">
-		<% if @teacher_class_relationship.nil? %>
-			<% @teacher_class_relationship = TeacherClassRelationship.new %>
-		<% end %>
-		<%= form_for @teacher_class_relationship, :html => {:class => 'form-horizontal'} do |f| %>
-			<fieldset>
-				<% if @teacher_class_relationship.errors.any? %>
-					<div id="error_explanation">
-					  <h2><%= pluralize(@teacher_class_relationship.errors.count, "error") %> prohibited the realtion from being saved:</h2>
-
-					  <ul>
-					  <% @teacher_class_relationship.errors.full_messages.each do |msg| %>
-						<li><%= msg %></li>
-					  <% end %>
-					  </ul>
-					</div>
+        	<% if @teacher_classes.length != 0 %>
+				<% if @teacher_class_relationship.nil? %>
+					<% @teacher_class_relationship = TeacherClassRelationship.new %>
 				<% end %>
+				<%= form_for @teacher_class_relationship, :html => {:class => 'form-horizontal'} do |f| %>
+					<fieldset>
+						<% if @teacher_class_relationship.errors.any? %>
+							<div id="error_explanation">
+							  <h2><%= pluralize(@teacher_class_relationship.errors.count, "error") %> prohibited the realtion from being saved:</h2>
 
-				  <div class="form-group">
-					   <%= f.label :class_section_id, :class=>'col-sm-2 control-label' %>
-					   <div class="col-xs-4">
-							<%= f.select :class_section_id, @teacher_classes, :class=>'form-control' %>
-					   </div>
-				  </div>
-				  <div class="form-group">
-					<%= f.label :teacher_role_id, :class=>'col-sm-2 control-label' %>
-					<div class="col-xs-4">
-						<%= f.select :teacher_role_id, @teacher_roles, :class=>'form-control' %>
-					</div>
-				  </div>
+							  <ul>
+							  <% @teacher_class_relationship.errors.full_messages.each do |msg| %>
+								<li><%= msg %></li>
+							  <% end %>
+							  </ul>
+							</div>
+						<% end %>
+
+						  <div class="form-group">
+							   <%= f.label :class_section_id, :class=>'col-sm-2 control-label' %>
+							   <div class="col-xs-4">
+									<%= f.select :class_section_id, @teacher_classes, :class=>'form-control' %>
+							   </div>
+						  </div>
+						  <div class="form-group">
+							<%= f.label :teacher_role_id, :class=>'col-sm-2 control-label' %>
+							<div class="col-xs-4">
+								<%= f.select :teacher_role_id, @teacher_roles, :class=>'form-control' %>
+							</div>
+						  </div>
   
-				  <%= f.hidden_field :user_id, :value => params[:id] %> 
-				  <!--%= f.hidden_field :is_credit, :value => @point_options.credit %-->
+						  <%= f.hidden_field :user_id, :value => params[:id] %> 
+						  <!--%= f.hidden_field :is_credit, :value => @point_options.credit %-->
   
-				  <p>
-					  <div class="form-actions">
-						<div class="col-sm-offset-2 col-sm-10">
-							<%= f.submit "Save changes", class: "btn-small btn-primary" %>
-						</div>
-					  </div>
-				  </p>
+						  <p>
+							  <div class="form-actions">
+								<div class="col-sm-offset-2 col-sm-10">
+									<%= f.submit "Save changes", class: "btn-small btn-primary" %>
+								</div>
+							  </div>
+						  </p>
 				  
-			  </fieldset>
-		<% end %>
-
-	</div>
+					  </fieldset>
+				<% end %>
+			<% else %>
+				<h5> No Classes created. Please go to Users > Classed to create new classes first. </h5>
+			<% end %>
+		</div>
     </div>
 </div>
