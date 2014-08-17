@@ -7,8 +7,7 @@
 	<div class="row">
 		<div class="well" style="width:100%;">
 			<div class="alert alert-dismissable alert-success">
-				To add users with the help of an Excel sheet please download the Sample Excel File. Remove the sample users and replace with your users. Fill in the appropriate Type: 1 - Administrators, 2 - Teachers, 3 - Students and 4 - Guardians. </br></br>
-				Please contact the admin for the school ID. This is very important else you will end up exposing your users to a different school. If you are the admin the school id is on the home pag, along with the other information about the school. </br></br>
+				To add users with the help of an Excel sheet please download the Sample Excel File. Remove the sample users and replace with your users. </br></br>
 				You do not need to add the enrollment_id unless the user is a Student. </br></br>
 				Password and Password_confirmation fields should be equal.
 			</div>
@@ -24,6 +23,8 @@
 
 <%= form_tag import_users_path, multipart: true do %>
   <%= file_field_tag :file %>
+  <%= hidden_field_tag :class_id, params[:class_id] %>
+  <%= hidden_field_tag :type, params[:type] %>
   </br>
   <%= button_tag(type: 'Import', class: "btn-small btn-primary", rel: "tooltip", title: "Import Users") do %>
 	  <span class="glyphicon glyphicon-upload"></span> 

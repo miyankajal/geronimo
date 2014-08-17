@@ -6,6 +6,7 @@ class UsersController < ApplicationController
   before_action :classes_all
   before_action :points_all
   before_action :teachers_all
+  before_action :terms_all
   
 
   # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
@@ -70,6 +71,7 @@ class UsersController < ApplicationController
   # POST /users
   def create
     @user = User.new(user_params)
+	@user.school_id = current_user.school_id
 
     if @user.save
 		
@@ -112,8 +114,9 @@ class UsersController < ApplicationController
   
   
   def import
-	User.import(params[:file])
-	redirect_to root_url, notice: "Users imported."
+	session[:return_to] ||= request.referer
+	User.import(params[:file], current_user.school_id, params[:type], params[:class_id])
+	redirect_to session.delete(:return_to), notice: "Users imported."
   end
   
   def download_sample
@@ -129,6 +132,10 @@ class UsersController < ApplicationController
   	@teacher_classes = ClassSection.where('school_id = ?', current_user.school_id).map{|class_section| [class_section.description, class_section.id]}
 	@teacher_roles = TeacherRole.all.map{|teacher_role| [teacher_role.description, teacher_role.id]}
   end 
+  
+  def terms_all
+	@term_count = Term.where('school_id = ?', current_user.school_id).count
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

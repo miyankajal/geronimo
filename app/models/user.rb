@@ -32,7 +32,8 @@ class User < ActiveRecord::Base
 
 	has_secure_password
 	
-	validates_presence_of :username, :email, :password_digest, :first_name, :last_name
+	validates_presence_of :username, :password_digest, :first_name, :last_name
+	validates_presence_of :email, :unless => :is_student?
 	validates_presence_of :class_id, :if => :is_student? #should have a class_id and enrollment_id only if the user is a student 
 	validates_presence_of :enrollment_id, :if => :is_student?
 	validates_presence_of :school_id, :unless => :is_guardian?
@@ -43,7 +44,7 @@ class User < ActiveRecord::Base
 						:message => "must be a valid email address"
 					
 	
-	validates_length_of :email, :within => 4..MAX_EMAIL
+	validates_length_of :email, :within => 6..MAX_EMAIL
 	validates_length_of :username, :maximum => MAX_USERNAME
 	validates_length_of :first_name, :maximum => MAX_FIRST_NAME
 	validates_length_of :last_name, :maximum => MAX_LAST_NAME
@@ -77,7 +78,7 @@ class User < ActiveRecord::Base
 		end while User.exists?(column => self[column])
 	end
 	
-	def self.import(file)
+	def self.import(file, school_id, user_type, class_id)
 	  spreadsheet = open_spreadsheet(file)
 	  header = spreadsheet.row(1)
 	  (2..spreadsheet.last_row).each do |i|
@@ -85,6 +86,11 @@ class User < ActiveRecord::Base
 		user = find_by_id(row["id"]) || new
 		#(:username, :email, :password, :first_name, :last_name, :type, :enrollment_id, :class_id, :school_id)
 		user.attributes = row.to_hash
+		user.school_id = school_id
+		user.type = user_type
+		if user_type == '3'
+			user.class_id = class_id
+		end
 		user.save!
 	  end
 	end
