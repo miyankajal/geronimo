@@ -21,6 +21,13 @@
 </head>
 
 <body>
+	<% flash.each do |key, msg| %>
+		<div class="alert alert-dismissable alert-info">
+		  <button type="button" class="close" data-dismiss="alert">×</button>
+		  <p><%= msg %></p>
+		</div>
+	<% end %>
+    
 	<% if session[:product] == 1 %>
 		<%= render 'layouts/header'%>
 	<% else %>

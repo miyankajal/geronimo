@@ -25,7 +25,7 @@ CardOffenseType.create(:id=>2, :description=>'Red Card')
 CardOffenseType.create(:id=>3, :description=>'Pink Card')
 CardOffenseType.create(:id=>4, :description=>'Yellow Card')
 
-AlertSetting.create!(:default_points=>1000, :min_points_required=>200, :send_auto_email=>true, :max_warnings_before_email_alert=>3, :min_points_for_penalty=>25, :repetition_of_mistake_before_email=>3, :penalty_carried_over=>10)
+AlertSetting.create!(:default_points=>1000, :min_points_required=>200, :send_auto_email=>true, :max_warnings_before_email_alert=>3, :min_points_for_penalty=>25, :repetition_of_mistake_before_email=>3, :penalty_carried_over=>10, :school_id => 1)
 
 #First School
 School.create!(:name => 'Geronimo Academy', :address => 'Canfield, Ohio, USA', :phone_no => '+1 0000000000')
