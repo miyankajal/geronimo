@@ -21,6 +21,7 @@ class UsersController < ApplicationController
   	else
   		@users = User.where('type = ? AND school_id = ?', params[:type], current_user.school_id).order('username')
   	end
+	
   	
   end
   
@@ -103,8 +104,9 @@ class UsersController < ApplicationController
 
   # DELETE /users/1
   def destroy
+	session[:return_to] ||= request.referer
     User.find(params[:id]).destroy
-    redirect_to users_url, notice: 'User was successfully destroyed.'
+    redirect_to session.delete(:return_to), notice: 'User was successfully destroyed.'
   end
   
   def classes_all

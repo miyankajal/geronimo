@@ -30,7 +30,7 @@
 	<td>
 		<% @l = Array.new %>
 			<% if idea.likes_count != 0 %> 
-				<% @l = User.joins('INNER JOIN user_idea_relationships ON user_idea_relationships.user_id = users.id').where('idea_id = ?', idea.id).map{|liker| [liker.last_name + ' ' + liker.last_name + ', ']} %>
+				<% @l = User.joins('INNER JOIN user_idea_relationships ON user_idea_relationships.user_id = users.id').where('idea_id = ?', idea.id).map{|liker| [liker.first_name + ' ' + liker.last_name + ', ']} %>
 			<% end %>
 		<%= link_to "#{idea.likes_count} Likes", '', :class => "popover-test", :title => "This idea was liked by:", "data-content" => @l %> 
 	</td>
@@ -77,7 +77,7 @@
 	<% elsif current_user.type == 2 %> 
 		<td colspan="3"> 
 			<b>Moderator:</b> 
-			<%= idea.moderator_user_first_name + ' ' + idea.moderator_user_last_name %> 
+			<%= idea.moderator_user_first_name %>  <%= idea.moderator_user_last_name %>
 		</td>
 		<% if current_user.id == idea.moderator_id %>
 			<%= form_for idea do |f| %>

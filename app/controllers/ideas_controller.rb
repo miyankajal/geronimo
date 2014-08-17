@@ -56,27 +56,31 @@ class IdeasController < ApplicationController
 	session[:return_to] ||= request.referer
 	@user_id = Idea.select('user_id, likes_count').where('id = ?', params[:idea_id]).first
 	
-	UserIdeaRelationships.create(:user_id => current_user.id, :idea_id => params[:idea_id], :like => 't', :report => 'f')
-	@current_term = Term.select('id, term_from, term_to').where('term_from <= ? AND school_id = ?', Time.now, current_user.school_id).order('term_from desc').first
+	@user_idea_count = UserIdeaRelationships.where(:user_id => current_user.id, :idea_id => params[:idea_id]).count
 	
-	@student_point = StudentPoint.select('assigned_points, id').where('point_id = 31 and user_id = ? and created_at >= ? and created_at < ?', @user_id.user_id, @current_term.term_from, @current_term.term_to).order("student_points.created_at")
-			
-	if @user_id.likes_count + 1 == 15
-		if @student_point.empty?
-			StudentPoint.create(:user_id => @user_id.user_id, :point_id => 31, :assigned_points => 5, :is_credit => 't' )
+	if @user_idea_count == 0
+	
+		UserIdeaRelationships.create(:user_id => current_user.id, :idea_id => params[:idea_id], :like => 't', :report => 'f')
+		@current_term = Term.select('id, term_from, term_to').where('term_from <= ? AND school_id = ?', Time.now, current_user.school_id).order('term_from desc').first
+		
+		@student_point = StudentPoint.select('assigned_points, id').where('point_id = 31 and user_id = ? and created_at >= ? and created_at < ?', @user_id.user_id, @current_term.term_from, @current_term.term_to).order("student_points.created_at").first
+				
+		if @user_id.likes_count + 1 == 15
+			if @student_point.empty?
+				StudentPoint.create(:user_id => @user_id.user_id, :point_id => 31, :assigned_points => 5, :is_credit => 't' )
+			else
+				StudentPoint.where('id = ?', @student_point.id).update_all('assigned_points = assigned_points + 5')
+			end
+			Idea.where('id = ? AND user_id <> ?', params[:idea_id], current_user.id).update_all('portal_id = 3, likes_count = likes_count + 1, updated_at = NOW()')
 		else
-			StudentPoint.where('id = ?', @student_point.id).update_all('assigned_points = assigned_points + 5')
+			if @student_point.nil?
+				StudentPoint.create(:user_id => @user_id.user_id, :point_id => 31, :assigned_points => 1, :is_credit => 't' )
+			else
+				StudentPoint.where('id = ?', @student_point.id).update_all('assigned_points = assigned_points + 1')
+			end
+			Idea.where('id = ? AND user_id <> ?', params[:idea_id], current_user.id).update_all('likes_count = likes_count + 1')
 		end
-		Idea.where('id = ? AND user_id <> ?', params[:idea_id], current_user.id).update_all('portal_id = 3, likes_count = likes_count + 1, updated_at = NOW()')
-	else
-		if @student_point.empty?
-			StudentPoint.create(:user_id => @user_id.user_id, :point_id => 31, :assigned_points => 1, :is_credit => 't' )
-		else
-			StudentPoint.where('id = ?', @student_point.id).update_all('assigned_points = assigned_points + 1')
-		end
-		Idea.where('id = ? AND user_id <> ?', params[:idea_id], current_user.id).update_all('likes_count = likes_count + 1')
 	end
-
 	redirect_to session.delete(:return_to)
   end
   
@@ -132,8 +136,8 @@ class IdeasController < ApplicationController
 		@idea.portal_id = 2
 		@idea.accepted = true
 	else
-		@moderator = User.select(:username, :email).where('id = ?', @idea.moderator_id)
-		#UserMailer.new_idea_email(@moderator[0]).deliver
+		@moderator = User.select(:username, :email).where('id = ?', @idea.moderator_id).first
+		UserMailer.new_idea_email(@moderator).deliver
 	end
 	
     if @idea.save
