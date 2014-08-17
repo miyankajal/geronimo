@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
 	end
 
 	def create
-		user = User.find_by(email: params[:session][:email].downcase)
+		user = User.where('email = ? OR username = ?', params[:session][:email].downcase, params[:session][:email].downcase).first
 		if user && user.authenticate(params[:session][:password])
 			sign_in user, params[:remember_me]
 			redirect_back_or user
