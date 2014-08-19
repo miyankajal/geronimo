@@ -23,7 +23,11 @@ class IdeasController < ApplicationController
 	elsif current_user.type == 2 #if teacher
 		
 		if params[:portal_id] == '2'
-			@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('portal_id = ? AND users.class_id = ? AND accepted = ?', params[:portal_id], params[:class_id], params[:accepted]).order('ideas.updated_at DESC')
+			if params[:accepted] == '1'
+				@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where("portal_id = ? AND users.class_id = ? AND accepted = 't'", params[:portal_id], params[:class_id]).order('ideas.updated_at DESC')
+			elsif params[:accepted] == '0'
+				@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where("portal_id = ? AND users.class_id = ? AND accepted = 'f'", params[:portal_id], params[:class_id]).order('ideas.updated_at DESC')
+			end
 		elsif params[:portal_id] == '3'
 			@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id').where('portal_id = ? AND users.school_id = ?', params[:portal_id], current_user.school_id).order('ideas.updated_at DESC')
 		end
