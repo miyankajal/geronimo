@@ -1,5 +1,12 @@
 <tr>
-	<td colspan="4" class="separate-below-none"><b><%= link_to idea.first_name + ' ' + idea.last_name, user_path(idea.user_id)%></b></td>
+	<td colspan="3" class="separate-below-none"><b><%= link_to idea.first_name + ' ' + idea.last_name, user_path(idea.user_id)%></b> (<%= idea.updated_at.to_formatted_s(:short) %>)</td>
+	<td>
+		<% @l = Array.new %>
+			<% if idea.likes_count != 0 %> 
+				<% @l = User.joins('INNER JOIN user_idea_relationships ON user_idea_relationships.user_id = users.id').where('idea_id = ?', idea.id).map{|liker| [liker.first_name + ' ' + liker.last_name + ', ']} %>
+			<% end %>
+		<%= link_to "#{idea.likes_count} Likes", '', :class => "popover-test", :title => "This idea was liked by:", "data-content" => @l %> 
+	</td>
 </tr>
 <% @email = User.select('email, id, type').where('id = ?', idea.user_id).first %>
 <tr>
@@ -18,42 +25,27 @@
 			<%= link_to idea, method: :delete, data: { confirm: 'Are you sure you want to remove this idea from the bank?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Idea" do %> 
 				<i class="glyphicon glyphicon-trash"></i> 
 			<% end %>
-		<% end %> 
-	</td>
-</tr>
-<tr>
-	<td colspan="4" class="separate-below-none"/>
-</tr>
-<tr>
-	<td/>
-	<td><b>Updated On:</b> <%= idea.updated_at %></td>
-	<td>
-		<% @l = Array.new %>
-			<% if idea.likes_count != 0 %> 
-				<% @l = User.joins('INNER JOIN user_idea_relationships ON user_idea_relationships.user_id = users.id').where('idea_id = ?', idea.id).map{|liker| [liker.first_name + ' ' + liker.last_name + ', ']} %>
-			<% end %>
-		<%= link_to "#{idea.likes_count} Likes", '', :class => "popover-test", :title => "This idea was liked by:", "data-content" => @l %> 
-	</td>
-	<td>	
-		<% if params[:portal_id] != '1' && current_user.id != idea.user_id %> 
-			<%= link_to add_like_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Like" do %> 
-				<i class="glyphicon glyphicon-thumbs-up"></i> 
-			<% end %>
-		<% end %> 
-		
-		<% if idea.accepted == false %>
-			<% if current_user.type == 2 && idea.moderator_id == current_user.id %>
-				<%= link_to accept_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Accept" do %>
-					<i class="glyphicon glyphicon-ok"></i> 
+		<% else %>
+			<% if params[:portal_id] != '1' && current_user.id != idea.user_id %> 
+				<%= link_to add_like_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Like" do %> 
+					<i class="glyphicon glyphicon-thumbs-up"></i> 
 				<% end %>
-			<% else %>
-				To be accepted
+			<% end %> 
+		
+			<% if idea.accepted == false %>
+				<% if current_user.type == 2 && idea.moderator_id == current_user.id %>
+					<%= link_to accept_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Accept" do %>
+						<i class="glyphicon glyphicon-ok"></i> 
+					<% end %>
+				<% else %>
+					To be accepted
+				<% end %>
+			<% elsif current_user.id != idea.user_id %>
+				<%= link_to report_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Report" do %>
+					<i class="glyphicon glyphicon-thumbs-down"></i> 
+				<% end %>
 			<% end %>
-		<% elsif current_user.id != idea.user_id %>
-			<%= link_to report_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Report" do %>
-				<i class="glyphicon glyphicon-thumbs-down"></i> 
-			<% end %>
-		<% end %>
+		<% end %> 
 	</td>
 </tr>
 <tr>
@@ -125,14 +117,6 @@
 	<td colspan="4" class="separate-below-none"/>
 </tr>
 
-<tr>
-	<td><b>Comments: </b> </td>	
-</tr>
-
-<tr>
-	<td colspan="4" class="separate-below-none"/>
-</tr>
-
 <% @comments = Comment.joins(:user).select('comments.id AS id, user_id, comment, users.first_name AS user_first_name, users.last_name AS user_last_name').where('idea_id = ?', idea.id) %> 
 <% @comments.each do |comment| %>
 	<tr>
@@ -157,13 +141,8 @@
 	</tr>
 <% end %>
 
-<tr>
-	<td colspan="4" class="separate-below-none"/>
-</tr>
-
-
 <tr class="separate-below">
-	<td colspan="1"/> 
+	<td/>
 	<td colspan="3">
 		<%= render 'comment', :idea_id => idea.id  %>
 	<td>
