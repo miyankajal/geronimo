@@ -6,5 +6,6 @@ class ClassSection < ActiveRecord::Base
 	
 	has_many :teacher_class_relationships, dependent: :destroy
 	has_many :users, through: :teacher_class_relationships 
+	has_many :ideas, dependent: :destroy
 	belongs_to :school
 end

@@ -24,3 +24,4 @@ doc/
 .DS_Store
 .idea
 .secret
+app/assets/javascripts/application.js

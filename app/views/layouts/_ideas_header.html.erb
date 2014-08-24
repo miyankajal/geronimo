@@ -10,38 +10,42 @@
 				<ul class="nav navbar-nav navbar-right">
 					<% if sign_in? %>
 						
-						<% if current_user.type == 3 %>
-							<li>
-								<%= link_to get_portal_ideas_path(1,0,0) do %> 
-									My Ideas <i class="glyphicon glyphicon-edit"></i> 
-								<% end %>
-							</li>
-						<% elsif current_user.type == 2 %>
+						<% if current_user.type == 2 %>
 							<li>
 								<%= link_to tags_path() do %> 
 									Idea Tags <i class="glyphicon glyphicon-book"></i> 
 								<% end %>
 							</li>
-						<% end %>
-						<% if current_user.type == 2 %>
 							<li>
-								<%= link_to get_portal_ideas_path(2,0,0) do %> 
-									My Class Ideas <i class="glyphicon glyphicon-list-alt"></i> 
-								<% end %>
-							</li>
-						<% else %>
-							<li>
-								<%= link_to get_portal_ideas_path(2,0,1) do %> 
-									My Class Ideas <i class="glyphicon glyphicon-list-alt"></i> 
+								<%= link_to new_idea_path() do %> 
+									Broadcast Message <i class="glyphicon glyphicon-comment"></i> 
 								<% end %>
 							</li>
 						<% end %>
-						<li>
-							<%= link_to get_portal_ideas_path(3,0,0) do %> 
-								My School Ideas <i class="glyphicon glyphicon-list-alt"></i> 
-							<% end %>
-						</li>
 						
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Ideas <i class="glyphicon glyphicon-edit"></i> <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<% if current_user.type == 3 %>
+									<li>
+										<%= link_to 'My Ideas', get_portal_ideas_path(1,0,0) %>
+									</li>
+								<% end %>
+								<% if current_user.type == 2 %>
+									<li>
+										<%= link_to 'Class Ideas', get_portal_ideas_path(2,0,0) %> 
+									</li>
+								<% else %>
+									<li>
+										<%= link_to 'Class Ideas', get_portal_ideas_path(2,0,1) %> 
+									</li>
+								<% end %>
+								<li>
+									<%= link_to 'School Ideas', get_portal_ideas_path(3,0,0) %> 
+								</li>
+							</ul>
+						</li>
+
 						<li>
 							<%= link_to user_path(current_user) do %> 
 								POINTS BANK <i class="glyphicon glyphicon-star-empty"></i> 
