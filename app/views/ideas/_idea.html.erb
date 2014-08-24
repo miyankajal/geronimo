@@ -18,7 +18,7 @@
 					</div>
 				</div>
 			</p>
-				
+			<br/>
 			<% @email = User.select('email, id, type').where('id = ?', idea.user_id).first %>
 			<p>
 				<div id="name">
@@ -63,7 +63,7 @@
 					</div>
 				</div>
 			</p>
-
+			<br/>
 			<p>
 
 				<% if current_user.id == idea.user_id %>
