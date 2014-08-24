@@ -185,6 +185,49 @@ td,
 th {
   padding: 0;
 }
+
+#wrap {
+width:900px;
+margin:0 auto;
+}
+#name {
+float:left;
+width:100px;
+}
+#comment_name {
+float:left;
+width:100px;
+height:53px;
+}
+#all_text {
+float:right;
+width:800px;
+}
+#text {
+float:left;
+width:600px;
+}
+#actions {
+float:right;
+width:200px;
+}
+
+#all_idea_text {
+float:right;
+width:800px;
+min-height:60px;
+}
+#idea_text {
+float:left;
+width:600px;
+min-height:60px;
+}
+#idea_actions {
+float:right;
+min-height:60px;
+width:200px;
+}
+
 @media print {
   * {
     text-shadow: none !important;
