@@ -63,17 +63,15 @@
 					</div>
 				</div>
 			</p>
-			<br/>
-			<p>
+			<br/><br/>
 
+			<p>
 				<% if current_user.id == idea.user_id %>
 					<%= form_for idea do |f| %>
-						<div id="name">
-							<%= f.label 'Moderator: ' %>
-						</div>
 	
 						<div id="all_text">
 							<div id="text">
+								<%= f.label 'Moderator: ' %>
 								<%= f.select :moderator_id, options_for_select( [['None', '']] + @moderator_options.map { |j| [j[0], j[2]]}, selected_key = idea.moderator_id ) %>
 							</div>
 							<div id="actions">
@@ -84,18 +82,19 @@
 						</div>
 					<% end %>
 				<% elsif current_user.type == 2 %> 
-					<div id="name">
-						<b>Moderator:</b> 
-						<%= idea.moderator_user_first_name %>  <%= idea.moderator_user_last_name %>
-					</div>
-					<% if current_user.id == idea.moderator_id %>
+					<% if current_user.id != idea.moderator_id %>
+						<div id="all_text">
+							<b>Moderator:</b> 
+							<%= idea.moderator_user_first_name %>  <%= idea.moderator_user_last_name %>
+						</div>
+					<% else %>
 						<%= form_for idea do |f| %>
 							<div id="all_text">
 								<div id="text">
-								<%= f.select :portal_id, options_for_select( @portal_options, selected_key = params[:portal_id]) %>
-								<% if params[:portal_id] == 3 %>
-									<%= f.hidden_field :accepted, :value => true %>
-								<% end %>
+									<%= f.select :portal_id, options_for_select( @portal_options, selected_key = params[:portal_id]) %>
+									<% if params[:portal_id] == 3 %>
+										<%= f.hidden_field :accepted, :value => true %>
+									<% end %>
 								</div>
 								<div id="actions">
 									<%= button_tag(type: 'Change', class: "btn-small btn-primary", rel: "tooltip", title: "Change Portal") do %>
@@ -112,12 +111,10 @@
 
 				<% @tag_comment_ideas = TagCommentIdea.new %>
 				<%= form_for @tag_comment_ideas, :html => {:class => 'form-horizontal'} do |f| %>
-					<div id="name">
-					  <%= f.label 'Tags: ' %>
-					</div>
 
 					<div id="all_text">
 						<div id="text">
+						  <%= f.label 'Tags: ' %>
 						  <%= f.hidden_field :idea_id, :value => idea.id %> 
 						  <% @idea_tags = Tag.joins(:tag_comment_ideas).select('tags.id as tag_id, description, tag_comment_ideas.id as tag_idea_id, tag_comment_ideas.tag_id as tag_idea_tag_id, tag_comment_ideas.idea_id as tag_idea_idea_id').where('idea_id = ?', idea.id) %> 
 
@@ -137,11 +134,9 @@
 			<% @comments = Comment.joins(:user).select('comments.id AS id, user_id, comment, users.first_name AS user_first_name, users.last_name AS user_last_name').where('idea_id = ?', idea.id) %> 
 			<% @comments.each do |comment| %>
 				<p>
-					<div id="name">	
-						<a><%= comment.user_first_name + ' ' + comment.user_last_name + ' - '%></a> 
-					</div>
 					<div id="all_text">
 						<div id="text">
+							<a><%= comment.user_first_name + ' ' + comment.user_last_name + ' - '%></a> 
 							<%= best_in_place comment, :comment, :type => :textarea, :activator => "#edit_#{comment.id}"  %>
 						</div>
 
@@ -159,10 +154,8 @@
 				</p>
 			<% end %>
 			<p>
-				<div id="comment_name">
-					 <b> Me: </b>
-				</div>
 				<div id="all_text">
+					<b> Me: </b>
 					<%= render 'comment', :idea_id => idea.id  %>
 				</div>
 			</p>
