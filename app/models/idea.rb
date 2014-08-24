@@ -8,6 +8,7 @@ class Idea < ActiveRecord::Base
 	belongs_to :moderator_user, :class_name => "User", :foreign_key => "moderator_id"
 	belongs_to :posting_portal	
 	has_many :user_idea_relationships
+	belongs_to :ideas, :class_name => "Idea", :foreign_key => "class_id"
 	
 	validates_presence_of :idea, :portal_id, :user_id
 end

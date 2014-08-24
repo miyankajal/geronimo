@@ -27,44 +27,55 @@
 
 				<div id="all_idea_text">
 					<div id="idea_text">
-						<%= best_in_place idea, :idea, :type => :textarea, :activator => "#edit_#{idea.id}"  %> 
+						<% if idea.user_type == 2 %>
+					 		<div class="alert alert-success">
+					 	<% end %>
+							<%= best_in_place idea, :idea, :type => :textarea, :activator => "#edit_#{idea.id}" %> 
+						<% if idea.user_type == 2 %>
+					 		</div>
+					  	<% end %>
 					</div>
 
 					<div id="idea_actions">
 						<% if idea.user_id == current_user.id %> 
-							<%= link_to idea, :id=>"edit_"+idea.id.to_s,  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Idea" do %> 
-								<i class="glyphicon glyphicon-pencil"></i> 
-							<% end %>
-
-							<%= link_to idea, method: :delete, data: { confirm: 'Are you sure you want to remove this idea from the bank?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Idea" do %> 
-								<i class="glyphicon glyphicon-trash"></i> 
-							<% end %>
+							<div id="idea_actions_1">
+								<%= link_to idea, :id=>"edit_"+idea.id.to_s,  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Idea" do %> 
+									<i class="glyphicon glyphicon-pencil"></i> 
+								<% end %>
+							</div>
+							<div id="idea_actions_2">
+								<%= link_to idea, method: :delete, data: { confirm: 'Are you sure you want to remove this idea from the bank?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Idea" do %> 
+									<i class="glyphicon glyphicon-trash"></i> 
+								<% end %>
+							</div>
 						<% else %>
-							<% if params[:portal_id] != '1' && current_user.id != idea.user_id %> 
-								<%= link_to add_like_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Like" do %> 
-									<i class="glyphicon glyphicon-thumbs-up"></i> 
-								<% end %>
-							<% end %> 
-
-							<% if idea.accepted == false %>
-								<% if current_user.type == 2 && idea.moderator_id == current_user.id %>
-									<%= link_to accept_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Accept" do %>
-										<i class="glyphicon glyphicon-ok"></i> 
+							<div id="idea_actions_1">
+								<% if params[:portal_id] != '1' && current_user.id != idea.user_id %> 
+									<%= link_to add_like_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Like" do %> 
+										<i class="glyphicon glyphicon-thumbs-up"></i> 
 									<% end %>
-								<% else %>
-									To be accepted
+								<% end %> 
+							</div>
+							<div id="idea_actions_2">
+								<% if idea.accepted == false %>
+									<% if current_user.type == 2 && idea.moderator_id == current_user.id %>
+										<%= link_to accept_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Accept" do %>
+											<i class="glyphicon glyphicon-ok"></i> 
+										<% end %>
+									<% else %>
+										To be accepted
+									<% end %>
+								<% elsif current_user.id != idea.user_id %>
+									<%= link_to report_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Report" do %>
+										<i class="glyphicon glyphicon-thumbs-down"></i> 
+									<% end %>
 								<% end %>
-							<% elsif current_user.id != idea.user_id %>
-								<%= link_to report_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Report" do %>
-									<i class="glyphicon glyphicon-thumbs-down"></i> 
-								<% end %>
-							<% end %>
+							</div>
 						<% end %> 
 					</div>
 				</div>
 			</p>
-			<br/><br/>
-
+			
 			<p>
 				<% if current_user.id == idea.user_id %>
 					<%= form_for idea do |f| %>
@@ -91,6 +102,7 @@
 						<%= form_for idea do |f| %>
 							<div id="all_text">
 								<div id="text">
+								   	<b>Portal:</b> 
 									<%= f.select :portal_id, options_for_select( @portal_options, selected_key = params[:portal_id]) %>
 									<% if params[:portal_id] == 3 %>
 										<%= f.hidden_field :accepted, :value => true %>
@@ -142,12 +154,16 @@
 
 						<div id="actions">
 							<% if comment.user_id == current_user.id %>
-								<%= link_to idea, :id=>"edit_"+comment.id.to_s,  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Comment" do %> 
-									<i class="glyphicon glyphicon-pencil"></i> 
-								<% end %>
-								<%= link_to comment, method: :delete, data: { confirm: 'Are you sure you want to remove comment?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Comment" do %> 
-									<i class="glyphicon glyphicon-trash"></i> 
-								<% end %>
+								<div id="actions_1">
+									<%= link_to idea, :id=>"edit_"+comment.id.to_s,  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Comment" do %> 
+										<i class="glyphicon glyphicon-pencil"></i> 
+									<% end %>
+								</div>
+								<div id="actions_2">
+									<%= link_to comment, method: :delete, data: { confirm: 'Are you sure you want to remove comment?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Comment" do %> 
+										<i class="glyphicon glyphicon-trash"></i> 
+									<% end %>
+								</div>
 							<% end %>
 						</div>
 					</div>
