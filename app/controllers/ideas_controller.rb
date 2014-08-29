@@ -4,7 +4,6 @@ class IdeasController < ApplicationController
   before_action :teacher_class_all
   before_action :tags_all
   before_action :portals_all
-  before_action :likes_all
   before_action :classes_all
   
   # GET /ideas
@@ -37,12 +36,8 @@ class IdeasController < ApplicationController
 	
   end
   
-  def likes_all
-	@idea_likes = User.joins('INNER JOIN user_idea_relationships ON user_idea_relationships.user_id = users.id AND idea_id = 6').select('first_name, last_name, users.id').all.map{|user| [user.first_name + ' ' + user.last_name]}
-  end
-  
   def teacher_class_all
-	@teacher_class_options = TeacherClassRelationship.joins(:class_section).select('class_sections.id, description').where('user_id = ?', current_user.id).map{|class_section| [class_section.description, class_section.id]}
+	@teacher_class_options = ClassSection.select('id, description').map{|class_section| [class_section.description, class_section.id]}
   end
   
   def tags_all
@@ -113,7 +108,7 @@ class IdeasController < ApplicationController
   
   def accept_idea
 	session[:return_to] ||= request.referer
-	Idea.where('id = ? AND moderator_id = ?', params[:idea_id], current_user.id).update_all('accepted = true, updated_at = NOW()')
+	Idea.where('id = ? AND moderator_id = ?', params[:idea_id], current_user.id).update_all(:accepted => true, :updated_at => Date.today)
 	redirect_to session.delete(:return_to)
   end
   

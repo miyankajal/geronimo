@@ -39,11 +39,9 @@ class CommentsController < ApplicationController
 	session[:return_to] ||= request.referer
     if @comment.update(comment_params)
 		respond_to do |format|
-			format.html { redirect_to session.delete(:return_to) }
-			format.json { render json: session.delete(:return_to)  }
+			format.html { redirect_to @comment }
+			format.json { render json: @comment }
 		end
-	else
-      render action: 'edit'
     end
   end
 

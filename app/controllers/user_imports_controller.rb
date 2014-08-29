@@ -4,7 +4,7 @@ class UserImportsController < ApplicationController
   end
 
   def create
-    @user_import = UserImport.new(params[:user_import)
+    @user_import = UserImport.new(params[:user_import])
     if @user_import.save
       redirect_to root_url, notice: "Imported users successfully."
     else
