@@ -1,91 +1,94 @@
+<% @guardian = Guardianship.select(:user_id).where('guardian_id = ? AND user_id = ?', current_user.id, params[:user_id])%>
+<% if (current_user.type == 3 && current_user.id.to_s == params[:user_id]) || (current_user.type == 4 && @guardian.length != 0) %>
+	<%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
 
-<%= javascript_include_tag "//www.google.com/jsapi", "chartkick" %>
-
-</br>
-<div class="span7">
-    <div class="row">
-        <div class="well" style="width:100%;">
-			<div class="alert alert-dismissable alert-success">
-				Points scored by the student every school term
-			</div>
-		</div>
-    </div>
-</div>
-
-<% data = Array.new %>
-<% @terms = Term.select('name, term_from, term_to').where('school_id = ?', current_user.school_id) %>
-
-<% @terms.each do |term| %>
-	<% @a = StudentPoint.where('student_points.created_at >= ? AND student_points.created_at < ? AND user_id = ?', term.term_from, term.term_to, params[:user_id]).sum(:assigned_points) %>
-	<% arr = Array.new %>
-	<% arr.push(term.name) %>
-	<% arr.push(@a) %>
-	<% data.push(arr) %>
-<% end %>
-
-<div class="span7">
-    <div class="row">
-        <div class="well" style="width:100%;">
-			<%= column_chart data %>
-		</div>
-    </div>
-</div>
-
-</br>
-<div class="span7">
-    <div class="row">
-        <div class="well" style="width:100%;">
-			<div class="alert alert-dismissable alert-success">
-				Tags of ideas contributed by the student. Also these charts could be used to identify particular interests of a child and encourage him</br>
-			</div>
-		</div>
-    </div>
-</div>
-
-<% pie = Hash.new %>
-<% @a = Tag.joins('INNER JOIN tag_comment_ideas ON tags.id = tag_comment_ideas.tag_id').joins('INNER JOIN user_idea_relationships ON user_idea_relationships.idea_id = tag_comment_ideas.idea_id').where('user_idea_relationships.user_id = ?', 9).select('tags.description, count(tags.id) AS tag_count').group('tags.description') %>
-
-<% if @a.length > 0 %>
+	</br>
 	<div class="span7">
 		<div class="row">
 			<div class="well" style="width:100%;">
-				<%= pie_chart @a.count %>
+				<div class="alert alert-dismissable alert-success">
+					Points scored by the student every school term
+				</div>
 			</div>
 		</div>
 	</div>
-<% end %>
 
-</br>
-<div class="span7">
-    <div class="row">
-        <div class="well" style="width:100%;">
-			<div class="alert alert-dismissable alert-success">
-				Term-wise participation of the student for tracing the complete all-around development down the years</br>
-				The target is not to merely earn higher points but to earn them by participating in multiple activities. Also these charts could be used to identify particular interests of a child and encourage him</br>
+	<% data = Array.new %>
+	<% @terms = Term.select('name, term_from, term_to').where('school_id = ?', current_user.school_id) %>
+
+	<% @terms.each do |term| %>
+		<% @a = StudentPoint.where('student_points.created_at >= ? AND student_points.created_at < ? AND user_id = ?', term.term_from, term.term_to, params[:user_id]).sum(:assigned_points) %>
+		<% arr = Array.new %>
+		<% arr.push(term.name) %>
+		<% arr.push(@a) %>
+		<% data.push(arr) %>
+	<% end %>
+
+	<div class="span7">
+		<div class="row">
+			<div class="well" style="width:100%;">
+				<%= column_chart data %>
 			</div>
 		</div>
-    </div>
-</div>
+	</div>
 
-<% @terms.each do |term| %>
+	</br>
+	<div class="span7">
+		<div class="row">
+			<div class="well" style="width:100%;">
+				<div class="alert alert-dismissable alert-success">
+					Tags of ideas contributed by the student. Also these charts could be used to identify particular interests of a child and encourage him</br>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<% pie = Hash.new %>
-	<% @a = Point.select('id').joins(:student_points).where("user_id = ? and point_id != 1 and point_id != 2 and student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?", params[:user_id], term.term_from, term.term_to, current_user.school_id).group('point_id').sum(:assigned_points) %>
-	<% if @a.count > 0 %>
-		<% @a.each do |k,v| %>
-			<% @point = Point.select('description').where('id = ? AND school_id = ?', k, current_user.school_id).first %>
-			<% if v < 0 %>
-				<% v = v * -1 %>
-			<% end %>
-			<% pie[@point.description] = v %>
-		<% end %>
-		<h4><%= term.name %></h4>
+	<% @a = Tag.joins('INNER JOIN tag_comment_ideas ON tags.id = tag_comment_ideas.tag_id').joins('INNER JOIN user_idea_relationships ON user_idea_relationships.idea_id = tag_comment_ideas.idea_id').where('user_idea_relationships.user_id = ?', 9).select('tags.description, count(tags.id) AS tag_count').group('tags.description') %>
+
+	<% if @a.length > 0 %>
 		<div class="span7">
 			<div class="row">
 				<div class="well" style="width:100%;">
-					<%= pie_chart pie %>
+					<%= pie_chart @a.count %>
 				</div>
 			</div>
 		</div>
 	<% end %>
+
+	</br>
+	<div class="span7">
+		<div class="row">
+			<div class="well" style="width:100%;">
+				<div class="alert alert-dismissable alert-success">
+					Term-wise participation of the student for tracing the complete all-around development down the years</br>
+					The target is not to merely earn higher points but to earn them by participating in multiple activities. Also these charts could be used to identify particular interests of a child and encourage him</br>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<% @terms.each do |term| %>
+
+		<% pie = Hash.new %>
+		<% @a = Point.select('id').joins(:student_points).where("user_id = ? and point_id != 1 and point_id != 2 and student_points.created_at >= ? and student_points.created_at < ? AND school_id = ?", params[:user_id], term.term_from, term.term_to, current_user.school_id).group('point_id').sum(:assigned_points) %>
+		<% if @a.count > 0 %>
+			<% @a.each do |k,v| %>
+				<% @point = Point.select('description').where('id = ? AND school_id = ?', k, current_user.school_id).first %>
+				<% if v < 0 %>
+					<% v = v * -1 %>
+				<% end %>
+				<% pie[@point.description] = v %>
+			<% end %>
+			<h4><%= term.name %></h4>
+			<div class="span7">
+				<div class="row">
+					<div class="well" style="width:100%;">
+						<%= pie_chart pie %>
+					</div>
+				</div>
+			</div>
+		<% end %>
+	<% end %>
+
 <% end %>

@@ -1,4 +1,6 @@
 class GuardianshipsController < ApplicationController
+  load_and_authorize_resource
+  
   #before_action :set_guardianship, only: [:show, :edit, :update, :destroy]
 
   # GET /guardianships

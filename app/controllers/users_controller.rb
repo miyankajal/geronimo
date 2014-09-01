@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+  
+  load_and_authorize_resource
+  
   skip_filter :download_sample
   before_action :set_user, only: [:show]
   before_action :signed_in_user, only: [:index, :show, :edit, :update, :destroy]
@@ -34,6 +37,15 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
+	
+	#is current user is a guardian dont let him access any users other than his wards
+	if current_user.type == 4 && current_user.id.to_s != params[:id]
+		@guardian = Guardianship.select('user_id').where('guardian_id = ? AND user_id = ?', current_user.id, params[:id])
+		if @guardian.length == 0
+			redirect_to root_path, notice: "Access Denied"
+		end
+	end
+	
 	#for some reason 'users.type' wasnt working hence the alias was added
 	@user = User.joins(:school).where('school_id = ? AND users.id = ?', current_user.school_id, params[:id]).select('users.id, username, first_name, last_name, email, type AS usr_type, enrollment_id, class_id, schools.name, address, phone_no').first
 	

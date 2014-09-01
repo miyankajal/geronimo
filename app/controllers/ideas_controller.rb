@@ -1,4 +1,6 @@
 class IdeasController < ApplicationController
+  load_and_authorize_resource
+  
   before_action :set_idea, only: [:show, :edit, :update, :destroy]
   before_action :teachers_all
   before_action :teacher_class_all

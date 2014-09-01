@@ -1,27 +1,29 @@
-<h2>5 Simple Steps to realize the full potential of your students with Geronimo!!!</h2>
+<% if current_user.nil? == false %>
+	<h2>5 Simple Steps to realize the full potential of your students with Geronimo!!!</h2>
 
-<div class="span11">
-	<div class="row">
-		<div class="well" style="width:100%;">
-			<p>By now Team Geronimo would have created an account for your school and given you an admin access, and since you are viewing this page you obviously have used the admin credentials to log in.</p>
+	<div class="span11">
+		<div class="row">
+			<div class="well" style="width:100%;">
+				<p>By now Team Geronimo would have created an account for your school and given you an admin access, and since you are viewing this page you obviously have used your credentials to log in.</p>
 
-			<h4>Welcome!!!</h4>
-			</br>
+				<h4>Welcome!!!</h4>
+				</br>
 
-			<p>Here's a beginner's guide to using Geronimo:</p>
-			</br>
+				<p>Here's a beginner's guide to using Geronimo:</p>
+				</br>
 
-			<ul>
-				<li><p>Step 1: Create a new Term. Goto Settings > Terms and add a new school term.</p></br></li>
+				<ul>
+					<li><p>Step 1: Create a new Term. Goto Settings > Terms and add a new school term.</p></br></li>
 	
-				<li><p>Step 2: Add Classes. To do so goto Users > Classes.</p></br></li>
+					<li><p>Step 2: Add Classes. To do so goto Users > Classes.</p></br></li>
 
-				<li><p>Step 3: Add Teachers from Users > Teachers page. Click on Teacher's username from here you can assign classes to the teacher, through 'Add Classes' link on the page. The Teacher can be Class Teacher/Subject Teacher/Restricted Teacher. More Administrators can also be added at this time from Users > Administrators page.</p></br></li>
+					<li><p>Step 3: Add Teachers from Users > Teachers page. Click on Teacher's username from here you can assign classes to the teacher, through 'Add Classes' link on the page. The Teacher can be Class Teacher/Subject Teacher/Restricted Teacher. More Administrators can also be added at this time from Users > Administrators page.</p></br></li>
 
-				<li><p>Step 4: The Teachers and Administrators should now be able to Add new students to Classes. Once the students have been added the Teachers can also add the Guardians. And assign Wards to the Guardians. To do so the Teachers/Administrators can click on the Guardian's username and Search for Wards in the search box with the Enrollment ID of the student. Once found the student can be added to the Guardian by clicking the Add Ward link. </p></br></li>
+					<li><p>Step 4: The Teachers and Administrators should now be able to Add new students to Classes. Once the students have been added the Teachers can also add the Guardians. And assign Wards to the Guardians. To do so the Teachers/Administrators can click on the Guardian's username and Search for Wards in the search box with the Enrollment ID of the student. Once found the student can be added to the Guardian by clicking the Add Ward link. </p></br></li>
 
-				<li><p>Step 5: Start using Geronimo!!! Edit Settings and allocate Points to individual students. View Reports. The system will now be able to automatically send emails to the Teachers and Guardians of the student if the appropriate Alert Settings are set. </p></br></li>
-			</ul>
+					<li><p>Step 5: Start using Geronimo!!! Edit Settings and allocate Points to individual students. View Reports. The system will now be able to automatically send emails to the Teachers and Guardians of the student if the appropriate Alert Settings are set. </p></br></li>
+				</ul>
+			</div>
 		</div>
 	</div>
-</div>
+<% end %>

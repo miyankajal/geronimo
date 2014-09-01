@@ -1,4 +1,5 @@
 class TeacherClassRelationshipsController < ApplicationController
+  load_and_authorize_resource
   before_action :teachers_all
 	
   # GET /teacher_class_relationship/new
