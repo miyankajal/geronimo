@@ -8,7 +8,9 @@ module SessionsHelper
 			cookies[:remember_token] = remember_token
 		end
 		user.update_attribute(:remember_token, User.hash(remember_token))
+		
 		self.current_user = user
+		
 		set_product_points
 	end
 	
@@ -18,7 +20,7 @@ module SessionsHelper
 	
 	def current_user
 		remember_token = User.hash(cookies[:remember_token])
-		@current_user || User.find_by(remember_token: remember_token)
+		@current_user ||= User.find_by(remember_token: remember_token)
 	end
 	
 	def current_user?(user)

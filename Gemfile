@@ -11,6 +11,7 @@ gem 'mysql2'
 gem 'foreigner'
 gem 'best_in_place', github: 'bernat/best_in_place', branch: "rails-4"
 gem 'chosen-rails'
+gem 'cancan'
 
 gem 'jquery-rails'
 gem 'bootstrap-sass', '2.0.0'

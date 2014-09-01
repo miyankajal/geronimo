@@ -1,5 +1,6 @@
 class StudentPointsController < ApplicationController
-	
+  load_and_authorize_resource
+  
   # GET /student_points/new
   def new
     @student_point = StudentPoint.new

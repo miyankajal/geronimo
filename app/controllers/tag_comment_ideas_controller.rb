@@ -1,4 +1,6 @@
 class TagCommentIdeasController < ApplicationController
+  load_and_authorize_resource
+  
   before_action :set_tag_comment_idea, only: [:show, :edit, :update, :destroy]
 
   # GET /tag_comment_ideas

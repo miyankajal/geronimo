@@ -1,4 +1,5 @@
 class AlertSettingsController < ApplicationController
+  load_and_authorize_resource
   
   # GET /alert_settings/1/edit
   def edit
