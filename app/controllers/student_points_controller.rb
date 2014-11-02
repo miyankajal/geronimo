@@ -18,16 +18,16 @@ class StudentPointsController < ApplicationController
 	
 	#gets send_auto_email, min_points_required, min_points_for_penalty, max_warnings_before_email_alert, repetition_of_mistake_before_email
 	@alert_settings = AlertSetting.where('school_id = ?', current_user.school_id).first
-	
+    @user = User.where('id = ? AND school_id = ?', @student_point.user_id, current_user.school_id).first
+    @guardians = Guardianship.joins(:user).select('guardian_id').where('user_id = ?', @user.id)
+    
 	if !@student_point.is_credit
 	
-		@user = User.where('id = ? AND school_id = ?', @student_point.user_id, current_user.school_id).first
 		#calculate total points
 		@current_term = Term.select('id, term_from, term_to').where('term_from <= ? AND school_id = ?', Time.now, current_user.school_id).order('term_from DESC').first
 		
 		@total_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @student_point.user_id, @current_term.term_from, @current_term.term_to).sum('assigned_points')
 		
-		@guardians = Guardianship.joins(:user).select('guardian_id').where('user_id = ?', @user.id)
 		@teachers = TeacherClassRelationship.joins('INNER JOIN users ON teacher_class_relationships.class_section_id = users.class_id').select('user_id').where('class_id = ?',  @user.class_id)
 
 		#if Pink card OR Yellow card OR Red card
@@ -113,7 +113,12 @@ class StudentPointsController < ApplicationController
 				end
 			end
 		end
-
+    else
+        @point = Point.where('id = ?', @student_point.point_id).first
+        @guardians.each do |guardian|
+            @email = User.where('id = ?', guardian.guardian_id).first
+            UserMailer.appreciation_email(@email, @user, @point).deliver
+        end
 	end
 	
     if @student_point.save

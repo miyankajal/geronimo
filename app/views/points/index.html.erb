@@ -1,4 +1,13 @@
-<h1>Listing points</h1>
+<h2>Listing points</h2>
+<div class="alert alert-dismissable alert-success"> 	
+    <div id="name" style='width:15%'>
+    	<%= image_tag "star.png" %>  
+    </div>
+    <br/><br/>
+    <div>
+		Add School Points. If the point is for good behaviour make sure to check the 'Is Good Behavior' checkbox. <br/><br/>
+	</div> 
+</div>
 
 <% if current_user.type == 1 || current_user.type == 2 %>
 	</br>
@@ -6,7 +15,7 @@
 	<hr>
 <% end %>
 
-<table class="table table-striped table-hover">
+<table class="table">
   <thead>
     <tr>
       <th>Description</th>
@@ -18,14 +27,23 @@
   <tbody>
     <% @points.each do |point| %>
       <tr>
-        <td><%= point.description %></td>
+        <td>
+        	<% if point.credit %>
+				<div class="alert alert-dismissable alert-success">
+			<% else %>
+				<div class="alert alert-dismissable alert-warning">
+			<% end %>
+				<%= point.description %></td>
+			</div>
 	<% if point.credit %>
         	<td><%= point.value %></td>
 	<% else %>
 		<td><%= point.value * -1 %></td>
 	<% end %>
 	<% @desc = CardOffenseType.select('description').where('id = ?', point.card_offense_id).first %>
-	<td><%= @desc.description %></td>
+	<td>
+		<%= @desc.description %>
+	</td>
 
 	<% if current_user.type == 1 %>
         	<td>

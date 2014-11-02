@@ -9,7 +9,7 @@ gem 'roo'
 gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
 gem 'mysql2'
 gem 'foreigner'
-gem 'best_in_place', github: 'bernat/best_in_place', branch: "rails-4"
+gem 'best_in_place', github: 'bernat/best_in_place'
 gem 'chosen-rails'
 gem 'cancan'
 
@@ -24,7 +24,7 @@ gem 'gravtastic', '>= 2.1.0'
 #gem "eventmachine", "1.0.3"
 gem 'redis'
 gem "chartkick"
-gem "therubyracer"
+gem "therubyracer", :require => 'v8'
 gem "less-rails"
 gem "twitter-bootstrap-rails"
 gem 'bootswatch-rails'
@@ -37,8 +37,9 @@ gem 'resque_mailer', '~> 2.2.6'
 gem 'sunspot_rails'
 gem 'sunspot_solr' 
 
+
 group :development, :test do
-  gem 'sqlite3', '1.3.7'
+  #gem 'sqlite3', '1.3.7'
   gem 'rspec-rails', '2.9.0'
   gem 'guard-rspec', '0.5.5'
   
@@ -51,6 +52,8 @@ group :assets do
   gem 'activesupport', '~>4.0.0'
   gem 'coffee-rails', '~>4.0.0'
   gem 'uglifier', '1.2.3'
+  gem 'sprockets', '2.11.0' # 2.12.0 is broken
+  gem 'sprockets-rails'
 end
 
 group :test do
@@ -58,7 +61,7 @@ group :test do
   gem 'factory_girl_rails', '1.4.0'
   gem 'cucumber-rails', '1.2.1', :require => false
   gem 'database_cleaner', '0.7.0'
-  gem 'rb-fsevent', '0.4.3.1', :require => false
+  #gem 'rb-fsevent', '0.4.3.1', :require => false
   gem 'growl', '1.0.3'
   gem 'guard-spork', '0.3.2'  
   gem 'spork', '0.9.0'
