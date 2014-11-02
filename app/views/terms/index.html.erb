@@ -1,13 +1,16 @@
-<h1>Listing terms</h1>
+<h2>Listing terms</h2>
 
+<div id="name" style='width:15%'>
+	<%= image_tag "calendar.png" %>  
+</div>
 <div class="alert alert-dismissable alert-success">
 	Note: On Creation of a new Term default points, as defined in 'Settings > Alert Settings', will be added automatically for all the students. 
 	Also, penalty points will be deducted based on previous year's performance, again as defined in 'Settings > Alert Settings'.
-	</br>
-	</br>
+
 	If a Term is Destroyed all points awarded to the students for the term, will be deleted. 
 	Please make sure you have alerted the teachers if you do so. 
 </div>
+
 
 <%= render 'form' %>
 

@@ -5,9 +5,9 @@
 <% @terms = Term.select('name, term_from, term_to').where('school_id = ?', current_user.school_id) %>
 
 <% if @terms.count == 0 %>
-	<div class="span7">
+	<div class="span7" style="width:100%;">
 		<div class="row">
-			<div class="well" style="width:100%;">
+			<div class="well">
 				<div class="alert alert-dismissable alert-success">
 					No terms defined yet. Reports can not be generated without Terms. Please go to Settings > Terms to add new Term.
 				</div>
@@ -17,9 +17,9 @@
 	
 <% else %>
 
-	<div class="span7">
+	<div class="span7" style="width:100%;">
 		<div class="row">
-			<div class="well" style="width:100%;">
+			<div class="well">
 				<div class="alert alert-dismissable alert-success">
 					Points scored by all the students every school term
 					
@@ -43,18 +43,18 @@
 		<% data.push(arr) %>
 	<% end %>
 
-	<div class="span7">
+	<div class="span7" style="width:100%;">
 		<div class="row">
-			<div class="well" style="width:100%;">
+			<div class="well">
 				<%= column_chart data %>
 			</div>
 		</div>
 	</div>
 
 	</br>
-	<div class="span7">
+	<div class="span7" style="width:100%;">
 		<div class="row">
-			<div class="well" style="width:100%;">
+			<div class="well">
 				<div class="alert alert-dismissable alert-success">
 					Percentage of points students were awarded/penalized during the current term for each defined activity  
 				</div>
@@ -72,9 +72,9 @@
 		<% pie[@point.description] = v %>
 	<% end %>
 
-	<div class="span7">
+	<div class="span7" style="width:100%;">
 		<div class="row">
-			<div class="well" style="width:100%;">
+			<div class="well">
 				<%= pie_chart pie %>
 			</div>
 		</div>
@@ -82,9 +82,9 @@
 
 
 	</br>
-	<div class="span7">
+	<div class="span7" style="width:100%;">
 		<div class="row">
-			<div class="well" style="width:100%;">
+			<div class="well">
 				<div class="alert alert-dismissable alert-success">
 					Percentage of points students were penalized during the current term for each defined unfavourable behavior  
 				</div>
@@ -101,18 +101,18 @@
 		<% pie[@point.description] = v %>
 	<% end %>
 
-	<div class="span7">
+	<div class="span7" style="width:100%;">
 		<div class="row">
-			<div class="well" style="width:100%;">
+			<div class="well">
 				<%= pie_chart pie %>
 			</div>
 		</div>
 	</div>
 
 	</br>
-	<div class="span7">
+	<div class="span7" style="width:100%;">
 		<div class="row">
-			<div class="well" style="width:100%;">
+			<div class="well">
 				<div class="alert alert-dismissable alert-success">
 					Percentage of points students were awarded during the current term for each defined good behavior  
 				</div>
@@ -129,9 +129,9 @@
 		<% pie[@point.description] = v %>
 	<% end %>
 
-	<div class="span7">
+	<div class="span7" style="width:100%;">
 		<div class="row">
-			<div class="well" style="width:100%;">
+			<div class="well">
 				<%= pie_chart pie %>
 			</div>
 		</div>
@@ -139,9 +139,9 @@
 
 	</br>
 
-	<div class="span7">
+	<div class="span7" style="width:100%;">
 		<div class="row">
-			<div class="well" style="width:100%;">
+			<div class="well">
 				<div class="alert alert-dismissable alert-success">
 					Percentage of points awarded/penalized per class during the current term for each defined unfavourable behavior   
 				</div>
@@ -158,9 +158,9 @@
 		<% pie[@class.description] = v %>
 	<% end %>
 
-	<div class="span7">
+	<div class="span7" style="width:100%;">
 		<div class="row">
-			<div class="well" style="width:100%;">
+			<div class="well">
 				<%= pie_chart pie %>
 			</div>
 		</div>

@@ -1,8 +1,18 @@
-<h1>Alert Settings</h1>
+<h2>Alert Settings</h2>
 
-<div class="span7">
+<div class="alert alert-dismissable alert-success"> 	
+    <div id="name" style='width:15%'>
+    	<%= image_tag "settings.png" %>  
+    </div>
+    <br/><br/>
+    <div>
+		Note: Add Settings for the School. Please read what the setting does before changing the default value.<br/><br/>
+	</div> 
+</div>
+
+<div class="span7" style="width:100%;">
     <div class="row">
-        <div class="well" style="width:100%;">
+        <div class="well">
 
 		<% if current_user.type == 1 %>
 			 <%= form_for @alert_setting, :html => {:class => 'form-horizontal'} do |f| %>

@@ -6,6 +6,8 @@ GeronimoSms::Application.routes.draw do
   resources :tag_comment_ideas
 
   resources :comments
+  get '/comments/accept/:idea_id/:comment_id', to: 'comments#accept_comment', as: 'accept_comment'
+  get '/comments/report/:idea_id/:comment_id', to: 'comments#report_comment', as: 'report_comment'
 
   resources :ideas
   get '/ideas/get_ideas/:portal_id/:class_id/:accepted', to: 'ideas#index', as: 'get_portal_ideas'

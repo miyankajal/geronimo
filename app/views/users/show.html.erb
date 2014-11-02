@@ -1,99 +1,108 @@
-<h2>Welcome! <%= current_user.first_name %> <%= current_user.last_name %></h2>
-
 <% set_product_points %>
 
-<hr>
 <div class="col-md-3">
-	<%= gravatar_for(@user) %>
+	</br>
+	</br>
+	<% if @user.usr_type == 3 %>
+		<%= gravatar_for(@user) %>
+	<% else %>
+		<%= image_tag "admin.png" %>
+	<% end %>
+	</br>
+	</br>
+	<% if current_user.type == 1 || current_user.type == 2 %>
+		<%= link_to edit_user_path(@user), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit User" do %> 
+			<b>Edit Account Settings </b><i class="glyphicon glyphicon-pencil"> </i>
+		<% end %>
+	<% end %>
 </div>
 
 <div class="col-md-9">
-	<table class="btn-group-vertical">
-		<tr>
-			<td><strong>Full name</strong></td>
-			<td><strong> : </strong></td>
-			<td class="col-xs-10"><%= @user.first_name %> <%= @user.last_name %></td>
-			<td> 	
-				<% if current_user.type == 1 || current_user.type == 2 %>
-					<%= link_to edit_user_path(@user), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit User" do %> 
-						<i class="glyphicon glyphicon-pencil"></i> 
-					<% end %>
-				<% end %>
-			</td>
-		</tr>
-		<tr>
-		  <td><strong>Username</strong></td>
-		  <td><strong> : </strong></td>
-		  <td class="col-xs-10"><%= @user.username %></td>
-		</tr>
-
-		<tr>
-		  <td><strong>Email</strong></td>
-		  <td><strong> : </strong></td>
-		  <td class="col-xs-10"><%= @user.email %></td>
-		</tr>
-
-		<tr>
-		  <td><strong>User Type</strong></td>
-		  <td><strong> : </strong></td>
-		  <td class="col-xs-10">
-			  <% if @user.usr_type == 1 %>
-				Administrator
-			  <% elsif @user.usr_type == 2 %>
-				Teacher
-			  <% elsif @user.usr_type == 3 %>
-				Student
-			  <% else @user.usr_type == 4 %>
-				Guardian
-			  <% end %>
-		  </td>
-		</tr>
-		
-		<% unless @user.usr_type == 4 || @user.id != current_user.id %>
+	<% if @user.id != current_user.id %>
+		</br>
+		</br>
+		<table class="btn-group-vertical">
 			<tr>
-			  <td><strong>School</strong></td>
+				<td><strong>Full name</strong></td>
+				<td><strong> : </strong></td>
+				<td class="col-xs-10"><%= @user.first_name %> <%= @user.last_name %></td>
+			</tr>
+			<tr>
+			  <td><strong>Username</strong></td>
 			  <td><strong> : </strong></td>
-			  <td class="col-xs-10"><%= @user.name %></td>
+			  <td class="col-xs-10"><%= @user.username %></td>
+			</tr>
+
+			<tr>
+			  <td><strong>Email</strong></td>
+			  <td><strong> : </strong></td>
+			  <td class="col-xs-10"><%= @user.email %></td>
+			</tr>
+
+			<tr>
+			  <td><strong>User Type</strong></td>
+			  <td><strong> : </strong></td>
+			  <td class="col-xs-10">
+				  <% if @user.usr_type == 1 %>
+					Administrator
+				  <% elsif @user.usr_type == 2 %>
+					Teacher
+				  <% elsif @user.usr_type == 3 %>
+					Student
+				  <% else @user.usr_type == 4 %>
+					Guardian
+				  <% end %>
+			  </td>
 			</tr>
 		
-			<tr>
-			  <td><strong>Address</strong></td>
-			  <td><strong> : </strong></td>
-			  <td class="col-xs-10"><%= @user.address %></td>
-			</tr>
+			<% unless @user.usr_type == 4 || @user.id != current_user.id %>
+				<tr>
+				  <td><strong>School</strong></td>
+				  <td><strong> : </strong></td>
+				  <td class="col-xs-10"><%= @user.name %></td>
+				</tr>
+		
+				<tr>
+				  <td><strong>Address</strong></td>
+				  <td><strong> : </strong></td>
+				  <td class="col-xs-10"><%= @user.address %></td>
+				</tr>
 
-			<tr>
-			  <td><strong>Phone Number</strong></td>
-			  <td><strong> : </strong></td>
-			  <td class="col-xs-10"><%= @user.phone_no %></td>
-			</tr>
-		<% end %>
+				<tr>
+				  <td><strong>Phone Number</strong></td>
+				  <td><strong> : </strong></td>
+				  <td class="col-xs-10"><%= @user.phone_no %></td>
+				</tr>
+			<% end %>
 	
-		<% if @user.usr_type == 3 %>
-			<tr>
-			  <td><strong>Enrollment</strong></td>
-			  <td><strong> : </strong></td>
-			  <td class="col-xs-10"><%= @user.enrollment_id %></td>
-			</tr>
+			<% if @user.usr_type == 3 %>
+				<tr>
+				  <td><strong>Enrollment</strong></td>
+				  <td><strong> : </strong></td>
+				  <td class="col-xs-10"><%= @user.enrollment_id %></td>
+				</tr>
 
-			<tr>
-			  <td><strong>Class</strong></td>
-			  <td><strong> : </strong></td>
-			  <td class="col-xs-10"><%= @user_grade %></td>
-			</tr>
-		<% end %>
-	</table>
-	
+				<tr>
+				  <td><strong>Class</strong></td>
+				  <td><strong> : </strong></td>
+				  <td class="col-xs-10"><%= @user_grade %></td>
+				</tr>
+			<% end %>
+		</table>
+	<% end %>	
+	<% if @user.id == current_user.id %>
+		<h2>Welcome, <%= @user.first_name %> <%= @user.last_name %>!</h2>
+	<% end %>
 	<% if @user.usr_type == 4 %>
 		
 		  <% @guardians = get_guardians(@user.id) %>
 		  <% if @guardians.any? %>
-		  	    <hr>
+		  	   <hr>
 			   <h3>
-			   	Guardians
-				<%= link_to new_user_path(:type => 4, :ward => @user.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Add Guardians" do %>
-					<i class="glyphicon glyphicon-plus-sign"></i> 
-				<% end %>
+					Guardians
+					<%= link_to new_user_path(:type => 4, :ward => @user.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Add Guardians" do %>
+						<i class="glyphicon glyphicon-plus-sign"></i> 
+					<% end %>
 			   </h3>
 			   <table class="table table-striped table-hover">
 				<thead>
@@ -118,9 +127,9 @@
 			<hr>
 
 			<h4>New Point</h4>
-			<div class="span7">
+			<div class="span7" style="width:100%;">
 				<div class="row">
-					<div class="well" style="width:100%;">
+					<div class="well">
 					<% if @student_point.nil? %>
 						<% @student_point = StudentPoint.new %>
 					<% end %>
@@ -175,7 +184,7 @@
 		<% end %>
 		
 		<% unless current_user.type == 1 %>
-			<hr>
+			
 			<div class="span8">
 				<% if @student_points_desc.nil? == false && @student_points_desc.any? %>	
 					<h3>
@@ -297,9 +306,9 @@
 	
 	<% if current_user.type == 1 &&  @user.usr_type == 1 %>
 		<% if @term_count == 0 || @point_options.length == 0 %>
-			<div class="span7">
+			<div class="span7" style="width:100%;">
 				<div class="row">
-					<div class="well" style="width:100%;">
+					<div class="well">
 						<div class="alert alert-dismissable alert-warning">
 					
 								Before starting the Settings section should be used to define School Terms (semester/yearly), Alert settings for the school term, and the Points pertaining to defined behaviors.</br></br>
@@ -310,9 +319,9 @@
 			</div>
 		<% end %>
 		
-		<div class="span7">
+		<div class="span7" style="width:100%;">
 			<div class="row">
-				<div class="well" style="width:100%;">
+				<div class="well">
 					<div class="alert alert-dismissable alert-success">
 					
 							As the Administrator of the site, you can edit Users (Teachers, Guardians and Classes > Students). Explore these options in the Users dropdown list in the navigation bar.</br></br>
