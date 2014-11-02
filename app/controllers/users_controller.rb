@@ -14,16 +14,18 @@ class UsersController < ApplicationController
 
   # GET /users?type=[1,2,3,4]&description=['']&class_id=[id]
   def index
-	  session[:return_to] ||= request.referer
+	session[:return_to] ||= request.referer
   	if params[:type] == '3'
-  		  @users = User.where('type = ? AND class_id = ? AND school_id = ?', params[:type], params[:class_id], current_user.school_id).order('username')
-	  elsif params[:search]
+  		@users = User.where('type = ? AND class_id = ? AND school_id = ?', params[:type], params[:class_id], current_user.school_id).order('username')
+	elsif params[:search]
         @user = User.select('id').where('enrollment_id = ? AND school_id = ?', params[:search], current_user.school_id).order('username').first
-		    Guardianship.create!(:guardian_id => params[:guardian_id], :user_id => @user.id)
-    		redirect_to session.delete(:return_to)
+		Guardianship.create!(:guardian_id => params[:guardian_id], :user_id => @user.id)
+		redirect_to session.delete(:return_to)
   	else
-  		  @users = User.where('type = ? AND school_id = ?', params[:type], current_user.school_id).order('username')
+  		@users = User.where('type = ? AND school_id = ?', params[:type], current_user.school_id).order('username')
   	end
+	
+  	
   end
   
   def search
@@ -81,9 +83,8 @@ class UsersController < ApplicationController
 
   # POST /users
   def create
-    ward_id = User.select('id').where(:id => params["user"]["ward"])
     @user = User.new(user_params)
-	  @user.school_id = current_user.school_id
+	@user.school_id = current_user.school_id
 
     if @user.save
 		
@@ -93,8 +94,8 @@ class UsersController < ApplicationController
 		StudentPoint.create!(:user_id => @user.id, :point_id => 1, :assigned_points => @setting.default_points)
 	  end
 	  
-	  if @user.type == 4 
-		Guardianship.create!(:guardian_id => @user.id, :user_id => ward_id)
+	  if @user.type == 4
+		Guardianship.create!(:guardian_id => @user.id, :user_id => params[:user][:ward])
 	  end
 	  
       redirect_to @user, notice: 'User was successfully created.'
@@ -105,7 +106,7 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1
   def update
-	  @user = User.find(params[:id])
+	@user = User.find(params[:id])
     if @user.update(user_params)
       redirect_to @user, notice: 'User was successfully updated.'
     else
@@ -115,7 +116,7 @@ class UsersController < ApplicationController
 
   # DELETE /users/1
   def destroy
-	  session[:return_to] ||= request.referer
+	session[:return_to] ||= request.referer
     User.find(params[:id]).destroy
     redirect_to session.delete(:return_to), notice: 'User was successfully destroyed.'
   end
@@ -128,12 +129,8 @@ class UsersController < ApplicationController
   
   def import
 	session[:return_to] ||= request.referer
-	if !params[:file]
-    	redirect_to session.delete(:return_to), notice: "No file selected."
-    else
-		User.import(params[:file], current_user.school_id, params[:type], params[:class_id])
-		redirect_to session.delete(:return_to), notice: "Users imported."
-	end
+	User.import(params[:file], current_user.school_id, params[:type], params[:class_id])
+	redirect_to session.delete(:return_to), notice: "Users imported."
   end
   
   def download_sample
@@ -180,56 +177,5 @@ class UsersController < ApplicationController
 		end
 	end 
 
-  def import_from_file(file, school_id, user_type, class_id)
-      spreadsheet = open_spreadsheet(file)
-      header = spreadsheet.row(1)
-      (2..spreadsheet.last_row).each do |i|
-            row = Hash[[header, spreadsheet.row(i)].transpose]
-            user = find_by_id(row["id"]) || new
-            #(:username, :email, :first_name, :last_name, :enrollment_id
-            user.attributes = row.to_hash
-            user.school_id = school_id
-            user.type = user_type
-            user.password = SecureRandom.hex(13)
-
-            if user_type == '3'
-              user.class_id = class_id
-            end
-            
-            if user_type == '4'
-              user.enrollment_id = 0
-              ward_enrollment_ids = row["enrollment_id"].split(",")
-            end
-            
-            user.save!
-            UserMailer.welcome_email(@user).deliver
-            
-            if user_type == '4'
-              ward_enrollment_ids = Array.new
-              ward_enrollment_ids.each do |enrollment_id|
-                user_id = User.select('id').where(:enrollment_id => enrollment_id).first
-                Guardianship.create!(:guardian_id => user.id, :user_id => user_id.id)
-              end
-            end
-      end
-    end
-    
-    def open_spreadsheet(file)
-      case File.extname(file.original_filename)
-              when '.csv' then Roo::Csv.new(file.path, nil, :ignore)
-              when '.xls' then Roo::Excel.new(file.path, nil, :ignore)
-              when '.xlsx' then Roo::Excelx.new(file.path, nil, :ignore)
-              else raise "Unknown file type: #{file.original_filename}"
-      end
-    end
-    
-    def to_csv(options = {})
-      CSV.generate(options) do |csv|
-            csv << column_names
-            all.each do |user|
-              csv << user.attributes.values_at(*column_names)
-            end
-      end
-    end
 	
 end
