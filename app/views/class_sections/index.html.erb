@@ -1,4 +1,14 @@
-<h2>Listing Classes</h2>
+<h1>Listing Classes</h1>
+
+<div class="span7">
+	<div class="row">
+		<div class="well" style="width:100%;">
+			<div class="alert alert-dismissable alert-success">
+				Only Class Teachers can add points or remove students. Restricted Teachers can only see points and edit student information.
+			</div>
+		</div>
+	</div>
+</div>
 </br>
 
 <%= render 'form' %>
@@ -6,13 +16,10 @@
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th/>
       <th>Classes</th>
       <% if current_user.type == 2 %>
      	 <th>Role</th>
       <% else %>
-      	  <th>Action</th>
-      	  <th>Action</th>
       	  <th>Action</th>
       <% end %>
       
@@ -23,15 +30,8 @@
   <tbody>
     <% @class_sections.each do |class_section| %>
       <tr>
-        <td/>
         <td><%= best_in_place class_section, :description, :type => :input, :activator => "#edit_#{class_section.id}" %></td>
 
-		<td>
-        	<%= link_to users_path(type: 3, desc: 'Students', class_id: class_section.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"See Students" do %> 
-				<i class="glyphicon glyphicon-link"></i> 
-			<% end %>
-        </td>
-        
         <td>
         	<% if current_user.type == 1 %>
         		<a href="#" id="edit_<%= class_section.id %>"><i class="glyphicon glyphicon-pencil"></i></a>
@@ -49,7 +49,11 @@
         	<% end %>
         </td>
         <% end %>
-        
+        <td>
+        	<%= link_to users_path(type: 3, desc: 'Students', class_id: class_section.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"See Students" do %> 
+				<i class="glyphicon glyphicon-link"></i> 
+			<% end %>
+        </td>
         <% if current_user.type == 1 %>
         	<td>
         		<%= link_to class_section, method: :delete, data: { confirm: 'Are you sure you want to remove this class?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove" do %> 

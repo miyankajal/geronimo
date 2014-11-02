@@ -50,11 +50,9 @@ class Ability
 				user.id == current_user.id
 			end
 			
-			
 			if user.type == 4	# guardian
 				cannot :manage, Idea
 			else
-			  can :manage, [Idea, TagCommentIdea, Comment]
 				cannot :show, User do |current_user|
 					user.id != current_user.id
 				end
