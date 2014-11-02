@@ -1,5 +1,9 @@
 <h1>Listing ideas</h1>
 
+<% if current_user.type == 2 && params[:portal_id] == '0' %>
+	<h3><%= link_to 'Ideas to be Accepted', get_portal_ideas_path(0,0,0) %></h3>
+<% end %>
+
 <% set_product_ideas %>
 </br>
 <% if params[:portal_id] == '1' %>
