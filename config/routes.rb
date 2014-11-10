@@ -10,7 +10,7 @@ GeronimoSms::Application.routes.draw do
   get '/comments/report/:idea_id/:comment_id', to: 'comments#report_comment', as: 'report_comment'
 
   resources :ideas
-  get '/ideas/get_ideas/:portal_id/:class_id/:accepted', to: 'ideas#index', as: 'get_portal_ideas'
+  get '/ideas/get_ideas/:portal_id/:class_id/:accepted/:tag_id', to: 'ideas#index', as: 'get_portal_ideas'
   get '/ideas/like/:idea_id', to: 'ideas#add_like', as: 'add_like'
   get '/ideas/accept/:idea_id', to: 'ideas#accept_idea', as: 'accept'
   get '/ideas/report/:idea_id', to: 'ideas#report_idea', as: 'report'

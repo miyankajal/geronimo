@@ -28,20 +28,20 @@
 							<ul class="dropdown-menu">
 								<% if current_user.type == 3 %>
 									<li>
-										<%= link_to 'My Ideas', get_portal_ideas_path(1,0,0) %>
+										<%= link_to 'My Ideas', get_portal_ideas_path(1,0,0,0) %>
 									</li>
 								<% end %>
 								<% if current_user.type == 2 %>
 									<li>
-										<%= link_to 'Class Ideas', get_portal_ideas_path(2,0,0) %> 
+										<%= link_to 'Class Ideas', get_portal_ideas_path(2,0,0,0) %> 
 									</li>
 								<% else %>
 									<li>
-										<%= link_to 'Class Ideas', get_portal_ideas_path(2,0,1) %> 
+										<%= link_to 'Class Ideas', get_portal_ideas_path(2,0,1,0) %> 
 									</li>
 								<% end %>
 								<li>
-									<%= link_to 'School Ideas', get_portal_ideas_path(3,0,0) %> 
+									<%= link_to 'School Ideas', get_portal_ideas_path(3,0,0,0) %> 
 								</li>
 							</ul>
 						</li>

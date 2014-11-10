@@ -11,31 +11,34 @@ class IdeasController < ApplicationController
   # GET /ideas
   def index
 	
-	if current_user.type == 3 #if student
-		@user_data = User.select(:class_id, :school_id).where('id = ?', current_user.id)
+	if params[:tag_id] == '0'
+		if current_user.type == 3 #if student
+			@user_data = User.select(:class_id, :school_id).where('id = ?', current_user.id)
 		
-		if params[:portal_id] == '1'
-			@ideas = Idea.all.joins('INNER JOIN users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where('ideas.user_id = ?', current_user.id).order('accepted, ideas.updated_at DESC')
-		elsif params[:portal_id] == '2'
-			@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id').select('ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where("(portal_id = 2 OR portal_id = 3) AND users.class_id = ?", current_user.class_id).where(:accepted => true).order('ideas.updated_at DESC')
-		elsif params[:portal_id] == '3'
-			@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id').select('ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where("portal_id = 3 AND users.school_id = ?", current_user.school_id).where(:accepted => true).order('ideas.updated_at DESC')
-		end
-
-	elsif current_user.type == 2 #if teacher
-		
-		if params[:portal_id] == '2'
-			if params[:accepted] == '1'
-				@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where("users.class_id = ? OR ideas.class_id = ?", params[:class_id], params[:class_id]).where(:accepted => true).order('ideas.updated_at DESC')
-			elsif params[:accepted] == '0'
-				@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where("users.class_id = ? OR ideas.class_id = ?", params[:class_id], params[:class_id]).where(:accepted => false).order('ideas.updated_at DESC')
+			if params[:portal_id] == '1'
+				@ideas = Idea.all.joins('INNER JOIN users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where('ideas.user_id = ?', current_user.id).order('accepted, ideas.updated_at DESC')
+			elsif params[:portal_id] == '2'
+				@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id').select('ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where("(portal_id = 2 OR portal_id = 3) AND users.class_id = ?", current_user.class_id).where(:accepted => true).order('ideas.updated_at DESC')
+			elsif params[:portal_id] == '3'
+				@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id').select('ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where("portal_id = 3 AND users.school_id = ?", current_user.school_id).where(:accepted => true).order('ideas.updated_at DESC')
 			end
-		elsif params[:portal_id] == '3'
-			@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where('portal_id = ? AND users.school_id = ?', params[:portal_id], current_user.school_id).order('ideas.updated_at DESC')
-		elsif params[:portal_id] == '0'
-		  @ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where('users.school_id = ? AND moderator_id = ?', current_user.school_id, current_user.id).where(:accepted => false).order('ideas.updated_at DESC')
-		end
+
+		elsif current_user.type == 2 #if teacher
 		
+			if params[:portal_id] == '2'
+				if params[:accepted] == '1'
+					@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where("users.class_id = ?", params[:class_id]).where(:accepted => true).order('ideas.updated_at DESC')
+				elsif params[:accepted] == '0'
+					@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where("users.class_id = ?", params[:class_id]).where(:accepted => false).order('ideas.updated_at DESC')
+				end
+			elsif params[:portal_id] == '3'
+				@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where('portal_id = ? AND users.school_id = ?', params[:portal_id], current_user.school_id).order('ideas.updated_at DESC')
+			elsif params[:portal_id] == '0'
+			  @ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'LEFT OUTER JOIN users AS moderator_user ON moderator_user.id = ideas.moderator_id').select('moderator_user.first_name AS moderator_user_first_name, moderator_user.last_name AS moderator_user_last_name, ideas.id, ideas.updated_at, idea, likes_count, tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where('users.school_id = ? AND moderator_id = ?', current_user.school_id, current_user.id).where(:accepted => false).order('ideas.updated_at DESC')
+			end
+		end
+	elsif params[:tag_id] != '0' && (current_user.type == 3 || current_user.type == 2)
+		@ideas = Idea.all.joins('INNER JOIN users AS users ON users.id = ideas.user_id', 'INNER JOIN tag_comment_ideas ON tag_comment_ideas.idea_id = ideas.id').select('ideas.id, ideas.updated_at, idea, likes_count, tag_comment_ideas.tag_id, ideas.user_id, moderator_id, accepted, users.first_name, users.last_name, portal_id, users.type AS user_type').where('users.school_id = ? AND tag_comment_ideas.tag_id = ?', current_user.school_id, params[:tag_id]).where(:accepted => true).order('ideas.updated_at DESC')	
 	end
 	
   end
@@ -180,6 +183,7 @@ class IdeasController < ApplicationController
   def classes_all
 	@class_options = ClassSection.where('school_id = ?', current_user.school_id).map{|class_section| [class_section.description, class_section.id]}
   end
+ 
   
   private
     # Use callbacks to share common setup or constraints between actions.
