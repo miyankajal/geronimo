@@ -105,7 +105,7 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1
   def update
-	  @user = User.find(params[:id])
+      #@user = User.find(params[:id])
     if @user.update(user_params)
       redirect_to @user, notice: 'User was successfully updated.'
     else
@@ -131,8 +131,12 @@ class UsersController < ApplicationController
 	if !params[:file]
     	redirect_to session.delete(:return_to), notice: "No file selected."
     else
-		User.import(params[:file], current_user.school_id, params[:type], params[:class_id])
-		redirect_to session.delete(:return_to), notice: "Users imported."
+		@result = import_from_file(params[:file], current_user.school_id, params[:type], params[:class_id])
+        if @result
+            redirect_to session.delete(:return_to), notice: "Users imported."
+        else
+            redirect_to session.delete(:return_to), notice: "Users could not be imported. Please check the input file data. If the user is a student, Enrollment id should be present. If user is not a Student Email id should be present and must be unique."
+        end
 	end
   end
   
@@ -175,7 +179,7 @@ class UsersController < ApplicationController
 	
 	# Only admins are allowed to change a users profile
 	def can_edit_users?
-		unless current_user.type == 1 or current_user.type == 2
+		unless current_user.type == 1 or current_user.type == 2 or current_user.id == @user.id
 			redirect_to root_path
 		end
 	end 
@@ -185,12 +189,13 @@ class UsersController < ApplicationController
       header = spreadsheet.row(1)
       (2..spreadsheet.last_row).each do |i|
             row = Hash[[header, spreadsheet.row(i)].transpose]
-            user = find_by_id(row["id"]) || new
+            user = User.find_by_id(row["id"]) || new
             #(:username, :email, :first_name, :last_name, :enrollment_id
             user.attributes = row.to_hash
             user.school_id = school_id
             user.type = user_type
             user.password = SecureRandom.hex(13)
+            user.password_confirmation = user.password
 
             if user_type == '3'
               user.class_id = class_id
@@ -201,8 +206,13 @@ class UsersController < ApplicationController
               ward_enrollment_ids = row["enrollment_id"].split(",")
             end
             
-            user.save!
-            UserMailer.welcome_email(@user).deliver
+            unless user.save
+                return false
+            end
+            
+            if (@user.email?)
+                UserMailer.welcome_email(@user).deliver
+            end
             
             if user_type == '4'
               ward_enrollment_ids = Array.new
@@ -212,6 +222,7 @@ class UsersController < ApplicationController
               end
             end
       end
+      return true
     end
     
     def open_spreadsheet(file)

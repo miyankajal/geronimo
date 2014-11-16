@@ -22,12 +22,14 @@
 					<%= f.text_field :username, :class=>'form-control' %>
 				</div>
 			  </div>
+			 
 			  <div class="form-group">
 				<%= f.label :email, :class=>'col-sm-2 control-label' %>
 				<div class="col-xs-4">
 					<%= f.text_field :email, :class=>'form-control' %>
 				</div>
 			  </div>
+			
 			  <div class="form-group">
 				<%= f.label :first_name, :class=>'col-sm-2 control-label' %>
 				<div class="col-xs-4">
@@ -62,20 +64,22 @@
 			  <% if params[:type] == "4" %>
 				 <%= f.hidden_field :ward, :value => params[:ward_id] %> 
 			  <% end %>
- 
-			 <% if params[:type] == "3" || @user.type == 3 %>
-				  <div class="form-group">
-				   <%= f.label :enrollment_id, :class=>'col-sm-2 control-label' %>
-				   <div class="col-xs-4">
-						<%= f.number_field :enrollment_id, :class=>'form-control' %>
-				   </div>
-				 </div>
-				 <div class="form-group">
-				   <%= f.label :class_section, :class=>'col-sm-2 control-label' %>
-				   <div class="col-xs-4">
-						<%= f.select :class_id, @class_options, :class=>'form-control' %>
-				   </div>
-				 </div>
+ 			
+			  <% unless current_user.type == 3 %>
+			 	<% if params[:type] == "3" || @user.type == 3 %>
+					  <div class="form-group">
+					   <%= f.label :enrollment_id, :class=>'col-sm-2 control-label' %>
+					   <div class="col-xs-4">
+							<%= f.number_field :enrollment_id, :class=>'form-control' %>
+					   </div>
+					 </div>
+					 <div class="form-group">
+					   <%= f.label :class_section, :class=>'col-sm-2 control-label' %>
+					   <div class="col-xs-4">
+							<%= f.select :class_id, @class_options, :class=>'form-control' %>
+					   </div>
+					 </div>
+				  <% end %>
 			  <% end %>
 
 			  <p>

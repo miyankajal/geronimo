@@ -4,15 +4,19 @@
 	</br>
 	</br>
 	<% if @user.usr_type == 3 %>
-		<%= gravatar_for(@user) %>
+		<% if @user.email? %>
+			<%= gravatar_for(@user) %>
+		<% else %>
+			<%= image_tag "student.jpeg" %>
+		<% end %>
 	<% else %>
 		<%= image_tag "admin.png" %>
 	<% end %>
 	</br>
 	</br>
-	<% if current_user.type == 1 || current_user.type == 2 %>
+	<% if current_user.type == 1 || current_user.type == 2 || current_user.type == 3 %>
 		<%= link_to edit_user_path(@user), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit User" do %> 
-			<b>Edit Account Settings </b><i class="glyphicon glyphicon-pencil"> </i>
+			<b>Account Settings </b><i class="glyphicon glyphicon-pencil"> </i>
 		<% end %>
 	<% end %>
 </div>
@@ -269,7 +273,7 @@
 	<% end %>
 	<% if @user.usr_type == 2 %>
 
-		<h3>Classes</h3>
+		<h3>My Classes</h3>
 		
 		 <p>
 			<% if current_user.type == 1 %>
@@ -323,11 +327,11 @@
 			<div class="row">
 				<div class="well">
 					<div class="alert alert-dismissable alert-success">
-					
 							As the Administrator of the site, you can edit Users (Teachers, Guardians and Classes > Students). Explore these options in the Users dropdown list in the navigation bar.</br></br>
 							To add new users go to the particular user type in the Users menu and click 'New User'. Every user can be edited or removed except the Administrators.</br></br>
 							The Reports section shows the school reports based on the data accumulated.</br></br>
-							The Settings section should be used to define School Terms (semester/yearly), Alert settings for the school term, and the Points pertaining to defined behaviors.</br></br>
+							The Settings section should be used to define School Terms (semester/yearly), Alert settings for the school term, and the Points pertaining to defined behaviours.</br></br>
+							To get started click <a href="/geronimo_settings">here</a>.</br></br>
 
 					</div>
 				</div>

@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
 
 	#attr_accessor :password, :verify_password, :new_password
-	before_save { self.email = email.downcase }
+    before_save :email_downcase
 	before_create :create_remember_token
 	
 	MAX_EMAIL = 64
@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
 	has_secure_password
 	
 	validates_presence_of :username, :password_digest, :first_name, :last_name
-	validates_presence_of :email, :unless => :is_student?
+    validates_presence_of :email, :unless => :is_student?
 	validates_presence_of :class_id, :if => :is_student? #should have a class_id and enrollment_id only if the user is a student 
 	validates_presence_of :enrollment_id, :if => :is_student?
 	validates_presence_of :school_id, :unless => :is_guardian?
@@ -41,15 +41,15 @@ class User < ActiveRecord::Base
 	validates_format_of :email, 
 						:with => EMAIL_REGEX, 
 						:on => :create, 
-						:message => "must be a valid email address"
+						:message => "must be a valid email address", :unless => :is_student?
 					
 	
-	validates_length_of :email, :within => 6..MAX_EMAIL
+	validates_length_of :email, :within => 6..MAX_EMAIL, :unless => :is_student?
 	validates_length_of :username, :maximum => MAX_USERNAME
 	validates_length_of :first_name, :maximum => MAX_FIRST_NAME
 	validates_length_of :last_name, :maximum => MAX_LAST_NAME
 	
-	validates_uniqueness_of :email, :case_sensitive => false
+	validates_uniqueness_of :email, :case_sensitive => false, :unless => :is_student?
 	validates_uniqueness_of :enrollment_id, :if => :is_student?
 	
 	validates_confirmation_of :password,
@@ -84,11 +84,18 @@ class User < ActiveRecord::Base
 		end
 		
 		def is_student?
-			:type == 3
+			self.type == 3
 		end
 		
 		def is_guardian?
-			:type == 4
+			self.type == 4
 		end
+        
+        def email_downcase
+            if self.email?
+                self.email = email.downcase
+            end
+        end
+        
 
 end

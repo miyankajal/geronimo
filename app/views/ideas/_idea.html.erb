@@ -1,4 +1,4 @@
-<div style="background-color:#F2F2F2;float:left;width:75%;">
+<div style="background-color:#F2F2F2;float:left;">
 	<div class="row">
 		<div id="wrap" >
 			<% @email = User.select('email, id, type').where('id = ?', idea.user_id).first %>

@@ -129,14 +129,18 @@ class StudentPointsController < ApplicationController
   end
   
   def self.calcInitPoints(prev_term)
-	@setting = AlertSetting.select('penalty_carried_over, default_points').first
+	  @setting = AlertSetting.select('penalty_carried_over, default_points').first
+	  
+	  @students = User.select(:id).where('school_id = 1 AND type = 3')
+	  @students.each do |user|
+			StudentPoint.create!(:user_id => user.id, :point_id => 1, :assigned_points => @setting.default_points)
+	  end	
 
-	@initialPoints = StudentPoint.select('user_id').group('user_id').where('assigned_points < 0').where('created_at >= ?', prev_term['term_from']).where('created_at <= ?', prev_term['term_to']).sum('assigned_points')
-	@initialPoints.each do |user_id, points|
-		StudentPoint.create!(:user_id => user_id, :point_id => 1, :assigned_points => @setting.default_points)
-		StudentPoint.create!(:user_id => user_id, :point_id => 2, :assigned_points => (((@setting.penalty_carried_over * points)/100) * -1).to_int)
-		@user = User.where('id = ?', user_id)
-	end		
+	  @initialPoints = StudentPoint.select('user_id').group('user_id').where('assigned_points < 0').where('created_at >= ?', @prev_term.term_from).where('created_at <= ?', @prev_term.term_to).sum('assigned_points')
+	  @initialPoints.each do |user_id, points|
+			StudentPoint.create!(:user_id => user_id, :point_id => 2, :assigned_points => (((@setting.penalty_carried_over * points)/100) * -1).to_int)
+	  end	
+	  	
   end
   
   private

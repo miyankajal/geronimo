@@ -26,6 +26,18 @@
         <td/>
         <td><%= best_in_place class_section, :description, :type => :input, :activator => "#edit_#{class_section.id}" %></td>
 
+		<% if current_user.type == 2 %>
+        <td><% @teacher_role_id = teacher_classes_and_roles(current_user.id, class_section.id) %>
+        	<% if @teacher_role_id == 2 %>
+        		<%= 'Class Teacher' %>
+        	<% elsif @teacher_role_id == 3 %>	
+        		<%= 'Subject Teacher' %>
+        	<% else %>
+        		<%= 'Restricted Teacher' %>
+        	<% end %>
+        </td>
+        <% end %>
+
 		<td>
         	<%= link_to users_path(type: 3, desc: 'Students', class_id: class_section.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"See Students" do %> 
 				<i class="glyphicon glyphicon-link"></i> 
@@ -37,18 +49,6 @@
         		<a href="#" id="edit_<%= class_section.id %>"><i class="glyphicon glyphicon-pencil"></i></a>
         	<% end %>
         </td>
-        
-        <% if current_user.type == 2 %>
-        <td><% @teacher_role_id = teacher_classes_and_roles(current_user.id, class_section.id) %>
-        	<% if @teacher_role_id == 2 %>
-        		<%= 'Class Teacher' %>
-        	<% elsif @teacher_role_id == 3 %>	
-        		<%= 'Subject Teacher' %>
-        	<% else %>
-        		<%= 'Restricted Teacher' %>
-        	<% end %>
-        </td>
-        <% end %>
         
         <% if current_user.type == 1 %>
         	<td>

@@ -1,5 +1,5 @@
 <% if params[:search].nil? %>
-<h2>Listing <%= params[:desc] %> </h2>
+<h2><%= params[:desc] %> : </h2>
 
 <table class="table">
   <tbody>
@@ -27,7 +27,10 @@
 		<td/>
 		<td style="vertical-align:middle">
 			<div class="alert alert-dismissable alert-success">
-				In order to upload multiple users download the Sample Export File and replace the example users with the ones you want to add. The users will be sent a welcome email with their password, which they can change later.
+				In order to upload multiple users download the Sample Export File and replace the example users with the ones you want to add. The users with emails will be sent a welcome email with their password, which they can change later.</br>
+				Students do not need email addresses. The admin can set up the accounts and ask the Students to change Passwords on first login.<br/>
+				When adding Guardians, if the person has more than one ward. Add Enrolment ID for the wards separated by ','.
+				
 			</div>
 		</td>
 	</tr>
@@ -45,7 +48,9 @@
 		<td/>
 		<td style="vertical-align:middle">
 			<div class="alert alert-dismissable alert-success">
-				To add a single user at a time without having to upload users using the Sample Export File.
+				To add a single user at a time without having to upload users using the Sample Export File. </br>
+				The users with emails will be sent a welcome email with their password, which they can change later.</br>
+				Students do not need email addresses to add accounts. The admin can set up the accounts and ask the Students to change Passwords on first login.
 			</div>
 		</td>
 	</tr>
