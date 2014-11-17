@@ -9,6 +9,7 @@ class UserMailer < ActionMailer::Base
   
   def appreciation_email(user, student, point)
       @user = user
+      @student = student
       @url  = 'http://198.58.103.23:3000'
       @point = point
       mail(to: @user.email, subject: 'Student Appreciation Email')

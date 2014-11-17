@@ -1,4 +1,5 @@
 class TeacherClassRelationshipsController < ApplicationController
+  before_action :new
   load_and_authorize_resource
   before_action :teachers_all
 	

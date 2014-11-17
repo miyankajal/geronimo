@@ -1,6 +1,7 @@
 class PointsController < ApplicationController
   load_and_authorize_resource
   
+  before_action :new
   before_action :set_point, only: [:show, :edit, :update, :destroy]
   before_action :card_offenses
 
