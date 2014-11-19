@@ -24,10 +24,12 @@ class StudentPointsController < ApplicationController
 	if !@student_point.is_credit
 	
 		#calculate total points
-		@current_term = Term.select('id, term_from, term_to').where('term_from <= ? AND school_id = ?', Time.now, current_user.school_id).order('term_from DESC').first
+		@current_term = Term.select('id, term_from, term_to').where('term_from <= ? AND term_to > ? AND school_id = ?', Time.now, Time.now, current_user.school_id).order('term_from DESC').first
 		
-		@total_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @student_point.user_id, @current_term.term_from, @current_term.term_to).sum('assigned_points')
-		
+        unless @current_term.nil?
+            @total_points = StudentPoint.where('student_points.user_id = ? and student_points.created_at >= ? and student_points.created_at < ?', @student_point.user_id, @current_term.term_from, @current_term.term_to).sum('assigned_points')
+		end
+        
 		@teachers = TeacherClassRelationship.joins('INNER JOIN users ON teacher_class_relationships.class_section_id = users.class_id').select('user_id').where('class_id = ?',  @user.class_id)
 
 		#if Pink card OR Yellow card OR Red card
@@ -131,9 +133,10 @@ class StudentPointsController < ApplicationController
   def self.calcInitPoints(prev_term)
 	  @setting = AlertSetting.select('penalty_carried_over, default_points').first
 	  
-	  @students = User.select(:id).where('school_id = 1 AND type = 3')
+	  @students = User.select(:id).where('school_id = ? AND type = 3', current_user.school_id)
+      @point_id = Point.select(:id).where('school_id = ? AND points.key = 1', current_user.school_id)
 	  @students.each do |user|
-			StudentPoint.create!(:user_id => user.id, :point_id => 1, :assigned_points => @setting.default_points)
+			StudentPoint.create!(:user_id => user.id, :point_id => @point_id.id, :assigned_points => @setting.default_points)
 	  end	
 
 	  @initialPoints = StudentPoint.select('user_id').group('user_id').where('assigned_points < 0').where('created_at >= ?', @prev_term.term_from).where('created_at <= ?', @prev_term.term_to).sum('assigned_points')

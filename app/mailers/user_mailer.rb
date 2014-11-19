@@ -24,6 +24,7 @@ class UserMailer < ActionMailer::Base
   
   def too_many_email(user, student)
     @user = user
+    @student = student
     @url  = 'http://198.58.103.23:3000'
     mail(to: @user.email, subject: 'For Immediate Attention of the Guardian')
   end
@@ -36,6 +37,7 @@ class UserMailer < ActionMailer::Base
   
   def repetition_email(user, student, point)
     @user = user
+    @student = student
     @url  = 'http://198.58.103.23:3000'
 	@point = point
     mail(to: @user.email, subject: 'For Immediate Attention of the Guardian')
@@ -49,6 +51,7 @@ class UserMailer < ActionMailer::Base
   
   def pink_card_email(user, student, point)
     @user = user
+    @student = student
     @url  = 'http://198.58.103.23:3000'
 	@point = point
     mail(to: @user.email, subject: 'For Immediate Attention of the Guardian')
@@ -56,6 +59,7 @@ class UserMailer < ActionMailer::Base
   
   def yellow_card_email(user, student, point)
     @user = user
+    @student = student
     @url  = 'http://198.58.103.23:3000'
 	@point = point
     mail(to: @user.email, subject: 'For Immediate Attention of the Guardian')
@@ -63,6 +67,7 @@ class UserMailer < ActionMailer::Base
   
   def red_card_email(user, student, point)
     @user = user
+    @student = student
     @url  = 'http://198.58.103.23:3000'
 	@point = point
     mail(to: @user.email, subject: 'For Immediate Attention of the Guardian')
