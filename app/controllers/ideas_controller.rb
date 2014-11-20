@@ -69,19 +69,21 @@ class IdeasController < ApplicationController
 	
 		UserIdeaRelationships.create(:user_id => current_user.id, :idea_id => params[:idea_id], :like => 't', :report => 'f')
 		@current_term = Term.select('id, term_from, term_to').where('term_from <= ? AND school_id = ?', Time.now, current_user.school_id).order('term_from desc').first
+        
+        @idea_point_id = Point.select(:id).where('points.key = 31').first
 		
-		@student_point = StudentPoint.select('assigned_points, id').where('point_id = 31 and user_id = ? and created_at >= ? and created_at < ?', @user_id.user_id, @current_term.term_from, @current_term.term_to).order("student_points.created_at").first
+		@student_point = StudentPoint.select('assigned_points, id').where('point_id = ? and user_id = ? and created_at >= ? and created_at < ?', @idea_point_id.id, @user_id.user_id, @current_term.term_from, @current_term.term_to).order("student_points.created_at").first
 				
 		if @user_id.likes_count + 1 == 15
 			if @student_point.empty?
-				StudentPoint.create(:user_id => @user_id.user_id, :point_id => 31, :assigned_points => 5, :is_credit => 't' )
+				StudentPoint.create(:user_id => @user_id.user_id, :point_id => @idea_point_id.id, :assigned_points => 5, :is_credit => 't' )
 			else
 				StudentPoint.where('id = ?', @student_point.id).update_all('assigned_points = assigned_points + 5')
 			end
 			Idea.where('id = ? AND user_id <> ?', params[:idea_id], current_user.id).update_all('portal_id = 3, likes_count = likes_count + 1, updated_at = NOW()')
 		else
 			if @student_point.nil?
-				StudentPoint.create(:user_id => @user_id.user_id, :point_id => 31, :assigned_points => 1, :is_credit => 't' )
+				StudentPoint.create(:user_id => @user_id.user_id, :point_id => @idea_point_id.id, :assigned_points => 1, :is_credit => 't' )
 			else
 				StudentPoint.where('id = ?', @student_point.id).update_all('assigned_points = assigned_points + 1')
 			end

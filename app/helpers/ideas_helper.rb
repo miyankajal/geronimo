@@ -1,6 +1,7 @@
 module IdeasHelper
 
 	def gravatar_for_idea(email, type)
+        gravatar_id = Digest::MD5::hexdigest(email)
         if email.nil?
             gravatar_url = "student.jpeg"
         else
