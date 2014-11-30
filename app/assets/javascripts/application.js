@@ -15,7 +15,6 @@
 //= require twitter/bootstrap
 //= require bootstrap
 //= require jquery.turbolinks
-//= require_tree .
 //= require student_points
 //= require jsapi
 //= require chartkick
@@ -24,6 +23,7 @@
 //= require chosen-jquery
 //= require bootstrap-tooltip.js
 //= require bootstrap-popover.js
+//= require_tree .
 
 $(function () {
 $('.popover-test').popover();
@@ -37,3 +37,4 @@ $(document).ready(function() {
 $(document).ready(function(){
   $(".chzn-select").chosen();
 });
+

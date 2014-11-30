@@ -308,15 +308,25 @@
  
 	<% end %>
 	
+	<% if mobile_device? && (current_user.type == 1 || current_user.type == 2) %>
+		<div class="span7" style="width:100%;">
+			<div class="row">
+				<div class="well">
+					<div class="alert alert-dismissable alert-warning">
+						If you are an Administrator, please use a computer or iPad for better user experience. Devices with smaller screens might not be perfect for performing all the functions seamlessly.</br></br>
+					</div>
+				</div>
+			</div>
+		</div>
+	<% end %>
+	
 	<% if current_user.type == 1 &&  @user.usr_type == 1 %>
 		<% if @term_count == 0 || @point_options.length == 0 %>
 			<div class="span7" style="width:100%;">
 				<div class="row">
 					<div class="well">
 						<div class="alert alert-dismissable alert-warning">
-					
-								Before starting the Settings section should be used to define School Terms (semester/yearly), Alert settings for the school term, and the Points pertaining to defined behaviors.</br></br>
-
+								Before starting the Settings section should be used to define School Terms (semester/yearly), Alert settings for the school term, and the Points pertaining to defined behaviours.</br></br>
 						</div>
 					</div>
 				</div>

@@ -1,7 +1,7 @@
-<div id="all_idea_right">
+<div>
 	<div class="row">
 		</br>
-		<p class="text-center text-white"><b>BULLETIN BOARD</b></p>
+		<p class="text-center"><b>BULLETIN BOARD</b></p>
 		<% @idea_of_the_day = Idea.joins(:user).select(:idea, :first_name, :last_name).where('school_id = ? AND ideas.created_at >= ?', current_user.school_id, Time.zone.now.beginning_of_day).order('likes_count desc').limit(1).first %>
 		<% unless @idea_of_the_day.nil? %>
 			<p class="text-center text-white"><b>Star idea of the day!!!</b></p>
