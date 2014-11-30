@@ -22,7 +22,7 @@
 				<div class="nav-collapse">
 					<ul class="nav navbar-nav">
 						<% if sign_in? %>
-							<% if mobile_device? && (current_user.type == 1 || current_user.type == 2) %>
+							<% if mobile_device? && current_user.type == 1 %>
 								<li>
 		 							<%= link_to signout_path, :method => 'delete' do %> 
 										Sign out <i class="glyphicon glyphicon-off"></i> 

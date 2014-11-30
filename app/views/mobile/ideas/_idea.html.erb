@@ -1,6 +1,6 @@
-<div style="background-color:#F2F2F2;float:left;">
-	<div class="row">
-		<div id="wrap" >
+<div style="width:100%">
+	<div>
+		<div>
 			<% @email = User.select('email, id, type').where('id = ?', idea.user_id).first %>
 			<p>
 				<div id="name">
@@ -37,25 +37,25 @@
 					<br/>
 					<div id="idea_actions">
 						<% if idea.user_id == current_user.id %> 
-							<div id="idea_actions_1">
+							<div id="idea_actions_1_mobile">
 								<%= link_to idea, :id=>"edit_"+idea.id.to_s,  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Idea" do %> 
 									<i class="glyphicon glyphicon-pencil"></i> 
 								<% end %>
 							</div>
-							<div id="idea_actions_2">
+							<div id="idea_actions_2_mobile">
 								<%= link_to idea, method: :delete, data: { confirm: 'Are you sure you want to remove this idea from the bank?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Idea" do %> 
 									<i class="glyphicon glyphicon-trash"></i> 
 								<% end %>
 							</div>
 						<% else %>
-							<div id="idea_actions_1">
+							<div id="idea_actions_1_mobile">
 								<% if params[:portal_id] != '1' && current_user.id != idea.user_id %> 
 									<%= link_to add_like_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Like" do %> 
 										<i class="glyphicon glyphicon-thumbs-up"></i> 
 									<% end %>
 								<% end %> 
 							</div>
-							<div id="idea_actions_2">
+							<div id="idea_actions_2_mobile">
 								<% if idea.accepted == false %>
 									<% if current_user.type == 2 && idea.moderator_id == current_user.id %>
 										<%= link_to accept_path(idea.id), data: { confirm: 'Make sure you promote the idea to the proper Portal before accepting it. Do you want to continue?' }, :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Accept" do %>
@@ -92,7 +92,7 @@
 
 						<div id="actions">
 							<% if comment.user_id == current_user.id %>
-								<div id="actions_1">
+								<div id="actions_1_mobile">
 									<% if comment.accepted == false && idea.moderator_id == current_user.id %>
 										<div class="alert alert-dismissable alert-danger">
 									<% end %>
@@ -103,20 +103,20 @@
 										</div>
 									<% end %>
 								</div>
-								<div id="actions_2">
+								<div id="actions_2_mobile">
 									<%= link_to comment, method: :delete, data: { confirm: 'Are you sure you want to remove comment?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Comment" do %> 
 										<i class="glyphicon glyphicon-trash"></i> 
 									<% end %>
 								</div>
 							<% else %>
 								<% if comment.accepted == true %>
-									<div id="actions_3">
+									<div id="actions_1_mobile">
 										<%= link_to report_comment_path(idea.id, comment.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Report Comment" do %> 
 											<i class="glyphicon glyphicon-flag"></i> 
 										<% end %>
 									</div>
 								<% elsif current_user.type == 2 && idea.moderator_id == current_user.id %>
-									<div id="actions_4">
+									<div id="actions_2_mobile">
 											<%= link_to accept_comment_path(idea.id, comment.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Accept Comment" do %>
 												<i class="glyphicon glyphicon-ok"></i> 
 											<% end %>
@@ -189,10 +189,10 @@
 						  <%= f.hidden_field :idea_id, :value => idea.id %> 
 						  <% @idea_tags = Tag.joins(:tag_comment_ideas).select('tags.id as tag_id, description, tag_comment_ideas.id as tag_idea_id, tag_comment_ideas.tag_id as tag_idea_tag_id, tag_comment_ideas.idea_id as tag_idea_idea_id').where('idea_id = ?', idea.id) %> 
 
-						  <%= f.select :tag_id, options_for_select(@tag_options, @idea_tags.map { |j| j.tag_idea_tag_id}), {}, { :multiple => true, :class => "chzn-select", :style => "width:400px;" }%>
+						  <%= f.select :tag_id, options_for_select(@tag_options, @idea_tags.map { |j| j.tag_idea_tag_id}), {}, { :multiple => true, :class => "chzn-select" }%>
 						</div>
 
-						<div id="actions">
+						<div id="actions_mobile">
 						  <%= button_tag(type: 'Save Tags', class: "btn-small btn-primary", rel: "tooltip", title: "Add Tag") do %>
 							  <span class="glyphicon glyphicon-plus"></span> 
 						  <% end %>

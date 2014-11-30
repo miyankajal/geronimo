@@ -1,12 +1,15 @@
 class IdeasController < ApplicationController
   load_and_authorize_resource
   
+  helper :all
+  before_filter :prepare_for_mobile
   before_action :set_idea, only: [:show, :edit, :update, :destroy]
   before_action :teachers_all
   before_action :teacher_class_all
   before_action :tags_all
   before_action :portals_all
   before_action :classes_all
+  
   
   # GET /ideas
   def index
@@ -196,5 +199,14 @@ class IdeasController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def idea_params
       params.require(:idea).permit(:idea, :user_id, :moderator_id, :likes_count, :tag_id, :portal_id, :accepted, :class_id)
+    end
+    
+    def mobile_device?
+        request.user_agent =~ /Mobile|webOS|iPhone/ && !(request.user_agent =~ /iPad/)
+    end
+    helper_method :mobile_device?
+    
+    def prepare_for_mobile
+        prepend_view_path "#{Rails.root}/app/views/mobile" if mobile_device?
     end
 end
