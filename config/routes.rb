@@ -16,6 +16,7 @@ GeronimoSms::Application.routes.draw do
   get '/ideas/report/:idea_id', to: 'ideas#report_idea', as: 'report'
   get '/tag_comment_ideas/add_tag/:idea_id/:tag_id', to: 'tag_comment_ideas#add_tag', as: 'add_tag'
 
+
   resources :posting_portals
 
   resources :tags
@@ -36,6 +37,8 @@ GeronimoSms::Application.routes.draw do
   match '/settings' => 'static_pages#settings', via: [:get]
   match '/reports' => 'static_pages#reports', via: [:get]
   match '/user_report' => 'static_pages#user_report', via: [:get]
+  
+  match '/bulletin_board' => 'ideas#_bulletin_board', via: [:get]
   
   match '/contact_us' => 'static_pages#contact_us', via: [:get]
   match '/demo' => 'static_pages#demo', via: [:get]
