@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	  <%= stylesheet_link_tag "application", :media => "all" %>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+
+	  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+	  <!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+	  <![endif]-->
+	  <!--[if IE 8]>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+		<script src="../../vendor/assets/js/respond.js"></script>
+	  <![endif]-->
+	<title>Geronimo!!!</title>
+	<%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %> 
+	<%= javascript_include_tag "application", "data-turbolinks-track" => true %> 
+	<%= csrf_meta_tags %>
+	
+</head>
+
+<body>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	    <!-- Include all compiled plugins (below), or include individual files as needed -->
+	    <script src="js/bootstrap.min.js"></script>
+	<% flash.each do |key, msg| %>
+		<div class="span7" style="width:100%;">
+			<div class="alert alert-dismissable alert-info">
+			  <button type="button" class="close" data-dismiss="alert">×</button>
+			  <p><%= msg %></p>
+			</div>
+		</div>
+	<% end %>
+    
+	<% if session[:product] == 2 %>
+		<%= render 'layouts/ideas_header'%>
+	<% else %>
+		<%= render 'layouts/header'%>
+  	<% end %>
+  	
+	<div class = "container">
+		<%= yield %>
+	</div>
+	
+	<%= render 'layouts/footer'%>
+</body>
+</html>
