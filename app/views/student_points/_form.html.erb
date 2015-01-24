@@ -1,0 +1,73 @@
+<script type="text/javascript">
+	function get_point(id, credit, value, card_offense, card_offense_id)
+	{
+		if(credit)
+		 {
+			$("#assigned_points_value").val(value);
+		 }
+		 else
+		 {
+			$("#assigned_points_value").val(value * -1);
+		 }
+	 
+		 $("#assigned_points_card").val(card_offense);
+		 $("#assigned_points_card_id").val(card_offense_id);
+	}
+</script>
+
+<% set_product_points %>
+<div class="span7" style="width:100%;">
+	<div class="row">
+		<div class="well">
+		<% if @student_point.nil? %>
+			<% @student_point = StudentPoint.new %>
+		<% end %>
+		<%= form_for @student_point, :html => {:class => 'form-horizontal'}, :id => 'student_points_form' do |f| %>
+			<fieldset>
+			  <% if @student_point.errors.any? %>
+				<div id="error_explanation">
+				  <h2><%= pluralize(@student_point.errors.count, "error") %> prohibited this point from being saved:</h2>
+
+				  <ul>
+				  <% @student_point.errors.full_messages.each do |msg| %>
+					<li><%= msg %></li>
+				  <% end %>
+				  </ul>
+				</div>
+			  <% end %>
+
+			  <div class="form-group">
+				   <%= f.label :point_id, :class=>'col-sm-2 control-label' %>
+				   <div class="col-xs-4">
+					<%= f.select :point_id, @point_options.map{|point| [point.description, point.id, 'data_point_credit'=>point.credit, 'data_point_val'=>point.value, 'data_card_offense'=>point.card_offense, 'data_card_offense_id'=>point.card_offense_id]}, {:include_blank =>'select one'}, :onchange => "get_point(this.value, this.options[this.selectedIndex].getAttribute('data_point_credit'), this.options[this.selectedIndex].getAttribute('data_point_val'), this.options[this.selectedIndex].getAttribute('data_card_offense'), this.options[this.selectedIndex].getAttribute('data_card_offense_id'))", :id => "point", :style => "width:300px"%>
+				   </div>
+			  </div>
+
+			  <div class="form-group">
+				<%= f.label :assigned_points, :class=>'col-sm-2 control-label' %>
+				<div class="col-xs-4">
+					<%= f.number_field :assigned_points, :id => "assigned_points_value"%>
+				</div>
+			  </div>
+
+			  <div class="form-group">
+				<%= f.label :card_offense_id, :class=>'col-sm-2 control-label' %>
+				<div class="col-xs-4">
+					<%= f.text_field(:card_offense_id, :id => "assigned_points_card", :readonly => true, :value => "None") %>
+				</div>
+			  </div>
+  
+			  
+			  <%= f.hidden_field :card_offense_id, :id => "assigned_points_card_id" %> 
+			  <%= f.hidden_field :user_id, :value => params[:user_id] %> 
+
+			  <%= button_tag(type: 'Add Point', class: "btn-small btn-primary", rel: "tooltip", title: "Add Point") do %>
+				<span class="glyphicon glyphicon-plus"></span> 
+			  <% end %>
+			  
+			</fieldset>	  
+		<% end %>
+
+		</div>
+	</div>
+</div>

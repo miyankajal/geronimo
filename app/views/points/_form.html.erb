@@ -14,7 +14,7 @@
 			<% @point = Point.new %>
 		<% end %>
 		<h3>New point</h3>
-		<%= form_for @point, :html => {:class => 'form-horizontal'} do |f| %>
+		<%= form_for @point, :html => {:class => 'form-horizontal'}, :id => 'points_form', :remote => true do |f| %>
 		 <fieldset>
 		  <% if @point.errors.any? %>
 			<div id="error_explanation">

@@ -22,6 +22,7 @@ class User < ActiveRecord::Base
 	
 	# self referential associations
 	has_many :guardianships
+    accepts_nested_attributes_for :guardianships
 	has_many :guardians, :through => :guardianships
 	has_many :inverse_guardianships, :class_name => "GuardianShip", :foreign_key => "guardian_id"
 	has_many :inverse_guardians, :through => :inverse_guardianships, :source => :user
@@ -77,7 +78,71 @@ class User < ActiveRecord::Base
 			self[column] = SecureRandom.urlsafe_base64(20, false)
 		end while User.exists?(column => self[column])
 	end
-			
+    
+    def self.accessible_attributes
+        ['username', 'email', 'first_name', 'last_name', 'enrollment_id']
+    end
+    
+    def self.import_from_file(file, school_id, user_type, class_id)
+        spreadsheet = open_spreadsheet(file)
+        header = spreadsheet.row(1)
+        (2..spreadsheet.last_row).each do |i|
+            row = Hash[[header, spreadsheet.row(i)].transpose]
+            user = User.find_by_id(row["id"]) || new
+            #(:username, :email, :first_name, :last_name, :enrollment_id
+            user.attributes = row.to_hash.slice(*accessible_attributes)
+            user.school_id = school_id
+            user.type = user_type
+            user.password = SecureRandom.hex(13)
+            user.password_confirmation = user.password
+            
+            if user_type == '3'
+                user.class_id = class_id
+            end
+            
+            if user_type == '4'
+                user.enrollment_id = 0
+                ward_enrollment_ids = row["enrollment_id"].split(",")
+            end
+            
+            unless user.save
+                return false
+            end
+            
+            if (@user.email?)
+                UserMailer.welcome_email(@user).deliver
+            end
+            
+            if user_type == '4'
+                ward_enrollment_ids = Array.new
+                ward_enrollment_ids.each do |enrollment_id|
+                    user_id = User.select('id').where(:enrollment_id => enrollment_id).first
+                    Guardianship.create!(:guardian_id => user.id, :user_id => user_id.id)
+                end
+            end
+        end
+        return true
+    end
+    
+    def self.open_spreadsheet(file)
+        case File.extname(file.original_filename)
+            when '.csv' then Roo::Csv.new(file.path, nil, :ignore)
+            when '.xls' then Roo::Excel.new(file.path, nil, :ignore)
+            when '.xlsx' then Roo::Excelx.new(file.path, nil, :ignore)
+            else raise "Unknown file type: #{file.original_filename}"
+        end
+    end
+    
+    def self.to_csv(options = {})
+        CSV.generate(options) do |csv|
+            csv << column_names
+            all.each do |user|
+                csv << user.attributes.values_at(*column_names)
+            end
+        end
+    end
+
+   	
 	private
 		def create_remember_token
 			self.remember_token = User.hash(User.new_remember_token)

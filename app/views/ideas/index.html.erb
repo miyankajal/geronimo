@@ -35,12 +35,18 @@
 			<br/><br/>
 		<% end %>
 
-		<% if @ideas.empty? %>
-			<div class="alert alert-dismissable alert-danger"> NO IDEAS TO DISPLAY!!! </div>
-		<% else %>
-			<% @ideas.each do |idea| %>
-				<%= render idea %>
+		<div id="my-ideas">
+			<% if @ideas.empty? %>
+				<div class="alert alert-dismissable alert-danger"> NO IDEAS TO DISPLAY!!! </div>
+			<% else %>
+				<% @ideas.each do |idea| %>
+					<%= render idea %>
+				<% end %>
 			<% end %>
-		<% end %>
+		</div>
+		
+		<div id="infinite-scrolling">
+		  <%= will_paginate %>
+		</div>
 	</div>
 </div>

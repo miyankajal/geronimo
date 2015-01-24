@@ -5,10 +5,10 @@
     </div>
     <br/><br/>
     <div>
-		<% if current_user.type = 1 || current_user.type = 2 %>
-			Add School Points to encourage the student behaviour or report unfavourable behaviour, according to the school policy.</br> If the point is for bad behaviour make sure you enter negative points. For good behaviour, remember to check the <b>'Credit'</b> checkbox. Choose the Card given in case of bad behaviour, however that is not required. Parents will be notified in case of carded offense as the per the school policies as set in the Settings. Contact your administrator to know more.
+		<% if current_user.type == 1 || current_user.type == 2 %>
+			Add School Points to encourage the student behaviour or report unfavourable behaviour, according to the school policy.</br> If the point is for bad behaviour make sure you enter negative points. For good behaviour, remember to check the <b>'Credit'</b> checkbox. Choose the Card given in case of bad behaviour, however that is not required. Parents will be notified in case of carded offence as the per the school policies as set in the Settings. Contact your administrator to know more.
 		<% else %>
-			Listing of points.</br>Carded Offenses will be dealt with according to the school policies.<br/><br/>
+			Listing of points.</br>Carded Offences will be dealt with according to the school policies.<br/><br/>
 		<% end %>
 	</div> 
 </div>
@@ -19,50 +19,18 @@
 	<hr>
 <% end %>
 
-<table class="table">
+<table class="table" id='points_table'>
   <thead>
     <tr>
       <th>Description</th>
       <th>Value</th>
-      <th>Carded Offenses</th>
+      <th>Carded Offences</th>
     </tr>
   </thead>
 
   <tbody>
     <% @points.each do |point| %>
-      <tr>
-        <td>
-        	<% if point.credit %>
-				<div class="alert alert-dismissable alert-success">
-			<% else %>
-				<div class="alert alert-dismissable alert-warning">
-			<% end %>
-				<%= point.description %></td>
-			</div>
-	<% if point.credit %>
-        	<td><%= point.value %></td>
-	<% else %>
-		<td><%= point.value * -1 %></td>
-	<% end %>
-	<% @desc = CardOffenseType.select('description').where('id = ?', point.card_offense_id).first %>
-	<td>
-		<%= @desc.description %>
-	</td>
-
-	<% if current_user.type == 1 %>
-        	<td>
-        		<%= link_to edit_point_path(point), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit" do %> 
-					<i class="glyphicon glyphicon-pencil"></i> 
-				<% end %>
-        	</td>
-       		<td>
-       			<%= link_to point, method: :delete, data: { confirm: 'Are you sure you want to remove this point?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove" do %> 
-					<i class="glyphicon glyphicon-trash"></i> 
-				<% end %>
-       		</td>
-	<% end %>
-
-      </tr>
+      <%= render 'point_val', point: point %>
     <% end %>
   </tbody>
 </table>

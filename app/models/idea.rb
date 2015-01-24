@@ -11,4 +11,5 @@ class Idea < ActiveRecord::Base
 	belongs_to :ideas, :class_name => "Idea", :foreign_key => "class_id"
 	
 	validates_presence_of :idea, :portal_id, :user_id
+    self.per_page = 10
 end

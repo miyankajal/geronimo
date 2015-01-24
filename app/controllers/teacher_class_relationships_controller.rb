@@ -2,6 +2,7 @@ class TeacherClassRelationshipsController < ApplicationController
   before_action :new
   load_and_authorize_resource
   before_action :teachers_all
+  respond_to :html, :js
 	
   # GET /teacher_class_relationship/new
   def new
@@ -13,7 +14,11 @@ class TeacherClassRelationshipsController < ApplicationController
     @teacher_class_relationship = TeacherClassRelationship.new(teacher_class_params)
 
     if @teacher_class_relationship.save
-      redirect_to user_path(:id => @teacher_class_relationship.user_id), notice: 'Class relation was successfully saved for the teacher.'
+        respond_to do |format|
+            format.html {redirect_to user_path(:id => @teacher_class_relationship.user_id), notice: 'Class relation was successfully saved for the teacher.'}
+            format.js {}
+        end
+      
     else
       render action: 'new'
     end
@@ -22,7 +27,10 @@ class TeacherClassRelationshipsController < ApplicationController
   # DELETE /teacher_class_relationship/1
   def destroy
     @a = TeacherClassRelationship.find(params[:id]).destroy
-    redirect_to user_path(:id => @a.user_id), notice: 'User was successfully destroyed.'
+    respond_to do |format|
+        format.html {redirect_to user_path(:id => @a.user_id), notice: 'User was successfully destroyed.'}
+        format.js {}
+    end
   end
   
   def teachers_all

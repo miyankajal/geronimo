@@ -14,8 +14,13 @@ GeronimoSms::Application.routes.draw do
   get '/ideas/like/:idea_id', to: 'ideas#add_like', as: 'add_like'
   get '/ideas/accept/:idea_id', to: 'ideas#accept_idea', as: 'accept'
   get '/ideas/report/:idea_id', to: 'ideas#report_idea', as: 'report'
+  
   get '/tag_comment_ideas/add_tag/:idea_id/:tag_id', to: 'tag_comment_ideas#add_tag', as: 'add_tag'
-
+  
+  get '/users/points_for_term/:term_id', to: 'users#points_for_term'
+  get '/users/add_guardianship/:user_id/:guardian_id', to: 'users#add_guardianship', as: 'add_guardianship'
+  get '/users/destroy_guardianship/:user_id/:guardian_id', to: 'users#destroy_guardianship', as: 'destroy_guardianship'
+  
 
   resources :posting_portals
 
@@ -62,6 +67,12 @@ GeronimoSms::Application.routes.draw do
 	member do
 		get 'download_sample'
 	end
+  end
+  
+  resources :users do
+      member do
+          get 'get_term/:term_id', :action => 'get_term', :as => 'get_term'
+      end
   end
   
   resources :user_types

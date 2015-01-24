@@ -1,0 +1,9 @@
+<tr id="class_<%= class_section.class_section_id %>">
+	<td><%= link_to get_teacher_class(class_section.class_section_id), users_path(type: 3, desc: 'Students', class_id: class_section.class_section_id)%></td>
+	<td><%= get_teacher_role(class_section.teacher_role_id) %></td>
+	<td>
+		<%= link_to class_section, method: :delete, data: { confirm: 'Are you sure you want to remove this teacher class relationship?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove", remote: true do %> 
+			<i class="glyphicon glyphicon-trash"></i> 
+		<% end %>
+	</td>
+</tr>

@@ -59,6 +59,6 @@ class GuardianshipsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def guardianship_params
-      params.require(:guardianship).permit(:user_id, :guardian_id)
+      params.require(:guardianship).permit(:guardian_id, :user_id)
     end
 end

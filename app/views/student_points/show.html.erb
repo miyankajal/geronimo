@@ -1,6 +1,23 @@
-<p id="notice"><%= notice %></p>
+<h2>Points</h2>
 
-<p>
-  <strong>Description:</strong>
-  <%= @teacher_role.description %>
-</p>
+<hr>
+
+<div class="row-fuild">
+	<div class="span4 well">
+
+	<p>
+	  <strong>Description:</strong>
+	  <%= @point.description %>
+	</p>
+
+	<p id="value">
+	  <strong>Value:</strong>
+	  <% if @point.credit %>
+	  	<%= @point.value %>
+	  <% else %>
+		<%= @point.value * -1 %>
+	  <% end %>
+	</p>
+
+	</div>
+</div>

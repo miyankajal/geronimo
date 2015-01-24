@@ -1,46 +1,78 @@
-<tr>
-	<td/>
-	<% if user.type == 3 %>
-		<td><%= user.enrollment_id %></td>
-	<% end %>
+<% unless user.nil? %>
 
-	<td><%= link_to user.username, user %></td>
-	<td><%= user.first_name %> <%= user.last_name %></td>
-	<td>
-		<%= link_to edit_user_path(user), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit User" do %> 
-			<i class="glyphicon glyphicon-pencil"></i> 
+	<!--guardians or students in the index-->
+	<% if (params[:id].present? && (user.type == 4 || user.type == 3)) %>
+		<% if user.type == 3 %>
+			<% @isward = true %>
+			<% @user_id = user.id %>
+			<% @guardian_id = params[:id] %>
+		<% elsif user.type == 4 %>
+			<% @isguardian = true %>
+			<% @user_id = params[:id] %>
+			<% @guardian_id = user.id %>
 		<% end %>
-	</td>
-	<% if user.type == 3 &&  (current_user.type == 1 || current_user.type == 2) %>
-		<td>
-			<%= link_to new_user_path(:type => 4, :ward_id => user.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Add Guardian" do %>
-				<i class="glyphicon glyphicon-plus"></i> 
-			<% end %>
-		</td>
 	<% end %>
-	<td>
-		<% if (current_user.type == 2 && class_teacher?(current_user.id, user.class_id)) || current_user.type == 1 %>
-			<% unless params[:search].nil? %>
-				<%= link_to add_guardian_student_relationship(user.id, guardian_id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Add Ward" do %> 
-					<i class="glyphicon glyphicon-plus"></i> 
-				<% end %>
+	
+	<!--add new guardians or add new users (in that order)-->
+	<% if (!params[:user].nil? || !params[:guardian_id].nil? )  %>
+		<% if user.type == 3 %>
+			<% @isward = true %>
+			<% @user_id = user.id %>
+			<% @guardian_id = params[:guardian_id] %>
+			<% @edit = false %>
+		<% elsif (user.type == 4 && params['user']['guardianships_attributes'].present?) %>
+			<% @isguardian = true %>
+			<% @user_id = params['user']['guardianships_attributes']['0']['user_id'] %>
+			<% @guardian_id = user.id %>
+			<% @edit = false %>
+		<% end %>
+	<% end %>
+	
+	<tr id="user_<%= user.id %>">
+		<td/>
+		<% unless user.enrollment_id.nil? %>
+			<td><%= user.enrollment_id %></td>
+		<% end %>
 
-			<% else %>
-				<% unless user.type == 1 %>
-					<% if params[:id].present? && get_user_type(params[:id]).type == 4 %>
-						<%= link_to destroy_guardian_student_relationship(user.id, params[:id]), method: :delete, data: { confirm: 'Are you sure you want to remove this ward?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove Ward" do %> 
-							<i class="glyphicon glyphicon-trash"></i> 
-						<% end %>
-					<% else %>
-						<%= link_to user, method: :delete, data: { confirm: 'Are you sure you want to remove this user?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove User" do %> 
-							<i class="glyphicon glyphicon-trash"></i> 
+		<td><%= link_to user.username, user %></td>
+		<td><%= user.first_name %> <%= user.last_name %></td>
+		<% if !(!@user_id.nil? && !@guardian_id.nil? && (@user_id.to_s != @guardian_id.to_s)) %>
+			<td>
+				<%= link_to edit_user_path(user), remote: true, :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit User" do %> 
+					<i class="glyphicon glyphicon-pencil"></i> 
+				<% end %>
+			</td>
+		<% end %>
+		<td>
+			<% if current_user.type == 1 || (current_user.type == 2 && class_teacher?(current_user.id, user.class_id)) %>
+				<% unless params[:search].nil? %>
+					<%= link_to add_guardianship_path(:user_id => user.id, :guardian_id => params[:guardian_id]), remote: true, :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Add Ward", id: 'link_add_ward' do %> 
+						<i class="glyphicon glyphicon-plus"></i> 
+					<% end %>
+
+				<% else %>
+					<% unless user.type == 1 %>
+						<% if (!@user_id.nil? && !@guardian_id.nil? && (@user_id.to_s != @guardian_id.to_s)) %>
+							<% if @isward %>
+								<%= link_to destroy_guardianship_path(:user_id => @user_id, :guardian_id => @guardian_id), remote: true, data: { confirm: 'Are you sure you want to remove disassociate this ward from the guardian?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove Ward", id: 'link_remove_ward' do %> 
+									<i class="glyphicon glyphicon-trash"></i> 
+								<% end %>
+							<% elsif @isguardian %>
+								<%= link_to destroy_guardianship_path(:user_id => @user_id, :guardian_id => @guardian_id), remote: true, data: { confirm: 'Are you sure you want to disassociate this guardian from the ward?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove Guardian", id: 'link_remove_ward' do %> 
+									<i class="glyphicon glyphicon-trash"></i> 
+								<% end %>
+							<% end %>
+						<% else %>
+							<%= link_to user, remote: true, method: :delete, data: { confirm: 'Are you sure you want to remove this user?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove User", id: 'link_remove_user' do %> 
+								<i class="glyphicon glyphicon-trash"></i> 
+							<% end %>
 						<% end %>
 					<% end %>
 				<% end %>
+
 			<% end %>
 	
-		<% end %>
-		
-		
-	</td>
-</tr>
+	
+		</td>
+	</tr>
+<% end %>

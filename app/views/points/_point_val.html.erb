@@ -1,0 +1,37 @@
+<tr id="point_<%= point.id %>">
+    <td>
+    	<% if point.credit %>
+			<div class="alert alert-dismissable alert-success">
+		<% else %>
+			<div class="alert alert-dismissable alert-warning">
+		<% end %>
+			<%= point.description %>
+		</div>
+	</td>	
+	<% if point.credit %>
+        <td><%= point.value %></td>
+	<% else %>
+		<td><%= point.value * -1 %></td>
+	<% end %>
+	<td>
+		<% unless @point_card_offense.nil? %>
+		<%= @point_card_offense.description %>
+		<% else %>
+		<%= point.card_offense %>
+		<% end %>
+	</td>
+
+	<% if current_user.type == 1 || current_user.type == 2 %>
+        <td>
+       		<%= link_to edit_point_path(point), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit" do %> 
+				<i class="glyphicon glyphicon-pencil"></i> 
+			<% end %>
+       	</td>
+      	<td>
+      		<%= link_to point, method: :delete, data: { confirm: 'Are you sure you want to remove this point?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove", remote: true do %> 
+			<i class="glyphicon glyphicon-trash"></i> 
+			<% end %>
+     	</td>
+	<% end %>
+
+</tr>

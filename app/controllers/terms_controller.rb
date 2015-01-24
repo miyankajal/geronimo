@@ -4,6 +4,7 @@ class TermsController < ApplicationController
   load_and_authorize_resource
   
   before_action :set_term, only: [:show, :edit, :update, :destroy]
+  respond_to :html, :js
 
   # GET /terms
   def index
@@ -29,13 +30,13 @@ class TermsController < ApplicationController
     @term = Term.new(term_params)
 
     if @term.save
-	  @prev_term = Term.select('id, term_from, term_to').where('school_id = ?', current_user.school_id).order('term_from DESC').first
+	  @prev_term = Term.select('id, term_from, term_to').where('school_id = ?', current_user.school_id).order('term_from DESC').second
 	  #Resque.enqueue_at(@term.term_from, StudentInitPoints, @prev_term)
 	  #Resque.remove_delayed(StudentInitPoints, @prev_term)
 	  
 	  @setting = AlertSetting.select('penalty_carried_over, default_points').first
 	  
-	  @students = User.select(:id).where('school_id = 1 AND type = 3')
+	  @students = User.select(:id).where('school_id = ? AND type = 3', current_user.school_id)
 	  @students.each do |user|
 			StudentPoint.create!(:user_id => user.id, :point_id => 1, :assigned_points => @setting.default_points)
 	  end	
@@ -45,9 +46,17 @@ class TermsController < ApplicationController
 			StudentPoint.create!(:user_id => user_id, :point_id => 2, :assigned_points => (((@setting.penalty_carried_over * points)/100) * -1).to_int)
 	  end	
 	  
-	  redirect_to session.delete(:return_to), notice: 'Term was successfully created.'
+      respond_to do |format|
+          format.html { redirect_to session.delete(:return_to), notice: 'Term was successfully created.' }
+          format.js {}
+      end
+	  
     else
-      render action: 'new'
+    
+      respond_to do |format|
+          format.html { render action: 'new' }
+          format.js {}
+      end
     end
   end
 
@@ -69,10 +78,17 @@ class TermsController < ApplicationController
 		@student_point.delete_all
 		@term.destroy
 		
-		redirect_to terms_url, notice: 'Term was successfully destroyed.'
+        respond_to do |format|
+            format.html { redirect_to terms_url, notice: 'Term was successfully destroyed.' }
+            format.js {}
+        end
 	else 
 		@term.destroy
-		redirect_to terms_url, notice: 'Term was successfully destroyed.'
+        respond_to do |format|
+            format.html { redirect_to terms_url, notice: 'Term was successfully destroyed.' }
+            format.js {}
+        end
+		
 	end
     
   end

@@ -14,7 +14,7 @@
 
 <%= render 'form' %>
 
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover" id="terms_table">
   <thead>
     <tr>
       <th>Name</th>
@@ -26,16 +26,7 @@
 
   <tbody>
     <% @terms.each do |term| %>
-      <tr>
-        <td><%= term.name %></td>
-        <td><%= term.term_from.strftime("%m/%d/%y") %></td>
-        <td><%= term.term_to.strftime("%m/%d/%y") %></td>
-        <td>
-        	<%= link_to term, method: :delete, data: { confirm: 'Are you sure you want to remove this term?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove" do %> 
-				<i class="glyphicon glyphicon-trash"></i> 
-			<% end %>
-        </td>
-      </tr>
+      <%= render term %>
     <% end %>
   </tbody>
 </table>

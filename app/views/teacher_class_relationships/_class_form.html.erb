@@ -5,7 +5,7 @@
 				<% if @teacher_class_relationship.nil? %>
 					<% @teacher_class_relationship = TeacherClassRelationship.new %>
 				<% end %>
-				<%= form_for @teacher_class_relationship, :html => {:class => 'form-horizontal'} do |f| %>
+				<%= form_for @teacher_class_relationship, :html => {:class => 'form-horizontal'}, remote: true do |f| %>
 					<fieldset>
 						<% if @teacher_class_relationship.errors.any? %>
 							<div id="error_explanation">

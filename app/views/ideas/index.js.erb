@@ -1,0 +1,7 @@
+$('#my-ideas').append('<%= j render @ideas %>');
+<% if @ideas.next_page %>
+  $('.pagination').replaceWith('<%= j will_paginate @ideas %>');
+<% else %>
+  $(window).off('scroll');
+  $('.pagination').remove();
+<% end %>

@@ -4,19 +4,22 @@ class PointsController < ApplicationController
   before_action :new
   before_action :set_point, only: [:show, :edit, :update, :destroy]
   before_action :card_offenses
+  respond_to :html, :js
 
   # GET /points
   def index
-    @points = Point.where('school_id = ?', current_user.school_id)
+    @points = Point.joins('INNER JOIN card_offense_types ON card_offense_types.id = points.card_offense_id').select('points.id AS point_id, points.credit, points.description, points.value, card_offense_types.description AS card_offense, points.id AS id, points.card_offense_id').where('school_id = ?', current_user.school_id)
   end
 
   # GET /points/1
   def show
-	@point_val = Point.joins('INNER JOIN card_offense_types ON card_offense_types.id = points.card_offense_id').select('points.description, points.value, points.credit, card_offense_types.description AS card_offense, card_offense_types.id AS card_offense_id').where('points.id = ? AND school_id = ?', params[:id], current_user.school_id)
+	@point = Point.joins('INNER JOIN card_offense_types ON card_offense_types.id = points.card_offense_id').select('points.description, points.value, points.credit, card_offense_types.description AS card_offense, card_offense_types.id AS card_offense_id, points.id AS id, points.card_offense_id').where('points.id = ? AND school_id = ?', params[:id], current_user.school_id).first
 	
 	respond_to do |format|
       format.html
-      format.json { render json: @point_val }
+      format.js
+      
+      format.json {render :json => @point}
     end
   end
 
@@ -32,12 +35,19 @@ class PointsController < ApplicationController
   # POST /points
   def create
     @point = Point.new(point_params)
-
+    @point_card_offense = CardOffenseType.select('description').where('id = ?', @point.card_offense_id).first
     if @point.save
-      redirect_to points_path, notice: 'Point was successfully created.'
+        respond_to do |format|
+            format.html {redirect_to points_path, notice: 'Point was successfully created.'}
+            format.js
+        end
     else
       render action: 'new'
     end
+  end
+  
+  def get_card_desc
+      @desc = CardOffenseType.select('description').where('id = ?', params[:id]).first
   end
 
   # PATCH/PUT /points/1
@@ -52,7 +62,11 @@ class PointsController < ApplicationController
   # DELETE /points/1
   def destroy
     @point.destroy
-    redirect_to points_url, notice: 'Point was successfully destroyed.'
+    respond_to do |format|
+        format.html { redirect_to points_url, notice: 'Point was successfully destroyed.' }
+        format.js
+    end
+    
   end
 
   private

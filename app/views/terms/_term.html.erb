@@ -1,0 +1,10 @@
+<tr id="term_<%= term.id %>">
+    <td><%= term.name %></td>
+    <td><%= term.term_from.strftime("%m/%d/%y") %></td>
+    <td><%= term.term_to.strftime("%m/%d/%y") %></td>
+    <td>
+    	<%= link_to term, method: :delete, data: { confirm: 'Are you sure you want to remove this term?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Remove", :remote => true do %> 
+		<i class="glyphicon glyphicon-trash"></i> 
+		<% end %>
+    </td>
+</tr>
