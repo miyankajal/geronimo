@@ -1,65 +1,70 @@
 <% if params[:search].nil? %>
+	<h2><%= params[:desc] %> : </h2>
 
-<table class="table">
-  <tbody>
-	<tr>
-		<td/>
-		<td><%= image_tag "users.png" %></td>
-		<td/>
-		<td>			
-			<h5> 
-				<%= link_to :controller => 'users', :action => 'download_sample', :id => current_user.id , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Download Sample Excel File" do %>
-					Download Sample Export File <i class="glyphicon glyphicon-download-alt"></i> 
+	<table class="table">
+	  <tbody>
+		<tr>
+			<td/>
+			<td><%= image_tag "users.png" %></td>
+			<td/>
+			<td>			
+				<h5> 
+					<%= link_to :controller => 'users', :action => 'download_sample', :id => current_user.id , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Download Sample Excel File" do %>
+						Download Sample Export File <i class="glyphicon glyphicon-download-alt"></i> 
+					<% end %>
+				</h5>
+
+				<%= form_tag import_users_path, multipart: true do %>
+				  <%= file_field_tag :file %>
+				  <%= hidden_field_tag :class_id, params[:class_id] %>
+				  <%= hidden_field_tag :type, params[:type] %>
+				  </br>
+				  <%= button_tag(type: 'Import', class: "btn-small btn-primary", rel: "tooltip", title: "To add users with the help of an Excel sheet please download the Sample Excel File. Remove the sample users and replace with your users. Do not add the enrollment_id unless the user is a Student.") do %>
+					  Upload File <span class="glyphicon glyphicon-upload"></span> 
+				  <% end %>
 				<% end %>
-			</h5>
-
-			<%= form_tag import_users_path, multipart: true do %>
-			  <%= file_field_tag :file %>
-			  <%= hidden_field_tag :class_id, params[:class_id] %>
-			  <%= hidden_field_tag :type, params[:type] %>
-			  </br>
-			  <%= button_tag(type: 'Import', class: "btn-small btn-primary", rel: "tooltip", title: "To add users with the help of an Excel sheet please download the Sample Excel File. Remove the sample users and replace with your users. Do not add the enrollment_id unless the user is a Student.") do %>
-				  Upload File <span class="glyphicon glyphicon-upload"></span> 
-			  <% end %>
-			<% end %>
-		</td>
-		<td/>
-		<td style="vertical-align:middle">
-			<div class="alert alert-dismissable alert-success">
-				In order to upload multiple users download the Sample Export File and replace the example users with the ones you want to add. The users with emails will be sent a welcome email with their password, which they can change later.</br>
-				Students do not need email addresses. The admin can set up the accounts and ask the Students to change Passwords on first login.<br/>
-				When adding Guardians, if the person has more than one ward. Add Enrolment ID for the wards separated by ','.
+			</td>
+			<td/>
+			<td style="vertical-align:middle">
+				<div class="alert alert-dismissable alert-success">
+					In order to upload multiple users download the Sample Export File and replace the example users with the ones you want to add. The users with emails will be sent a welcome email with their password, which they can change later.</br>
+					Students do not need email addresses. The admin can set up the accounts and ask the Students to change Passwords on first login.<br/>
+					When adding Guardians, if the person has more than one ward. Add Enrolment ID for the wards separated by ','.
 				
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<td/>
-		<td><%= image_tag "user.png" %></td>
-		<td/>
-		<td style="vertical-align:middle">		
-			<h5>
-				<%= link_to new_user_path(:type => params[:type]) do %>
-					Add <%= params[:desc] %> <i class="glyphicon glyphicon-plus"></i> 
-				<% end %>
-			</h5>
-		</td>
-		<td/>
-		<td style="vertical-align:middle">
-			<div class="alert alert-dismissable alert-success">
-				To add a single user at a time without having to upload users using the Sample Export File. </br>
-				The users with emails will be sent a welcome email with their password, which they can change later.</br>
-				Students do not need email addresses to add accounts. The admin can set up the accounts and ask the Students to change Passwords on first login.
-			</div>
-		</td>
-	</tr>
-  </tbody>
-</table>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td/>
+			<td><%= image_tag "user.png" %></td>
+			<td/>
+			<td style="vertical-align:middle">		
+				<h5>
+					<%= link_to new_user_path(:type => params[:type], :class_id => params[:class_id]), remote: true do %>
+						Add <%= params[:desc] %> <i class="glyphicon glyphicon-plus"></i> 
+					<% end %>
+				</h5>
+			</td>
+			<td/>
+			<td style="vertical-align:middle">
+				<div class="alert alert-dismissable alert-success">
+					To add a single user at a time without having to upload users using the Sample Export File. </br>
+					The users with emails will be sent a welcome email with their password, which they can change later.</br>
+					Students do not need email addresses to add accounts. The admin can set up the accounts and ask the Students to change Passwords on first login.
+				</div>
+			</td>
+		</tr>
+	  </tbody>
+	</table>
+	
+	<div class="row">
+	  <div id="user-form" style="display:none;"></div>
+	</div>
 
 <% end %>
 
 <hr/>
-<table class="table table-striped table-hover">
+<table id="user_table" class="table table-striped table-hover">
   <thead>
     <tr>
       <th/>
@@ -70,11 +75,7 @@
       <th>Name</th>
       <th>Action</th>
     </tr>
-  </thead>
-  <tbody>
-	<% @users.each do |user| %>
-		<%= render user, type: params[:type], guardian_id: params[:guardian_id] %>
-	<% end %>
-  </tbody>
+  </thead>	
+  <%= render @users %>
 </table>
 
