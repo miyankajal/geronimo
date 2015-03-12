@@ -1,8 +1,17 @@
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#hover_text_<%= idea_id %>').click(function(){
+		$('#hoverbutton_<%= idea_id %>').show();
+	});
+});
+
+
+</script>
 <% if @comment.nil? %>
 	<% @comment = Comment.new %>
 <% end %>
 
-<%= form_for @comment, :html => {:class => 'form-horizontal'} do |f| %>
+<%= form_for @comment, :html => {:class => 'form-horizontal'}, :remote => true do |f| %>
 	<fieldset>
 	  <% if @comment.errors.any? %>
 		<div id="error_explanation">
@@ -15,14 +24,14 @@
 		  </ul>
 		</div>
 	  <% end %>
-	  <div id="text">
-			 <%= f.text_area :comment, :cols => "85", :rows => "3" %>
-	  </div> 
-	  <div id="actions">
-			  <%= button_tag(type: 'Add', class: "btn-small btn-primary") do %>
-				<span class="glyphicon glyphicon-comment"></span> 
-			  <% end %>
-	  </div> 	  
+	
+	 <div id='hover_text_<%= idea_id %>'>
+		<%= f.text_area :comment, :cols => "85", :rows => "3", :placeholder => "Add your two cents..." %>
+		<%= button_tag(type: 'Add', class: "btn-small btn-primary", id: "hoverbutton_#{idea_id}", remote: true) do %>
+			<span class="glyphicon glyphicon-comment"></span>
+		 <% end %>
+	 </div> 
+	  
 	<%= f.hidden_field :user_id, :value => current_user.id %> 
 	<%= f.hidden_field :idea_id, :value => idea_id %>
 		

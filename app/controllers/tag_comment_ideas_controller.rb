@@ -1,5 +1,6 @@
 class TagCommentIdeasController < ApplicationController
   load_and_authorize_resource
+  respond_to :html, :json, :js
   
   before_action :set_tag_comment_idea, only: [:show, :edit, :update, :destroy]
 
@@ -47,7 +48,10 @@ class TagCommentIdeasController < ApplicationController
 		TagCommentIdea.create(:tag_id => id, :idea_id => @idea_id)
 	end
 	
-	redirect_to session.delete(:return_to)
+    respond_to do |format|
+        format.html {redirect_to session.delete(:return_to)}
+        format.js {}
+    end
 
   end
 
@@ -64,13 +68,21 @@ class TagCommentIdeasController < ApplicationController
   def destroy
 	session[:return_to] ||= request.referer
     @tag_comment_idea.destroy
-    redirect_to session.delete(:return_to)
+    respond_to do |format|
+        format.html {redirect_to session.delete(:return_to)}
+        format.js {}
+    end
+    
   end
 
   def add_tag
 	session[:return_to] ||= request.referer
 	TagCommentIdea.create(:tag_id => params[:tag_id], :idea_id => params[:idea_id])
-	redirect_to session.delete(:return_to)
+	
+    respond_to do |format|
+        format.html {redirect_to session.delete(:return_to)}
+        format.js {}
+    end
   end
   
   private

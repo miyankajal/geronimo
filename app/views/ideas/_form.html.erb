@@ -1,11 +1,11 @@
-<div class="span7" style="width:71%;">
+<div class="span7">
     <div class="row">
-        <div class="well">
-		<% if @idea.nil? %>
-			<% @idea = Idea.new %>
-		<% end %>
-		<h3>New idea</h3>
-        	<%= form_for @idea, :html => {:class => 'form-horizontal'} do |f| %>
+        <div id="idea_form">
+			<% if @idea.nil? %>
+				<% @idea = Idea.new %>
+			<% end %>
+			
+        	<%= form_for @idea, :html => {:class => 'form-horizontal'}, :id => 'form_idea', :remote => true do |f| %>
 				<fieldset>
 					  <% if @idea.errors.any? %>
 						<div id="error_explanation">
@@ -22,7 +22,7 @@
 					  <div class="form-group">
 						<%= f.label :idea, :class=>'col-sm-2 control-label' %><br>
 						<div class="col-xs-4">
-							<%= f.text_area :idea, :cols => "60", :rows => "5" %>
+							<%= f.text_area :idea, :cols => "80", :rows => "4" %>
 						</div>
 					  </div>
 
@@ -34,14 +34,14 @@
 							   <div class="col-xs-4">
 									<%= f.select :moderator_id, @moderator_options, {:include_blank =>'select one'}%>
 							   </div>
-						  </div> 
-					  <% else %>
-						  <div class="form-group">
-							   <%= f.label :class_section, :class=>'col-sm-2 control-label' %>
-							   <div class="col-xs-4">
-									<%= f.select :class_id, @class_options, :class=>'form-control' %>
-							   </div>
-						 </div>
+						  </div>
+					<% else %>
+						<div class="form-group">
+							<%= f.label :class_id, :class=>'col-sm-2 control-label' %>
+							<div class="col-xs-4">
+								<%= f.select :class_id, @class_options, {:include_blank =>'select one'}%>
+						   </div>
+						</div>
 					 <% end %>
 					  	
 					    <p>

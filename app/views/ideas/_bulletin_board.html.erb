@@ -1,39 +1,44 @@
-<div id="all_idea_right">
-	<div class="row">
-		</br>
-		<p class="text-center text-white"><b>BULLETIN BOARD</b></p>
-		<% @idea_of_the_day = Idea.joins(:user).select(:idea, :first_name, :last_name).where('school_id = ? AND ideas.created_at >= ?', current_user.school_id, Time.zone.now.beginning_of_day).order('likes_count desc').limit(1).first %>
-		<% unless @idea_of_the_day.nil? %>
-			<p class="text-center text-white"><b>Star idea of the day!!!</b></p>
-			<p class="box">
-				<%= "#{@idea_of_the_day.first_name} #{@idea_of_the_day.last_name} - #{@idea_of_the_day.idea}" %>
-			</p>
-		<% end %>
-		
-		<% @fav_tags = UserIdeaRelationships.joins('INNER JOIN users ON user_idea_relationships.user_id = users.id', 'INNER JOIN tag_comment_ideas ON tag_comment_ideas.idea_id = user_idea_relationships.idea_id').where('users.id = ?', current_user.id).where(:like => true).group('tag_comment_ideas.id').order('count_all desc').limit(5).count %>
-		<% unless @fav_tags.empty? %>
-			<p class="text-center text-white"><b>Ideas you might like</b></p>
-			<% @fav_tags.each do |fav_tag| %>
-				<% range = "ideas.created_at #{(7.days.ago.utc...Time.now.utc).to_s(:db)}" %>
-				<% @fav_idea_for_tag = Idea.joins(:user).select(:idea, :first_name, :last_name).where('school_id = ? AND likes_count > 0', current_user.school_id).order('likes_count desc').limit(1).first %>
-				<% unless @fav_idea_for_tag.nil? %>
-					<p class="box">
-						<%= "#{@fav_idea_for_tag.first_name} #{@fav_idea_for_tag.last_name} - #{@fav_idea_for_tag.idea}" %>
-					</p>
+<div class="row page_95">
+	</br>
+	<p><b>BULLETIN BOARD</b></p>
+	<hr>
+	<% @idea_of_the_day = Idea.joins(:user).select(:idea, :first_name, :last_name).where('school_id = ? AND ideas.created_at >= ?', current_user.school_id, Time.zone.now.beginning_of_day).order('likes_count desc').limit(1).first %>
+	<% unless @idea_of_the_day.nil? %>
+		<p><b>Star idea of the day!!!</b></p>
+		<p class="box">
+			<%= "#{@idea_of_the_day.first_name} #{@idea_of_the_day.last_name} - #{@idea_of_the_day.idea}" %>
+		</p>
+	<% end %>
+	<hr>
+	<% @fav_tags = UserIdeaRelationships.joins('INNER JOIN users ON user_idea_relationships.user_id = users.id', 'INNER JOIN tag_comment_ideas ON tag_comment_ideas.idea_id = user_idea_relationships.idea_id').where('users.id = ?', current_user.id).where(:like => true).group('tag_comment_ideas.tag_id').order('count_all desc').limit(5).count %>
+	<% unless @fav_tags.empty? %>
+		<p><b>Ideas you might like: </b></p>
+		<% tag_array = Array.new %>
+		<% @fav_tags.each do |fav_tag_count, tag| %>
+			<% range = "ideas.created_at #{(7.days.ago.utc...Time.now.utc).to_s(:db)}" %>
+			<% @fav_idea_for_tag = Idea.joins('INNER JOIN users ON ideas.user_id = users.id', 'LEFT OUTER JOIN tag_comment_ideas ON tag_comment_ideas.idea_id = ideas.id').select('idea, first_name, last_name, ideas.id AS idea_id').where('likes_count > 0 AND tag_comment_ideas.tag_id = ?', tag).order('likes_count desc').limit(1).first %>
+			
+			<% unless @fav_idea_for_tag.nil? %>
+				<% if !tag_array.include?(@fav_idea_for_tag.idea_id) %>
+				<% tag_array.push(@fav_idea_for_tag.idea_id) %>
+				<p class="box">
+					<%= "#{@fav_idea_for_tag.first_name} #{@fav_idea_for_tag.last_name} - #{@fav_idea_for_tag.idea}" %>
+				</p>
 				<% end %>
 			<% end %>
 		<% end %>
-		
-		<% @tags = Tag.select(:description, :points, :id).where(:school_id => current_user.school_id) %>
-		<% unless @tags.empty? %>	
-			<p class="box">
-				<p class="text-center text-white"><b>All tags available - </b></p>
-				<% @tags.each do |tag| %>
-					<p class="text-center text-white">
-						<%= link_to "#{tag.description} - #{tag.points}", get_portal_ideas_path(1,0,0,tag.id) %>
-					</p>
-				<% end %>
-			</p>
-		<% end %>
-	</div>
+	<% end %>
+	
+	<% @tags = Tag.select(:description, :points, :id).where(:school_id => current_user.school_id) %>
+	<% unless @tags.empty? %>	
+		<p class="box">
+			<p><b>All tags available - </b></p>
+			<hr>
+			<% @tags.each do |tag| %>
+				<p>
+					<%= link_to "#{tag.description} - #{tag.points}", get_portal_ideas_path(1,0,0,tag.id) %>
+				</p>
+			<% end %>
+		</p>
+	<% end %>
 </div>

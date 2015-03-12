@@ -10,7 +10,7 @@
 		<% else %>
 			<td></td>
 			<td> <%= @debit = point.assigned_point %> 
-				<% @sum += point.assigned_point %>
+				<% @sum -= point.assigned_point %>
 			</td>
 		<% end %>
 

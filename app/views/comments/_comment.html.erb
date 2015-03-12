@@ -1,0 +1,59 @@
+<script type="text/javascript">
+function accept_comment(comment_id) {
+	if(confirm("Do you want to continue?")) {
+		$.ajax('/comments/accept/' + comment_id);	
+	}
+    else {
+		return false;
+    }
+}
+</script>
+<p>
+	<div class="all_idea_text" id="comment_<%= comment.id %>">	
+		<div class="idea_text">
+			<div class="user_name">
+				<% @user = User.select('first_name, last_name').where('id = ?', comment.user_id).first %>
+				<%= link_to @user.first_name + ' ' + @user.last_name + ' - ', user_path(comment.user_id) %>	
+			</div>
+			<div class="all_idea_text">
+				<%= best_in_place comment, :comment, :as => :textarea, :activator => "#comment_activator_#{comment.id}" %>
+			</div>
+		</div>
+		
+		<% @idea = Idea.select('moderator_id').where('id = ?', comment.idea_id).first %>
+		<div class="idea_actions">
+			<% if comment.user_id == current_user.id %>
+				<div class="idea_actions_1">
+					<% if comment.accepted == false && @idea.moderator_id == current_user.id %>
+						<div class="alert alert-dismissable alert-danger">
+					<% end %>
+					<%= link_to comment, :id=>"comment_activator_#{comment.id}",  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Comment", remote: true do %> 
+						<i class="glyphicon glyphicon-pencil"></i> 
+					<% end %>
+					<% if comment.accepted == false && @idea.moderator_id == current_user.id %>
+						</div>
+					<% end %>
+				</div>
+				<div class="idea_actions_2">
+					<%= link_to comment, method: :delete, data: { confirm: 'Are you sure you want to remove comment?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Comment", remote: true do %> 
+						<i class="glyphicon glyphicon-trash"></i> 
+					<% end %>
+				</div>
+			<% else %>
+				<% if comment.accepted == true %>
+					<div class="idea_actions_1">
+						<%= link_to report_comment_path(comment.idea_id, comment.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Report Comment", remote: true do %> 
+							<i class="glyphicon glyphicon-flag"></i> 
+						<% end %>
+					</div>
+				<% elsif current_user.type == 2 && @idea.moderator_id == current_user.id %>
+					<div class="idea_actions_2">
+						<%= link_to '#', :onclick => "accept_comment(#{comment.id})", :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Accept", remote: true do %>
+							<i class="glyphicon glyphicon-ok"></i> 
+						<% end %>
+					</div>
+				<% end %>
+			<% end %>
+		</div>
+	</div>
+</p>

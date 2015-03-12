@@ -9,12 +9,12 @@ gem 'roo'
 gem 'yaml_db', github: 'jetthoughts/yaml_db', ref: 'fb4b6bd7e12de3cffa93e0a298a1e5253d7e92ba'
 gem 'mysql2'
 gem 'foreigner'
-gem 'best_in_place', github: 'bernat/best_in_place'
-gem 'chosen-rails'
 gem 'cancan'
 
+
 gem 'jquery-rails'
-gem 'bootstrap-sass', '2.0.0'
+gem 'bootstrap-sass', '~> 3.2.0'
+gem 'autoprefixer-rails'
 gem 'bcrypt-ruby', '3.1.2'
 gem 'faker', '1.0.1'
 gem 'will_paginate', '3.0.3'
@@ -28,6 +28,8 @@ gem "therubyracer", :require => 'v8'
 gem "less-rails"
 gem "twitter-bootstrap-rails"
 gem 'bootswatch-rails'
+gem 'x-editable-rails'
+gem 'best_in_place', '~> 3.0.1'
 
 #Background queue
 gem 'resque', '~> 1.22.0', :require => "resque/server"

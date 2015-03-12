@@ -26,7 +26,10 @@ class TagsController < ApplicationController
     @tag = Tag.new(tag_params)
 
     if @tag.save
-      redirect_to tags_url, notice: 'Tag was successfully created.'
+      respond_to do |format|
+          format.html { redirect_to tags_url, notice: 'Tag was successfully created.' }
+          format.js
+      end
     else
       render action: 'new'
     end
@@ -49,7 +52,11 @@ class TagsController < ApplicationController
   # DELETE /tags/1
   def destroy
     @tag.destroy
-    redirect_to tags_url, notice: 'Tag was successfully destroyed.'
+    respond_to do |format|
+        format.html { redirect_to tags_url, notice: 'Tag was successfully destroyed.' }
+        format.js
+    end
+    
   end
 
   private

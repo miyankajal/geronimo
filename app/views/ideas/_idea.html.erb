@@ -1,17 +1,66 @@
-<div style="background-color:#F2F2F2;float:left;">
-	<div class="row">
+<script type="text/javascript">
+	function add_tag(tag_id, idea_id)
+	{
+		var description = $( "#ddl_tags option:selected" ).text();
+		$('#tags').append("<div class='tag col-xs-2 alert alert-dismissable alert-info' id='tag_"+ tag_id +"'><button type='button' class='close' data-dismiss='alert'>×</button>" + description +"</div>");
+		
+		$.ajax('/tag_comment_ideas/add_tag/' + idea_id + '/' + tag_id);
+	}
+	
+	function change_moderator(moderator_id, idea_id)
+	{
+		if(confirm("Are you sure you want to change the moderator?")) {
+			$.ajax('/ideas/change_moderator/' + idea_id + '/' + moderator_id);
+		}
+	    else {
+			return false;
+	    }
+	}
+	
+	function change_portal(portal_id, idea_id)
+	{
+		if(confirm("Are you sure you want to change the portal?")) {
+			$.ajax('/ideas/change_portal/' + idea_id + '/' + portal_id);
+		}
+	    else {
+			return false;
+	    }
+	}
+	
+	function add_like(idea_id, like_count) {
+		var i = document.getElementById("likes_count_" + idea_id).innerHTML;
+		var count = i.split(' ');
+		$.ajax('/ideas/like/' + idea_id);
+		i = parseInt(count[0] ,10) + 1;
+		var likes = i.toString()
+		document.getElementById("likes_count_" + idea_id).innerHTML = likes.concat(' likes');
+	}
+
+	function accept_idea(idea_id) {
+		if(confirm("Make sure you promote the idea to the proper Portal before accepting it. All comments will be accepted along with the idea. Do you want to continue?")) {
+			$.ajax('/ideas/accept/' + idea_id);	
+		}
+	    else {
+			return false;
+	    }
+	}
+	
+</script>
+
+<div id="idea_<%=idea.id%>">
+	<div class="row idea-separator">
 		<div id="wrap" >
-			<% @email = User.select('email, id, type').where('id = ?', idea.user_id).first %>
+			<% @user = User.select('email, id, type, first_name, last_name').where('id = ?', idea.user_id).first %>
 			<p>
-				<div id="name">
-					<%= gravatar_for_idea(@email.email.downcase, @email.type) %><br/>
-				
+				<div class="user_name">
+					<%= gravatar_for_idea(@user.email.downcase, @user.type) %><br/>
+					<%= link_to @user.first_name + ' ' + @user.last_name, user_path(idea.user_id)%>
 				</div>
 
-				<div id="all_idea_text">
-					<div id="idea_text">
-						<b><%= link_to idea.first_name + ' ' + idea.last_name, user_path(idea.user_id)%></b> <br/>
-						<% if idea.user_type == 2 %>
+				<div class="all_idea_text">
+					
+					<div class="idea_text">
+						<% if @user.type == 2 %>
 							<div class="alert alert-success">
 						<% end %>
 				
@@ -19,187 +68,120 @@
 							<div class="alert alert-dismissable alert-danger">
 						<% end %>
 				
-						<%= best_in_place idea, :idea, :type => :textarea, :activator => "#edit_#{idea.id}" %> 
-						<% if idea.user_type == 2 || (idea.accepted == false && idea.moderator_id == current_user.id)  %>
+						<%= best_in_place idea, :idea, :as => :textarea, :activator => "#idea_activator_#{idea.id}" %>
+						
+						<% if @user.type == 2 || (idea.accepted == false && idea.moderator_id == current_user.id)  %>
 							</div>
 						<% end %>
-						<br/><br/>
-						<p class="text-muted">
+						<br/>
+						<div class="text-muted smaller_text">
 							(<%= idea.updated_at.to_formatted_s(:short) %>)
 							
-							<% @l = Array.new %>
+							<% @likers = Array.new %>
 								<% if idea.likes_count != 0 %> 
-									<% @l = User.joins('INNER JOIN user_idea_relationships ON user_idea_relationships.user_id = users.id').where('idea_id = ?', idea.id).map{|liker| [liker.first_name + ' ' + liker.last_name + ', ']} %>
+									<% @likers = User.joins('INNER JOIN user_idea_relationships ON user_idea_relationships.user_id = users.id').select('first_name, last_name').where('idea_id = ?', idea.id).map{|liker| [liker.first_name + ' ' + liker.last_name + ', ']} %>
 								<% end %>
-							<%= link_to "#{idea.likes_count} likes", '', :class => "popover-test", :title => "This idea was liked by:", "data-content" => @l %> 
-						</p>
-					</div>
-					<br/>
-					<div id="idea_actions">
-						<% if idea.user_id == current_user.id %> 
-							<div id="idea_actions_1">
-								<%= link_to idea, :id=>"edit_"+idea.id.to_s,  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Idea" do %> 
-									<i class="glyphicon glyphicon-pencil"></i> 
-								<% end %>
-							</div>
-							<div id="idea_actions_2">
-								<%= link_to idea, method: :delete, data: { confirm: 'Are you sure you want to remove this idea from the bank?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Idea" do %> 
-									<i class="glyphicon glyphicon-trash"></i> 
-								<% end %>
-							</div>
-						<% else %>
-							<div id="idea_actions_1">
-								<% if params[:portal_id] != '1' && current_user.id != idea.user_id %> 
-									<%= link_to add_like_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Like" do %> 
-										<i class="glyphicon glyphicon-thumbs-up"></i> 
-									<% end %>
-								<% end %> 
-							</div>
-							<div id="idea_actions_2">
-								<% if idea.accepted == false %>
-									<% if current_user.type == 2 && idea.moderator_id == current_user.id %>
-										<%= link_to accept_path(idea.id), data: { confirm: 'Make sure you promote the idea to the proper Portal before accepting it. Do you want to continue?' }, :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Accept" do %>
-											<i class="glyphicon glyphicon-ok"></i> 
-										<% end %>
-									<% else %>
-										To be accepted
-									<% end %>
-								<% elsif current_user.id != idea.user_id %>
-									<%= link_to report_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Report" do %>
-										<i class="glyphicon glyphicon-flag"></i> 
-									<% end %>
-								<% end %>
-							</div>
-						<% end %> 
-					
-					</div>
+							
+							<%= link_to "#{idea.likes_count} likes", '', :class =>"player_name_li", :rel=>"popover","data-placement"=>"right", "data-html"=>"true", "data-title"=>"People who liked this idea:", "data-trigger"=>"hover", "data-content"=>"<div class='custom_content'>#{@likers}</div>", "data-original-title"=>"", :title=>"", :id=>"likes_count_#{idea.id}" %>
+
+						</div>
 				</div>
+				<div class="idea_actions">
+					<% if idea.user_id == current_user.id %> 
+						<div class="idea_actions_1">
+							<%= link_to idea, :id=>"idea_activator_#{idea.id}",  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Idea" do %> 
+								<i class="glyphicon glyphicon-pencil"></i> 
+							<% end %>
+						</div>
+						<div class="idea_actions_2">
+							<%= link_to idea, method: :delete, data: { confirm: 'Are you sure you want to remove this idea from the bank?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Idea", :remote => true do %> 
+								<i class="glyphicon glyphicon-trash"></i> 
+							<% end %>
+						</div>
+					<% else %>
+						<div class="idea_actions_1">
+							<% if params[:portal_id] != '1' && current_user.id != idea.user_id %> 
+								<%= link_to '#', onclick: "add_like(#{idea.id}, #{idea.likes_count})", :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Like", remote: true, id: "like_id" do %> 
+									<i class="glyphicon glyphicon-thumbs-up"></i> 
+								<% end %>
+							<% end %> 
+						</div>
+						<div class="idea_actions_2">
+							<% if idea.accepted == false %>
+								<% if current_user.type == 2 && idea.moderator_id == current_user.id %>
+									<%= link_to '', :onclick => "accept_idea(#{idea.id})", :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Accept", remote: true do %>
+										<i class="glyphicon glyphicon-ok"></i> 
+									<% end %>
+									
+								<% else %>
+									<i class="glyphicon glyphicon-eye-close"></i>
+								<% end %>
+							<% elsif current_user.id != idea.user_id %>
+								<%= link_to report_path(idea.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Report", remote: true do %>
+									<i class="glyphicon glyphicon-flag"></i> 
+								<% end %>
+							<% end %>
+						</div>
+					<% end %> 
+
+				</div>
+			</div>
 			</p>
 		
 		
 			<% if current_user.type != 2 %>
-				<% @comments = Comment.joins(:user).select('comments.id AS id, user_id, comment, users.first_name AS user_first_name, users.last_name AS user_last_name, accepted').where("idea_id = ? AND accepted = 1", idea.id) %> 
+				<% @comments = Comment.select('comments.id AS id, user_id, comment, accepted, idea_id').where("idea_id = ? AND accepted = 1", idea.id) %> 
 			<% else %>
-				<% @comments = Comment.joins(:user).select('comments.id AS id, user_id, comment, users.first_name AS user_first_name, users.last_name AS user_last_name, accepted').where("idea_id = ?", idea.id) %> 
+				<% @comments = Comment.select('comments.id AS id, user_id, comment, accepted, idea_id').where("idea_id = ?", idea.id) %> 
 			<% end %>
-			<% @comments.each do |comment| %>
-				<p>
-					<div id="all_text">
-						<div id="text">
-							<a><%= comment.user_first_name + ' ' + comment.user_last_name + ' - '%></a> 
-							<%= best_in_place comment, :comment, :type => :textarea, :activator => "#edit_#{comment.id}"  %>
-						</div>
-
-						<div id="actions">
-							<% if comment.user_id == current_user.id %>
-								<div id="actions_1">
-									<% if comment.accepted == false && idea.moderator_id == current_user.id %>
-										<div class="alert alert-dismissable alert-danger">
-									<% end %>
-									<%= link_to comment, :id=>"edit_"+comment.id.to_s,  :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit Comment" do %> 
-										<i class="glyphicon glyphicon-pencil"></i> 
-									<% end %>
-									<% if comment.accepted == false && idea.moderator_id == current_user.id %>
-										</div>
-									<% end %>
-								</div>
-								<div id="actions_2">
-									<%= link_to comment, method: :delete, data: { confirm: 'Are you sure you want to remove comment?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Comment" do %> 
-										<i class="glyphicon glyphicon-trash"></i> 
-									<% end %>
-								</div>
-							<% else %>
-								<% if comment.accepted == true %>
-									<div id="actions_3">
-										<%= link_to report_comment_path(idea.id, comment.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Report Comment" do %> 
-											<i class="glyphicon glyphicon-flag"></i> 
-										<% end %>
-									</div>
-								<% elsif current_user.type == 2 && idea.moderator_id == current_user.id %>
-									<div id="actions_4">
-											<%= link_to accept_comment_path(idea.id, comment.id), :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Accept Comment" do %>
-												<i class="glyphicon glyphicon-ok"></i> 
-											<% end %>
-									</div>
-								<% end %>
-							<% end %>
-						</div>
-					</div>
-				</p>
-			<% end %>
-		
+			<div id="idea_comments_<%= idea.id %>">
+				<% @comments.each do |comment| %>
+					<%= render 'comments/comment', :comment => comment %>
+				<% end %>
+			</div>
 			<p>
-				<div id="all_text">
-					<%= link_to current_user.first_name + ' ' + current_user.last_name + ' - ', user_path(current_user.id)%>
-					<%= render 'comment', :idea_id => idea.id  %>
+				<div class="all_idea_text">
+					<%= render 'comments/form', :idea_id => idea.id  %>
 				</div>
 			</p>
 		
 			<p>
-				<% if current_user.id == idea.user_id %>
-					<%= form_for idea do |f| %>
+				<div id="all_text">
+					<% if current_user.id == idea.user_id || idea.idea_class.nil? %>
+						<div id="text">
+							<label> Moderator:  </label>
+							<%= select_tag(:moderator_id, options_for_select( [['None', '']] + @moderator_options.map { |j| [j[0], j[2], 'data_idea_id'=>idea.id]}, selected_key = idea.moderator_id), :id => 'ddl_moderator', :onchange => "change_moderator(this.value, this.options[this.selectedIndex].getAttribute('data_idea_id'))", :remote => true ) %>
+						
+							</br>
+							<% @all_tags = Tag.select('description, id').where('school_id = ?', current_user.school_id) %>
 
-						<div id="all_text">
-							<div id="text">
-								<%= f.label 'Moderator: ' %>
-								<%= f.select :moderator_id, options_for_select( [['None', '']] + @moderator_options.map { |j| [j[0], j[2]]}, selected_key = idea.moderator_id ) %>
-							</div>
-							<div id="actions">
-								<%= button_tag(type: 'Change', class: "btn-small btn-primary", rel: "tooltip", title: "Change Moderator") do %>
-									<span class="glyphicon glyphicon-pencil"></span> 
-								<% end %>
-							</div>
+							<label> Select Tag: </label>
+							<%= select_tag(:tag_id, options_for_select([['Select One', '']] + @all_tags.map{ |t| [t.description, t.id, 'data_idea_id'=>idea.id] }), :id => 'ddl_tags', :onchange => "add_tag(this.value, this.options[this.selectedIndex].getAttribute('data_idea_id'))", :remote => true) %>
+						
 						</div>
-					<% end %>
-				<% elsif current_user.type == 2 %> 
-					<% if current_user.id != idea.moderator_id %>
-						<div id="all_text">
-							<b>Moderator:</b> 
-							<%= idea.moderator_user_first_name %>  <%= idea.moderator_user_last_name %>
-						</div>
-					<% else %>
-						<%= form_for idea do |f| %>
-							<div id="all_text">
-								<div id="text">
-									<b>Portal:</b> 
-									<%= f.select :portal_id, options_for_select( @portal_options, selected_key = idea.portal_id) %>
-									<% if params[:portal_id] == 3 %>
-										<%= f.hidden_field :accepted, :value => true %>
-									<% end %>
-								</div>
-								<div id="actions">
-									<%= button_tag(type: 'Change', class: "btn-small btn-primary", rel: "tooltip", title: "Change Portal") do %>
-									  <span class="glyphicon glyphicon-pencil"></span> 
-									<% end %>
-								</div>
-							</div>
+					<% elsif current_user.type == 2 %> 
+						<% if current_user.id != idea.moderator_id %>
+								<b>Moderator:</b> 
+								<%= idea.moderator_user_first_name %>  <%= idea.moderator_user_last_name %>
+						<% else %>
+							<label> Select Portal: </label>
+							<%= select_tag(:tag_id, options_for_select( @portal_options.map{|portal| [portal.description, portal.id, 'data_idea_id'=>idea.id]}, selected_key = idea.portal_id), :id => 'ddl_portals', :onchange => "change_portal(this.value, this.options[this.selectedIndex].getAttribute('data_idea_id'))") %>
+						
 						<% end %>
 					<% end %>
-				<% end %>
+				</div>
 			</p>
-
+				
 			<p>
-
-				<% @tag_comment_ideas = TagCommentIdea.new %>
-				<%= form_for @tag_comment_ideas, :html => {:class => 'form-horizontal'} do |f| %>
-
-					<div id="all_text">
-						<div id="text">
-						  <%= f.label 'Tags: ' %>
-						  <%= f.hidden_field :idea_id, :value => idea.id %> 
-						  <% @idea_tags = Tag.joins(:tag_comment_ideas).select('tags.id as tag_id, description, tag_comment_ideas.id as tag_idea_id, tag_comment_ideas.tag_id as tag_idea_tag_id, tag_comment_ideas.idea_id as tag_idea_idea_id').where('idea_id = ?', idea.id) %> 
-
-						  <%= f.select :tag_id, options_for_select(@tag_options, @idea_tags.map { |j| j.tag_idea_tag_id}), {}, { :multiple => true, :class => "chzn-select", :style => "width:400px;" }%>
-						</div>
-
-						<div id="actions">
-						  <%= button_tag(type: 'Save Tags', class: "btn-small btn-primary", rel: "tooltip", title: "Add Tag") do %>
-							  <span class="glyphicon glyphicon-plus"></span> 
-						  <% end %>
-						</div>
-					</div>
-				<% end %>
-
+				<% @tag_comment_ideas = Tag.joins(:tag_comment_ideas).select('tags.id as tag_id, description, tag_comment_ideas.id as id, tag_comment_ideas.tag_id as tag_idea_tag_id, tag_comment_ideas.idea_id as tag_idea_idea_id').where('idea_id = ?', idea.id) %> 
+				<div class="all_idea_text" id="tags">
+					<%= div_for(@tag_comment_ideas, :class => "tag") do |tag| %>
+						<%= tag.description %> <%= link_to 'x', "#{request.protocol}#{request.host_with_port}/tag_comment_ideas/#{tag.id}", method: :delete, data: { confirm: 'Are you sure you want to remove this tag from the idea?' } , :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Delete Tag" %>
+						
+					<% end %>
+				</div>
+				
+				
 			</p>
 		</div>
 	</div>

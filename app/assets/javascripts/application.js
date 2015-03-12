@@ -11,30 +11,22 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery_ujs
-//= require twitter/bootstrap
-//= require bootstrap
 //= require jquery.turbolinks
+//= require jquery_ujs
+//= require bootstrap
 //= require student_points
 //= require jsapi
 //= require chartkick
 //= require jquery.purr
-//= require best_in_place
-//= require chosen-jquery
 //= require bootstrap-tooltip.js
-//= require bootstrap-popover.js
+//= require best_in_place
 //= require_tree .
 
-$(function () {
-$('.popover-test').popover();
-});
 
 $(document).ready(function() {
   /* Activating Best In Place */
   jQuery(".best_in_place").best_in_place();
+  jQuery('.dropdown-toggle').dropdown();
+  $('[data-toggle="popover"]').popover();
+  
 });
-
-$(document).ready(function(){
-  $(".chzn-select").chosen();
-});
-

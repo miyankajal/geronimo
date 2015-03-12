@@ -46,7 +46,7 @@ class Ability
 		else	#student 	
 			can :read, [User, Comment, Idea, Point]
 			cannot :index, User
-			can [:show, :edit, :update, :delete], User do |current_user|
+            can [:show, :edit, :update, :delete, :get_term], User do |current_user|
 				user.id == current_user.id
 			end
 			

@@ -1,0 +1,2 @@
+$('#idea_comments_<%= @comment.idea_id %>').prepend("<%= j (render 'comments/comment', :comment => @comment ) %>");
+$('#new_comment')[0].reset();

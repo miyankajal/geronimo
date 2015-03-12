@@ -31,7 +31,7 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-	
+	session[:product] = 1;
 	#is current user is a guardian dont let him access any users other than his wards
 	if current_user.type == 4 && current_user.id.to_s != params[:id]
 		@guardian = Guardianship.select('user_id').where('guardian_id = ? AND user_id = ?', current_user.id, params[:id])

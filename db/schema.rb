@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141118030456) do
+ActiveRecord::Schema.define(version: 20150301035542) do
 
   create_table "alert_email_queues", force: true do |t|
     t.integer "alert_id"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20141118030456) do
     t.boolean  "accepted",     default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "class_id"
   end
 
   add_index "ideas", ["moderator_id", "accepted"], name: "IX_Ideas_Moderator", using: :btree

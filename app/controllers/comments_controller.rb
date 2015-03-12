@@ -3,7 +3,7 @@
   
   before_action :set_comment, only: [:show, :edit, :update, :destroy]
 
-  respond_to :html, :json
+  respond_to :html, :json, :js
   
   # GET /comments
   def index
@@ -36,7 +36,7 @@
     if @comment.save
 		respond_to do |format|
 			format.html { redirect_to session.delete(:return_to) }
-			format.json { render json: session.delete(:return_to)  }
+			format.js {}
 		end
 	end
   end
@@ -48,6 +48,7 @@
 		respond_to do |format|
 			format.html { redirect_to @comment }
 			format.json { render json: @comment }
+            format.js {}
 		end
     end
   end
@@ -56,7 +57,11 @@
   def destroy
 	session[:return_to] ||= request.referer
     @comment.destroy
-    redirect_to session.delete(:return_to), notice: 'Comment was successfully destroyed.'
+    respond_to do |format|
+        format.html {redirect_to session.delete(:return_to), notice: 'Comment was successfully destroyed.'}
+        format.js {}
+    end
+    
   end
   
   def report_comment
@@ -66,24 +71,36 @@
 	
   	if @idea_user.moderator_id.nil?
   		@teacher = User.joins('INNER JOIN teacher_class_relationships ON users.class_id = teacher_class_relationships.class_section_id', 'LEFT OUTER JOIN users AS teacher ON teacher.id = teacher_class_relationships.user_id').select('teacher.username, teacher.id, teacher.email').where('users.id = ? AND teacher_role_id = 2', @idea_user.user_id).first
-  		Comment.where(:id => params[:comment_id]).update(:accepted => false)
-  		Idea.where(:id => params[:idea_id]).update({:moderator_id => @teacher.id})
+  		Comment.where(:id => params[:comment_id]).update_all(:accepted => false)
+  		Idea.where(:id => params[:idea_id]).update_all({:moderator_id => @teacher.id})
   	else
   		@teacher = User.select('username, id, email').where('users.id = ?', @idea_user.moderator_id).first
-  		Comment.where(:id => params[:comment_id]).update(:accepted => false)
+  		Comment.where(:id => params[:comment_id]).update_all(:accepted => false)
   	end
 	
   	#Send mail to moderator
   	UserMailer.report_idea_email(@teacher).deliver
+    @comment = Comment.select('id').where(:id => params[:comment_id]).first
+    
+    respond_to do |format|
+        format.html { redirect_to session.delete(:return_to)}
+        format.js {render 'destroy.js'}
+    end
 
-  	redirect_to session.delete(:return_to)
   end
   
   def accept_comment
-	  session[:return_to] ||= request.referer
-  	Comment.where('id = ?', params[:comment_id]).update(:accepted => true, :updated_at => Date.today)
-  	redirect_to session.delete(:return_to)
+    session[:return_to] ||= request.referer
+  	Comment.where('id = ?', params[:comment_id]).update_all(:accepted => true, :updated_at => Date.today)
+    @comment = Comment.select('id').where(:id => params[:comment_id]).first
+    
+    respond_to do |format|
+        format.js {render 'destroy.js'}
+        format.html { redirect_to session.delete(:return_to)}
+        
+    end
   end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
