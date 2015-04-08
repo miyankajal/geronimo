@@ -1,2 +1,11 @@
-$('#user_table').prepend("<%= j (render @user) %>");
-$('#user-form').slideUp(350);
+<% if params[:new_user_token] == '' %>
+{
+	$('#user_table').prepend("<%= j (render @user) %>");
+	$('#user-form').slideUp(350);
+}
+<% else %>
+{
+	$('#user_table').prepend("<%= j (render @user) %>");
+	$('#user-invite-form').slideUp(350);
+}
+<% end %>

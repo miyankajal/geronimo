@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150301035542) do
+ActiveRecord::Schema.define(version: 20150312020015) do
 
   create_table "alert_email_queues", force: true do |t|
     t.integer "alert_id"
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 20150301035542) do
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
     t.integer  "school_id"
+    t.string   "new_user_token"
   end
 
   add_index "users", ["email"], name: "index_users_email", unique: true, using: :btree

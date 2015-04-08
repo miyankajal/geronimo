@@ -7,6 +7,12 @@ class UserMailer < ActionMailer::Base
     #mail(to: @user.email, subject: 'Welcome to Geronimo!!!')
   end
   
+  def invitation_email(user)
+      @user = user
+      @url  = 'http://mygeronimo.com'
+      #mail(to: @user.email, subject: 'Welcome to Geronimo!!!')
+  end
+  
   def appreciation_email(user, student, point)
       @user = user
       @student = student

@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
 	#attr_accessor :password, :verify_password, :new_password
     before_save :email_downcase
 	before_create :create_remember_token
-	
+    
 	MAX_EMAIL = 64
 	MAX_PASSWORD = 64
 	MAX_USERNAME = 64
@@ -31,9 +31,9 @@ class User < ActiveRecord::Base
 	has_many :ideas
 	has_many :user_idea_relationships
 
-	has_secure_password
+    has_secure_password
 	
-	validates_presence_of :username, :password_digest, :first_name, :last_name
+    validates_presence_of :username, :password_digest, :first_name, :last_name, :unless => :is_invitation?
     validates_presence_of :email, :unless => :is_student?
 	validates_presence_of :class_id, :if => :is_student? #should have a class_id and enrollment_id only if the user is a student 
 	validates_presence_of :enrollment_id, :if => :is_student?
@@ -46,15 +46,15 @@ class User < ActiveRecord::Base
 					
 	
 	validates_length_of :email, :within => 6..MAX_EMAIL, :unless => :is_student?
-	validates_length_of :username, :maximum => MAX_USERNAME
-	validates_length_of :first_name, :maximum => MAX_FIRST_NAME
-	validates_length_of :last_name, :maximum => MAX_LAST_NAME
+    validates_length_of :username, :maximum => MAX_USERNAME, :unless => :is_invitation?
+    validates_length_of :first_name, :maximum => MAX_FIRST_NAME, :unless => :is_invitation?
+    validates_length_of :last_name, :maximum => MAX_LAST_NAME, :unless => :is_invitation?
 	
 	validates_uniqueness_of :email, :case_sensitive => false, :unless => :is_student?
 	validates_uniqueness_of :enrollment_id, :if => :is_student?
 	
-	validates_confirmation_of :password,
-							  if: lambda { |m| m.password.present? }
+    validates_confirmation_of :password,
+    						  if: lambda { |m| m.password.present? }, :unless => :is_invitation?
 	
 	self.inheritance_column = nil
 	
@@ -80,7 +80,7 @@ class User < ActiveRecord::Base
 	end
     
     def self.accessible_attributes
-        ['username', 'email', 'first_name', 'last_name', 'enrollment_id']
+        ['email', 'enrollment_id']
     end
     
     def self.import_from_file(file, school_id, user_type, class_id)
@@ -162,5 +162,8 @@ class User < ActiveRecord::Base
             end
         end
         
+        def is_invitation?
+            !new_user_token.nil?
+        end
 
 end

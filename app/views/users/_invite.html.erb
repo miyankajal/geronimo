@@ -1,0 +1,44 @@
+<div class="span7" style="width:100%;">
+	<button type='button' class='close' data-dismiss='alert'>×</button>
+    <div class="row">
+        <div class="well">
+		<%= form_for @user, :html => {:id => "user_invite_form"}, remote: true do |f| %>
+			 <fieldset>
+				<% if @user.errors.any? %>
+					<div class="alert alert-dismissable alert-danger">
+					  <h4><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h4>
+					  <button type="button" class="close" data-dismiss="alert">x</button>
+					  <ul>
+						  <% @user.errors.full_messages.each do |msg| %>
+							<li><%= msg %></li>
+						  <% end %>
+					  </ul>
+					</div>
+				<% end %>
+				<div id="invitation">
+					<div class="col-xs-4">
+						<%= f.text_field :email, :class=>'form-control', :placeholder => "Email" %>
+					</div>
+			 		 <% random_password = (0...50).map { ('a'..'z').to_a[rand(26)] }.join %>
+					 <% random_token = (0...50).map { ('a'..'z').to_a[rand(26)] }.join %>
+					 <%= f.hidden_field :type, :value => params[:type] %> 
+					 <%= f.hidden_field :school_id, :value => current_user.school_id %> 
+					 <%= f.hidden_field :class_id, :value => params[:class_id] %>
+					 <%= f.hidden_field :new_user_token, :value => random_token %>
+					 <%= f.hidden_field :password, :value => random_password %>
+					 <%= f.hidden_field :password_confirmation, :value => random_password %>
+					
+				 	<% if params[:type] == "3" || params[:type] == "4" || params[:type].nil? %>
+						<div class="col-xs-3">
+							<%= f.number_field :enrollment_id, :class=>'form-control', :placeholder => "Enrollment Id" %>
+					    </div>
+					<% end %>
+				
+					<%= f.submit "Invite", class: "btn btn-primary" %>
+				</div>
+			</fieldset>
+		<% end %>
+
+		</div>
+    </div>
+</div>

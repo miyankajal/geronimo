@@ -34,13 +34,40 @@
 				</div>
 			</td>
 		</tr>
+		<% if current_user.type == 1 || current_user.type == 2 %>
+		<tr>
+			<td/>
+			<td><%= image_tag "mail.png" %></td>
+			<td/>
+			<td>		
+				<h5>
+					<!--add a place holder for invitation token-->
+					<%= link_to new_user_path(:type => params[:type], :class_id => params[:class_id], :new_user_token => 'geronimo'), remote: true do %>
+						Invite <%= params[:desc] %> <i class="glyphicon glyphicon-plus"></i> 
+					<% end %>
+				</h5>
+			</td>
+			<td/>
+			<td style="vertical-align:middle">
+				<div class="alert alert-dismissable alert-success">
+					To invite users to create their own accounts. </br>
+					The users with emails will be sent a welcome email to the mail address provided, the user will then be trusted to enter their personal information on their own.</br>
+					Students can be added with their enrollment id and so can the guardians.
+				</div>
+				<div class="row">
+				  <div id="user-invite-form" style="display:none;"></div>
+				</div>
+			</td>
+		</tr>
+
+		<% end %>
 		<tr>
 			<td/>
 			<td><%= image_tag "user.png" %></td>
 			<td/>
-			<td style="vertical-align:middle">		
+			<td style="vertical-align:200px;">		
 				<h5>
-					<%= link_to new_user_path(:type => params[:type], :class_id => params[:class_id]), remote: true do %>
+					<%= link_to new_user_path(:type => params[:type], :class_id => params[:class_id], :new_user_token => ''), remote: true do %>
 						Add <%= params[:desc] %> <i class="glyphicon glyphicon-plus"></i> 
 					<% end %>
 				</h5>
@@ -52,14 +79,16 @@
 					The users with emails will be sent a welcome email with their password, which they can change later.</br>
 					Students do not need email addresses to add accounts. The admin can set up the accounts and ask the Students to change Passwords on first login.
 				</div>
+				<div class="row">
+				  <div id="user-form" style="display:none;"></div>
+				</div>
 			</td>
 		</tr>
+		
 	  </tbody>
 	</table>
 	
-	<div class="row">
-	  <div id="user-form" style="display:none;"></div>
-	</div>
+	
 
 <% end %>
 

@@ -1,2 +1,13 @@
-$('#user-form').html("<%= j (render 'form', type: params[:type]) %>");
-$('#user-form').slideDown(350);
+<% if params[:new_user_token] == '' %>
+{
+	$('#user-form').html("<%= j (render 'form', type: params[:type]) %>");
+	$('#user-form').slideDown(350);
+	$('#user-invite-form').slideUp(350);
+}
+<% else %>
+{
+	$('#user-invite-form').html("<%= j (render 'invite', type: params[:type], new_user_token: params[:new_user_token]) %>");
+	$('#user-invite-form').slideDown(350);
+	$('#user-form').slideUp(350);
+}
+<% end %>

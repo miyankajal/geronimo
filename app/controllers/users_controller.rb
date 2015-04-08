@@ -128,7 +128,11 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     @user.school_id = current_user.school_id
     
-    
+    if @user.username.nil?
+        usernm = @user.email.split('@')
+        @user.username = usernm[0]
+    end
+
     if @user.save
         
         if @user.type == 4
@@ -138,7 +142,11 @@ class UsersController < ApplicationController
             Guardianship.where(:id => @new_guardian.id).update_all(:user_id => @user_id, :guardian_id => @new_guardian.user_id)
         end
         
-        UserMailer.welcome_email(@user).deliver
+        if @user.new_user_token == ''
+            UserMailer.welcome_email(@user).deliver
+        else
+            UserMailer.invitation_email(@user).deliver
+        end
         
 	    if @user.type == 3
             @setting = AlertSetting.select('default_points').where('school_id = ?', current_user.school_id).first
@@ -235,6 +243,12 @@ class UsersController < ApplicationController
           format.json {render :json => @student_points_desc}
       end
   end
+  
+  def new_user_token
+      user = User.find_by_email(params[:email])
+      user.send_create_user if user
+      redirect_to '#', :notice => "Email sent with instructions to create user."
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -244,7 +258,7 @@ class UsersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-        params.require(:user).permit(:username, :school_id, :email, :first_name, :last_name, :password, :password_confirmation, :type, :enrollment_id, :class_id, :password_reset_token, :password_reset_sent_at, guardianships_attributes: [:id, :user_id, :guardian_id])
+        params.require(:user).permit(:username, :school_id, :email, :first_name, :last_name, :password, :password_confirmation, :type, :enrollment_id, :class_id, :password_reset_token, :password_reset_sent_at, :new_user_token, guardianships_attributes: [:id, :user_id, :guardian_id])
     end
 	
 	# Only allow signed in user update/edit profiles

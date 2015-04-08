@@ -1,17 +1,18 @@
 <h1>Password Reset</h1>
-
-<div class="span7" style="width:100%;">
-    <div class="row">
-        <div class="well">
-
-		<%= form_tag password_resets_path, :method => :post do %>
-		  <div class="field">
+<div class="row">
+	<div class="well">
+		<%= form_tag password_resets_path, :method => :post, :class => 'form-horizontal' do %>
+		  <div class="form-group">
+			<div class="col-xs-2 control-label">
 			<%= label_tag :email %>
-			<%= text_field_tag :email, params[:email] %>
+			</div>
+			<div class="col-xs-5">
+				<%= text_field_tag :email, params[:email], :class=>'form-control' %>
+				</br>
+				<%= submit_tag "Reset Password" %>
+				
+			</div>
 		  </div>
-		  </br>
-		  <div class="actions"><%= submit_tag "Reset Password" %></div>
 		<% end %>
 	</div>
-     </div>
 </div>

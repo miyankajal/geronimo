@@ -34,8 +34,15 @@
 			<td><%= user.enrollment_id %></td>
 		<% end %>
 
-		<td><%= link_to user.username, user %></td>
-		<td><%= user.first_name %> <%= user.last_name %></td>
+		<% if user.first_name.nil? %>
+			<td><%= link_to user.email, user %></td>
+			<td> Invited </td>
+		<% else %>
+			<td><%= link_to user.username, user %></td>
+			<td><%= user.first_name %> <%= user.last_name %></td>
+		<% end %>
+		
+		
 		<% if !(!@user_id.nil? && !@guardian_id.nil? && (@user_id.to_s != @guardian_id.to_s)) %>
 			<td>
 				<%= link_to edit_user_path(user), remote: true, :rel=>"tooltip", "data-placement"=>"right", "data-original-title"=>"Edit User" do %> 
